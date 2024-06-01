@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model School {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  Address    String
+  Student    Student[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Assessment Assessment[]
+}
+
+model Student {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  age        Int
+  school     School       @relation(fields: [schoolId], references: [id])
+  class      String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Assessment Assessment[]
+  schoolId   String       @db.ObjectId
+}
+
+enum RatingScale {
+  ELE
+  SnapIV
+  ATA
+}
+
+model Assessment {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String      @unique
+  student      Student     @relation(fields: [studentId], references: [id])
+  studentId    String      @db.ObjectId
+  ratingScale  RatingScale
+  school       School      @relation(fields: [schoolId], references: [id])
+  schoolId     String      @db.ObjectId
+  resultAmount Int?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
