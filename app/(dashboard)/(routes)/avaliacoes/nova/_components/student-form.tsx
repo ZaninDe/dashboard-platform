@@ -7,7 +7,6 @@ import { z } from 'zod'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,13 +14,16 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { School } from 'lucide-react'
-import Assessment from '../../page'
 import { Combobox } from '@/components/ui/combobox'
+import { useState } from 'react'
+import { School } from 'lucide-react'
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Nome é obrigatório',
+  }),
+  ra: z.string().min(2, {
+    message: 'Registro do Aluno é obrigatório',
   }),
   age: z.string().min(1, {
     message: 'Idade é obrigatório',
@@ -79,15 +81,26 @@ const schoolOptions = [
 ]
 
 const StudentForm = () => {
+  const [newSchool, setNewSchool] = useState(false)
+  const [nameSchool, setNameSchool] = useState('')
+  const [addressSchool, setAddressSchool] = useState('')
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
 
+  const toggleNewSchool = () => {
+    setNewSchool((state) => !state)
+  }
+
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+  }
+
+  const createNewSchool = async () => {
+    toggleNewSchool()
   }
   return (
     <Form {...form}>
@@ -100,6 +113,20 @@ const StudentForm = () => {
               <FormLabel>Nome do Aluno</FormLabel>
               <FormControl>
                 <Input placeholder="Ex: Gabriel Zanin de Oliveira" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="ra"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Registro do Aluno</FormLabel>
+              <FormControl>
+                <Input placeholder="Ex: 122042" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -141,25 +168,63 @@ const StudentForm = () => {
         />
 
         <div>
-          <FormField
-            control={form.control}
-            name="schoolId"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Combobox
-                    placeholder="Selecione a escola..."
-                    options={schoolOptions}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="button" className="mt-2">
-            Nova Escola
-          </Button>
+          {!newSchool ? (
+            <div>
+              <FormField
+                control={form.control}
+                name="schoolId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Combobox
+                        placeholder="Selecione a escola..."
+                        options={schoolOptions}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="button"
+                className="mt-2 flex gap-2"
+                onClick={toggleNewSchool}
+              >
+                Nova Escola
+                <School className="w-4 h-4" />
+              </Button>
+            </div>
+          ) : (
+            // <SchoolForm onClose={toggleNewSchool} />
+            <div className="border border-slate-300 px-2 py-4 rounded-md">
+              <h1 className="text-xl text-slate-900 mb-3">
+                Adicionar Nova Escola
+              </h1>
+              <div className="space-y-3">
+                <Input
+                  placeholder="Nome da Escola"
+                  onChange={(e) => setNameSchool(e.target.value)}
+                />
+                <Input
+                  placeholder="Endereço da Escola"
+                  onChange={(e) => setAddressSchool(e.target.value)}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={toggleNewSchool}
+                  >
+                    Fechar
+                  </Button>
+                  <Button type="button" onClick={createNewSchool}>
+                    Salvar Nova Escola
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex gap-2">
           <Button type="button" variant={'outline'}>

@@ -17,15 +17,12 @@ const NewAssessment = () => {
           <CardTitle>Nova Avaliação</CardTitle>
           <CardDescription>
             Antes de iniciar a avaliação de um aluno, é necessário preencher
-            algumas informações importante
+            algumas informações importantes.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <AssessmentForm />
         </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
       </Card>
     </div>
   )
