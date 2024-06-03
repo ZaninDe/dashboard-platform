@@ -15,8 +15,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Combobox } from '@/components/ui/combobox'
-import { useState } from 'react'
-import { School } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { School as SchoolIcon } from 'lucide-react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { db } from '@/lib/db'
+import { School } from '@prisma/client'
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -28,11 +32,11 @@ const formSchema = z.object({
   age: z.string().min(1, {
     message: 'Idade é obrigatório',
   }),
-  class: z.string().min(2, {
-    message: 'Nome da escola é obrigatório',
+  classroom: z.string().min(2, {
+    message: 'Sala é obrigatório',
   }),
   schoolId: z.string().min(2, {
-    message: 'Nome da escola é obrigatório',
+    message: 'Escola é obrigatório',
   }),
 })
 
@@ -52,38 +56,20 @@ for (let i = 6; i <= 16; i++) {
 const classOptions: OptionsProps[] = []
 for (let i = 1; i <= 9; i++) {
   classOptions.push({
-    value: i.toString(),
+    value: `${i}º Ano`,
     label: `${i}º Ano`,
   })
 }
 
-const schoolOptions = [
-  {
-    value: 'asdfasdfasdfwerqwr2341234',
-    label: 'EMEF Lourdes Maria',
-  },
-  {
-    value: '39q73r0efuqdfiodf',
-    label: 'EMEF Nelson Ferreira',
-  },
-  {
-    value: 'asdfhaisdfoasdf5432',
-    label: 'EMEF Lourdes Maria',
-  },
-  {
-    value: 'uasdfh2323nasldfadfasf',
-    label: 'EEMEF Dom Pedro de Âlcantara',
-  },
-  {
-    value: 'aisdjfoasijdf7293923',
-    label: 'EEMEF Najila Jamile',
-  },
-]
+interface StudentFormProps {
+  schoolOptions: School[]
+}
 
-const StudentForm = () => {
+const StudentForm = ({ schoolOptions }: StudentFormProps) => {
   const [newSchool, setNewSchool] = useState(false)
   const [nameSchool, setNameSchool] = useState('')
   const [addressSchool, setAddressSchool] = useState('')
+  const { setValue } = useForm()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
@@ -91,16 +77,48 @@ const StudentForm = () => {
   const toggleNewSchool = () => {
     setNewSchool((state) => !state)
   }
+  const getSchoolsOptions = async () => {
+    try {
+      const schoolsOptions = await db.school.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      })
+
+      setSchools(schoolsOptions)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getSchoolsOptions()
+  }, [newSchool])
 
   // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    try {
+      const response = await axios.post('/api/students', values)
+      console.log(response)
+      toast.success('Aluno criado com sucesso!')
+    } catch (err) {
+      toast.error('Algo deu errado.')
+    }
     console.log(values)
   }
 
   const createNewSchool = async () => {
-    toggleNewSchool()
+    try {
+      const response = await axios.post('/api/schools', {
+        name: nameSchool,
+        address: addressSchool,
+      })
+      toggleNewSchool()
+      toast.success('Escola criado com sucesso!')
+      setValue('schoolId', response.data.id)
+    } catch (err) {
+      toast.error('Algo deu errado.')
+    }
   }
   return (
     <Form {...form}>
@@ -133,39 +151,41 @@ const StudentForm = () => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="age"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Combobox
-                  placeholder="Selecione a idade do aluno..."
-                  options={ageOptions}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="age"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Combobox
+                    placeholder="Selecione a idade..."
+                    options={ageOptions}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="class"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Combobox
-                  placeholder="Selecione o ano escolar..."
-                  options={classOptions}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="classroom"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Combobox
+                    placeholder="Selecione o ano escolar..."
+                    options={classOptions}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <div>
           {!newSchool ? (
@@ -178,7 +198,10 @@ const StudentForm = () => {
                     <FormControl>
                       <Combobox
                         placeholder="Selecione a escola..."
-                        options={schoolOptions}
+                        options={schoolOptions.map((school) => ({
+                          label: school.name,
+                          value: school.id,
+                        }))}
                         {...field}
                       />
                     </FormControl>
@@ -192,7 +215,7 @@ const StudentForm = () => {
                 onClick={toggleNewSchool}
               >
                 Nova Escola
-                <School className="w-4 h-4" />
+                <SchoolIcon className="w-4 h-4" />
               </Button>
             </div>
           ) : (

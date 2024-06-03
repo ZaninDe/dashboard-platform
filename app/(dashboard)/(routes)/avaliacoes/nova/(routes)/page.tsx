@@ -1,15 +1,20 @@
+import { db } from '@/lib/db'
 import AssessmentForm from '../_components/assessment-form'
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 
-const NewAssessment = () => {
+const NewAssessment = async () => {
+  const schoolOptions = await db.school.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
   return (
     <div className="h-screen w-full flex justify-center items-center">
       <Card className="max-w-[920px]">
@@ -21,7 +26,7 @@ const NewAssessment = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AssessmentForm />
+          <AssessmentForm schoolOptions={schoolOptions} />
         </CardContent>
       </Card>
     </div>

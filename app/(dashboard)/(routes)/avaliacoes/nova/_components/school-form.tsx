@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import axios from 'axios'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -14,6 +15,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import toast from 'react-hot-toast'
+import { useState } from 'react'
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -38,53 +41,39 @@ export function SchoolForm({ onClose }: SchoolFormProps) {
     },
   })
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-    onClose()
+  const { isSubmitting, isValid } = form.formState
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      console.log('ENTROUUUUU!!!')
+      const response = await axios.post('/api/schools', values)
+      toast.success('Escola criado com sucesso!')
+    } catch (err) {
+      toast.error('Algo deu errado.')
+    }
   }
 
+  const [name, setName] = useState('')
+  const [address, setAddress] = useState('')
+
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nome da Escola</FormLabel>
-              <FormControl>
-                <Input placeholder="EMEF Lourdes Maria" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+    <div>
+      <div>
+        <label htmlFor="name">Nome da Escola</label>
+        <Input
+          id="name"
+          placeholder="EMEF Lourdes Maria"
+          onChange={(e) => setName(e.target.value)}
         />
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Endereço</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Rua dos Alecrins, 282 Jardim das Indústrias"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      </div>
+      <div>
+        <label htmlFor="address">Endereço Completo</label>
+        <Input
+          id="address"
+          placeholder="Ex: Carlos Alberto Consíglio, 282. Dom Pedro I - SJC"
+          onChange={(e) => setName(e.target.value)}
         />
-        <div className="flex flex-col md:flex-row gap-2">
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Fechar Nova Escola
-          </Button>
-          <Button type="submit">Salvar Nova Escola</Button>
-        </div>
-      </form>
-    </Form>
+      </div>
+    </div>
   )
 }

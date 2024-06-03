@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { RatingScale } from '@prisma/client'
+import { RatingScale, School } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -44,13 +44,11 @@ const formSchema = z.object({
   schoolId: z.string(),
 })
 
-const AssessmentForm = () => {
-  const [isNewStudent, setIsNewstudent] = useState(false)
+interface AssessmentFormProps {
+  schoolOptions: School[]
+}
 
-  const toggleNewStudent = () => {
-    setIsNewstudent((state) => !state)
-  }
-
+const AssessmentForm = ({ schoolOptions }: AssessmentFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
@@ -123,7 +121,7 @@ const AssessmentForm = () => {
                   Cadastrar Novo Aluno
                 </DialogTitle>
                 <DialogDescription>
-                  <StudentForm />
+                  <StudentForm schoolOptions={schoolOptions}/>
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
