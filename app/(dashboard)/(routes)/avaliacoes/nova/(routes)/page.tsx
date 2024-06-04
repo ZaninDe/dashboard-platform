@@ -15,6 +15,12 @@ const NewAssessment = async () => {
       createdAt: 'desc',
     },
   })
+
+  const studentsOptions = await db.student.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
   return (
     <div className="h-screen w-full flex justify-center items-center">
       <Card className="max-w-[920px]">
@@ -26,7 +32,10 @@ const NewAssessment = async () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <AssessmentForm schoolOptions={schoolOptions} />
+          <AssessmentForm
+            schoolOptions={schoolOptions}
+            studentOptions={studentsOptions}
+          />
         </CardContent>
       </Card>
     </div>

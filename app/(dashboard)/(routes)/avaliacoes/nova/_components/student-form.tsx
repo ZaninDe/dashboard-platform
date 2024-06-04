@@ -15,12 +15,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Combobox } from '@/components/ui/combobox'
-import { useEffect, useState } from 'react'
 import { School as SchoolIcon } from 'lucide-react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { db } from '@/lib/db'
 import { School } from '@prisma/client'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -61,45 +61,46 @@ for (let i = 1; i <= 9; i++) {
   })
 }
 
+export interface OptionProps {
+  label: string
+  value: string
+}
 interface StudentFormProps {
   schoolOptions: School[]
+  onChangeStudent: ({ label, value }: OptionProps) => void
+  onClose: (value: boolean) => void
 }
 
-const StudentForm = ({ schoolOptions }: StudentFormProps) => {
-  const [newSchool, setNewSchool] = useState(false)
+const StudentForm = ({
+  schoolOptions,
+  onClose,
+  onChangeStudent,
+}: StudentFormProps) => {
+  const [isNewSchool, setIsNewSchool] = useState(false)
   const [nameSchool, setNameSchool] = useState('')
   const [addressSchool, setAddressSchool] = useState('')
+  const [newSchool, setNewSchool] = useState<OptionProps>()
+
+  const router = useRouter()
+
   const { setValue } = useForm()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
 
   const toggleNewSchool = () => {
-    setNewSchool((state) => !state)
-  }
-  const getSchoolsOptions = async () => {
-    try {
-      const schoolsOptions = await db.school.findMany({
-        orderBy: {
-          createdAt: 'desc',
-        },
-      })
-
-      setSchools(schoolsOptions)
-    } catch (err) {
-      console.log(err)
-    }
+    setIsNewSchool((state: boolean) => !state)
   }
 
-  useEffect(() => {
-    getSchoolsOptions()
-  }, [newSchool])
-
-  // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await axios.post('/api/students', values)
       console.log(response)
+      onChangeStudent({
+        label: response.data.name,
+        value: response.data.id,
+      })
+      onClose(false)
       toast.success('Aluno criado com sucesso!')
     } catch (err) {
       toast.error('Algo deu errado.')
@@ -113,6 +114,12 @@ const StudentForm = ({ schoolOptions }: StudentFormProps) => {
         name: nameSchool,
         address: addressSchool,
       })
+
+      setNewSchool({
+        value: response.data.id,
+        label: response.data.name,
+      })
+      router.refresh()
       toggleNewSchool()
       toast.success('Escola criado com sucesso!')
       setValue('schoolId', response.data.id)
@@ -122,7 +129,16 @@ const StudentForm = ({ schoolOptions }: StudentFormProps) => {
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit((data, e) => {
+          if (e) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+          onSubmit(data)
+        })}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="name"
@@ -159,7 +175,7 @@ const StudentForm = ({ schoolOptions }: StudentFormProps) => {
               <FormItem>
                 <FormControl>
                   <Combobox
-                    placeholder="Selecione a idade..."
+                    placeholder="Selecione a idade"
                     options={ageOptions}
                     {...field}
                   />
@@ -176,7 +192,7 @@ const StudentForm = ({ schoolOptions }: StudentFormProps) => {
               <FormItem>
                 <FormControl>
                   <Combobox
-                    placeholder="Selecione o ano escolar..."
+                    placeholder="selecione um aluno..."
                     options={classOptions}
                     {...field}
                   />
@@ -188,7 +204,7 @@ const StudentForm = ({ schoolOptions }: StudentFormProps) => {
         </div>
 
         <div>
-          {!newSchool ? (
+          {!isNewSchool ? (
             <div>
               <FormField
                 control={form.control}
@@ -197,12 +213,13 @@ const StudentForm = ({ schoolOptions }: StudentFormProps) => {
                   <FormItem>
                     <FormControl>
                       <Combobox
-                        placeholder="Selecione a escola..."
+                        placeholder="selecione a escola..."
                         options={schoolOptions.map((school) => ({
                           label: school.name,
                           value: school.id,
                         }))}
                         {...field}
+                        // value={newSchool?.value}
                       />
                     </FormControl>
                     <FormMessage />
