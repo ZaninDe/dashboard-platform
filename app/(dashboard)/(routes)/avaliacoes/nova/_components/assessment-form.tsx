@@ -17,6 +17,7 @@ import {
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -98,6 +99,7 @@ const AssessmentForm = ({
           </Button>
         </DialogTrigger>
         <DialogContent>
+          <DialogClose />
           <DialogHeader>
             <DialogTitle className="text-2xl mb-10">
               Cadastrar Novo Aluno

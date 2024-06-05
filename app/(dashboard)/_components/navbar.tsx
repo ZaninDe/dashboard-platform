@@ -6,7 +6,7 @@ import { NavbarRoutes } from './navbar-routes'
 const NavBar = () => {
   return (
     <div className="w-full">
-      <div className="w-full py-4 border-b border-slate-900 hidden md:block bg-slate-50">
+      <div className="w-full py-4 border-b border-slate-900 hidden md:block bg-black">
         <div className="max-w-[1440px] px-8 flex justify-between">
           <Logo />
           <NavbarRoutes />

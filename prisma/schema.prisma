@@ -43,7 +43,7 @@ enum RatingScale {
 
 model Assessment {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String      @unique
+  userId       String
   Student      Student     @relation(fields: [studentId], references: [id])
   studentId    String      @db.ObjectId
   ratingScale  RatingScale
