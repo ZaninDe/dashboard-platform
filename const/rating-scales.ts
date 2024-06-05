@@ -86,6 +86,108 @@ export const ELEQuestions: QuestionsProps[] = [
   },
 ]
 
+export const SNAPQuestions: QuestionsProps[] = [
+  {
+    step: 1,
+    question: `Não consegue prestar muita atenção a detalhes ou
+    comete erros por descuido nos trabalhos
+    da escola ou tarefas`,
+  },
+
+  {
+    step: 2,
+    question: `Tem dificuldade de manter a atenção em
+    tarefas ou atividades de lazer`,
+  },
+
+  {
+    step: 3,
+    question: `Parece não estar ouvindo quando se fala
+    diretamente com ele`,
+  },
+
+  {
+    step: 4,
+    question: `Não segue instruções até o fim e não termina
+    deveres de escola, tarefas ou obrigações`,
+  },
+
+  {
+    step: 5,
+    question: `Tem dificuldade para organizar tarefas e atividades`,
+  },
+
+  {
+    step: 6,
+    question: `Evita, não gosta ou se envolve contra a vontade em
+    tarefas que exigem esforço mental prolongado`,
+  },
+
+  {
+    step: 7,
+    question: `Perde coisas necessárias para atividades (p. ex:
+      brinquedos, deveres da escola, lápis ou livros)`,
+  },
+
+  {
+    step: 8,
+    question: `Distrai-se com estímulos externos`,
+  },
+
+  {
+    step: 9,
+    question: `É esquecido em atividades do dia-a-dia`,
+  },
+
+  {
+    step: 10,
+    question: `Mexe com as mãos ou pés ou se remexe na cadeira`,
+  },
+
+  {
+    step: 11,
+    question: `Sai do lugar na sala de aula ou em outras situações
+    em que se espera que fique sentado`,
+  },
+
+  {
+    step: 12,
+    question: `Corre de um lado para outro ou sobe demais nas
+    coisas em situações em que isto é inapropriado`,
+  },
+
+  {
+    step: 13,
+    question: `Tem dificuldade em brincar ou envolver-se em
+    atividades de lazer de forma calma`,
+  },
+
+  {
+    step: 14,
+    question: `Não pára ou freqüentemente está a “mil por hora”`,
+  },
+
+  {
+    step: 15,
+    question: `Fala em excesso`,
+  },
+
+  {
+    step: 16,
+    question: `Responde as perguntas de forma precipitada antes
+    delas terem sido terminadas`,
+  },
+  {
+    step: 17,
+    question: `Tem dificuldade de esperar sua vez`,
+  },
+  {
+    step: 18,
+    question: `Interrompe os outros ou se intromete (por exemplo:
+      intromete-se nas conversas, jogos, etc.)`,
+  },
+]
+
 export interface ButtonOption {
   label: string
   value: string
@@ -105,6 +207,25 @@ export const ELEButtonOptions: ButtonOption[] = [
   },
   {
     label: 'Frequentemente',
+    value: '4',
+  },
+]
+
+export const SNAPButtonOptions: ButtonOption[] = [
+  {
+    label: 'Nem um pouco',
+    value: '1',
+  },
+  {
+    label: 'Só um pouco',
+    value: '2',
+  },
+  {
+    label: 'Bastante',
+    value: '3',
+  },
+  {
+    label: 'Demais',
     value: '4',
   },
 ]

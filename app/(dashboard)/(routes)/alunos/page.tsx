@@ -6,7 +6,11 @@ const Students = () => {
   if (!userId) {
     redirect('/')
   }
-  return <div>Students</div>
+  return (
+    <div className="w-full h-[80vh] flex justify-center items-center text-5xl">
+      Alunos
+    </div>
+  )
 }
 
 export default Students

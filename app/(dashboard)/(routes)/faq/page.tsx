@@ -6,7 +6,11 @@ const Faq = () => {
   if (!userId) {
     redirect('/')
   }
-  return <div>Faq</div>
+  return (
+    <div className="w-full h-[80vh] flex justify-center items-center text-5xl">
+      FAQ
+    </div>
+  )
 }
 
 export default Faq

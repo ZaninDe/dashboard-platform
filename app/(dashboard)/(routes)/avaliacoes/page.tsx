@@ -2,31 +2,44 @@
 
 import { redirect, useRouter } from 'next/navigation'
 import { DataTable } from './_components/data-table'
-import { columns } from './columns'
+import { AssessmentProps, columns } from './columns'
 import { Button } from '@/components/ui/button'
 import { PlusCircle } from 'lucide-react'
 import { useAuth } from '@clerk/nextjs'
 
 const Assessment = () => {
-  type Payment = {
-    id: string
-    amount: number
-    status: 'pending' | 'processing' | 'success' | 'failed'
-    email: string
-  }
-
-  const data: Payment[] = [
+  const data: AssessmentProps[] = [
     {
       id: '728ed52f',
-      amount: 100,
-      status: 'pending',
-      email: 'm@example.com',
+      name: 'Gabriel Zanin',
+      school: 'Caic',
+      age: 10,
+      classroom: '5ª série',
+      status: 'attention',
     },
     {
-      id: '489e1d42',
-      amount: 125,
-      status: 'processing',
-      email: 'example@gmail.com',
+      id: '34134fasdf',
+      name: 'Carla Zanin',
+      school: 'Nova Escola',
+      age: 13,
+      classroom: '8ª série',
+      status: 'OK',
+    },
+    {
+      id: 'asdfas343443',
+      name: 'Rafael Pereira',
+      school: 'Caic',
+      age: 11,
+      classroom: '4ª série',
+      status: 'attention',
+    },
+    {
+      id: '4536345rfdsa',
+      name: 'Felipe Assis',
+      school: 'Nova Escola',
+      age: 15,
+      classroom: '9ª série',
+      status: 'OK',
     },
     // ...
   ]

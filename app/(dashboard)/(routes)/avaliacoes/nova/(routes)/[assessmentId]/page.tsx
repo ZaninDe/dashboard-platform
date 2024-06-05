@@ -5,6 +5,8 @@ import {
   ELEButtonOptions,
   ELEQuestions,
   QuestionsProps,
+  SNAPButtonOptions,
+  SNAPQuestions,
 } from '@/const/rating-scales'
 
 const AssesmentIdPage = async ({
@@ -23,14 +25,14 @@ const AssesmentIdPage = async ({
       ? ELEButtonOptions
       : assessment?.ratingScale === 'ATA'
         ? ELEButtonOptions
-        : ELEButtonOptions
+        : SNAPButtonOptions
 
   const questions: QuestionsProps[] =
     assessment?.ratingScale === 'ELE'
       ? ELEQuestions
       : assessment?.ratingScale === 'ATA'
         ? ELEQuestions
-        : ELEQuestions
+        : SNAPQuestions
 
   return (
     <div className="w-full h-[calc(100vh-87px)]">

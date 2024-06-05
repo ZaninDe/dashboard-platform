@@ -6,7 +6,11 @@ const Dashboards = () => {
   if (!userId) {
     redirect('/')
   }
-  return <div>Dashboards</div>
+  return (
+    <div className="w-full h-[80vh] flex justify-center items-center text-5xl">
+      Dashboards
+    </div>
+  )
 }
 
 export default Dashboards
