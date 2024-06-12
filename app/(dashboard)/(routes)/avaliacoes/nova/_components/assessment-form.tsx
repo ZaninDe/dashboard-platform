@@ -165,8 +165,8 @@ const AssessmentForm = ({
                   <div className="mb-4">
                     <strong>ELE</strong>
                     <p>
-                      A escala de avaliação ELE (Escala de Linguagem Expressiva)
-                      é uma ferramenta utilizada para avaliar as habilidades de
+                      A escala de avaliação ELE (Escala de Leitura e Escrita) é
+                      uma ferramenta utilizada para avaliar as habilidades de
                       linguagem expressiva em crianças. A linguagem expressiva
                       refere-se à capacidade de uma pessoa de usar palavras,
                       frases e sentenças para se comunicar de forma eficaz.
@@ -177,19 +177,18 @@ const AssessmentForm = ({
                     <strong>SNAP-IV</strong>
                     <p>
                       A escala de avaliação SNAP-IV ajuda a identaificar e
-                      monitorar sintomas de TDAH e Transtorno Desafiador
-                      Opositivo em crianças e adolescentes, baseada nos
-                      critérios do DSM-IV.
+                      monitorar características de TDAH em crianças e
+                      adolescentes, baseada nos critérios do DSM-IV.
                     </p>
                   </div>
                   <div className="mb-4">
                     <strong>ATA</strong>
                     <p>
-                      A escala de avaliação ATA (Avaliação de Transtornos de
-                      Aprendizagem) é utilizada para identificar dificuldades de
-                      aprendizagem em crianças e adolescentes. Ela ajuda a
-                      detectar problemas específicos como dislexia, disgrafia e
-                      discalculia.
+                      A Escala de Avaliação de Traços Autísticos é uma
+                      ferramenta de fácil aplicação com objetivo de pontuar
+                      características do TEA, tornando-se possível sua
+                      utilização através de profissionais que possuem contato
+                      direta- mente com a criança,
                     </p>
                   </div>
                 </TooltipContent>

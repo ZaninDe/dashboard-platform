@@ -20,9 +20,8 @@ export default function Home() {
             Nossa Plataforma<span className="text-yellow-400">.</span>
           </h1>
           <p className="max-w-[500px] text-xl text-white">
-            Plataforma auxiliadora na percepção de características de
-            dificuldades específicas de aprendizado pelo profissional em sala de
-            aula
+            Nossa Plataforma Utiliza Dashboards para o Mapeamento de
+            Dificuldades de Aprendizagem Específicas
           </p>
           <Link
             to="about"

@@ -22,7 +22,7 @@ const NewAssessment = async () => {
     },
   })
   return (
-    <div className="h-screen w-full flex justify-center items-center">
+    <div className="h-[calc(100vh-100px)] w-full flex justify-center items-center">
       <Card className="max-w-[920px]">
         <CardHeader>
           <CardTitle>Nova Avaliação</CardTitle>

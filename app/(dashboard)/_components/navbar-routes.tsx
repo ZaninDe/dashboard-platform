@@ -21,11 +21,6 @@ const routes = [
     href: '/avaliacoes',
   },
   {
-    icon: GraduationCap,
-    label: 'Alunos',
-    href: '/alunos',
-  },
-  {
     icon: LayoutDashboard,
     label: 'Dashboards',
     href: '/dashboards',

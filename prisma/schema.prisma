@@ -50,4 +50,14 @@ model Assessment {
   resultAmount Int?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
+  Dialog       Dialog[]
+}
+
+model Dialog {
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  assessment     Assessment @relation(fields: [assessmentId], references: [id])
+  questionNumber Int
+  question       String
+  answer         Int
+  assessmentId   String     @db.ObjectId
 }

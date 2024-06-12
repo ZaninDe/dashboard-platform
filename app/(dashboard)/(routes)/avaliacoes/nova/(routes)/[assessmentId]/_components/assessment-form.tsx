@@ -1,23 +1,62 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { ButtonOption, QuestionsProps } from '@/const/rating-scales'
+import {
+  ButtonOption,
+  ELEButtonOptions,
+  ELEQuestions,
+  QuestionsProps,
+  SNAPButtonOptions,
+  SNAPQuestions,
+} from '@/const/rating-scales'
 import { cn } from '@/lib/utils'
-import { useState } from 'react'
+import { Assessment, Dialog } from '@prisma/client'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 interface AssessmentFormProps {
-  buttonOptions: ButtonOption[]
-  questions: QuestionsProps[]
+  assessment: Assessment
+  dialogs: Dialog[]
 }
 
-const AssessmentForm = ({ buttonOptions, questions }: AssessmentFormProps) => {
+const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
   const [step, setStep] = useState(1)
-  const [answer, setAnswer] = useState<number | null>(null)
+  const [answer, setAnswer] = useState<number | null>()
+  const [currentDialog, setCurrentDialog] = useState<Dialog>()
+
+  useEffect(() => {
+    const newCurrentDialog = dialogs.find(
+      (dialog) => dialog.questionNumber === step,
+    )
+    if (newCurrentDialog) {
+      setCurrentDialog(newCurrentDialog)
+      setAnswer(newCurrentDialog?.answer)
+    }
+  }, [step, dialogs])
+
+  const router = useRouter()
+
+  console.log(dialogs)
+
+  const buttonOptions: ButtonOption[] =
+    assessment?.ratingScale === 'ELE'
+      ? ELEButtonOptions
+      : assessment?.ratingScale === 'ATA'
+        ? ELEButtonOptions
+        : SNAPButtonOptions
+
+  const questions: QuestionsProps[] =
+    assessment?.ratingScale === 'ELE'
+      ? ELEQuestions
+      : assessment?.ratingScale === 'ATA'
+        ? ELEQuestions
+        : SNAPQuestions
 
   const nextStep = () => {
     if (step === questions.length) {
-      console.log('ULTIMA QUESTAO')
+      router.push(`/avaliacoes/${assessment.id}`)
     } else {
       setStep((state) => state + 1)
     }
@@ -33,7 +72,20 @@ const AssessmentForm = ({ buttonOptions, questions }: AssessmentFormProps) => {
 
   const onSubmit = async () => {
     try {
-      console.log(answer)
+      if (currentDialog?.answer === answer) {
+        return
+      }
+      const dialog = await axios.post(
+        `/api/assessments/${assessment.id}/dialogs`,
+        {
+          questionNumber: step,
+          question: questions[step].question,
+          answer,
+        },
+      )
+
+      router.refresh()
+      console.log(dialog)
     } catch (err) {
       toast.error('Algo deu errado.')
     } finally {
@@ -48,7 +100,7 @@ const AssessmentForm = ({ buttonOptions, questions }: AssessmentFormProps) => {
         <div>
           <div>
             <div className="h-40 flex flex-col items-center justify-center">
-              <p className="text-center text-xl">{questions[step].question}</p>
+              <p className="text-center text-xl">{questions[step]?.question}</p>
             </div>
             <div className="flex gap-4 justify-center">
               {buttonOptions.map((button) => (
@@ -73,8 +125,8 @@ const AssessmentForm = ({ buttonOptions, questions }: AssessmentFormProps) => {
           <Button variant="secondary" onClick={prevStep}>
             Voltar
           </Button>
-          <Button onClick={onSubmit} disabled={!answer}>
-            Próximo
+          <Button onClick={onSubmit} disabled={!answer && !questions.length}>
+            {step === questions.length ? 'Finalizar' : 'Próximo'}
           </Button>
         </div>
       </div>

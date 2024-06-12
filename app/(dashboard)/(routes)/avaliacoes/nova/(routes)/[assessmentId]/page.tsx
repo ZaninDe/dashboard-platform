@@ -1,13 +1,5 @@
 import { db } from '@/lib/db'
 import AssessmentForm from './_components/assessment-form'
-import {
-  ButtonOption,
-  ELEButtonOptions,
-  ELEQuestions,
-  QuestionsProps,
-  SNAPButtonOptions,
-  SNAPQuestions,
-} from '@/const/rating-scales'
 
 const AssesmentIdPage = async ({
   params,
@@ -20,25 +12,22 @@ const AssesmentIdPage = async ({
     },
   })
 
-  const buttonOptions: ButtonOption[] =
-    assessment?.ratingScale === 'ELE'
-      ? ELEButtonOptions
-      : assessment?.ratingScale === 'ATA'
-        ? ELEButtonOptions
-        : SNAPButtonOptions
-
-  const questions: QuestionsProps[] =
-    assessment?.ratingScale === 'ELE'
-      ? ELEQuestions
-      : assessment?.ratingScale === 'ATA'
-        ? ELEQuestions
-        : SNAPQuestions
+  const dialogs = await db.dialog.findMany({
+    where: {
+      assessmentId: assessment?.id,
+    },
+    orderBy: {
+      questionNumber: 'asc',
+    },
+  })
 
   return (
     <div className="w-full h-[calc(100vh-87px)]">
       <div className="h-[40%] w-full bg-cyan-200"></div>
       <div className="absolute inset-0 m-auto w-1/2 h-1/2 bg-white rounded-lg">
-        <AssessmentForm buttonOptions={buttonOptions} questions={questions} />
+        {assessment && (
+          <AssessmentForm assessment={assessment} dialogs={dialogs} />
+        )}
       </div>
       <div className="h-[60%] bg-cyan-600 flex justify-center items-end">
         <h1 className="mb-20 text-5xl font-bold text-white">
