@@ -25,7 +25,7 @@ const AssessmentPage = async ({
       {dialogs.map((dialog: Dialog) => (
         <div key={dialog.id} className="space-y-4 pl-4">
           <strong>{dialog?.question} :</strong>
-          <p className="font-light">{dialog.answer}</p>
+          <p className="font-light">{JSON.stringify(dialog.answer)}</p>
         </div>
       ))}
     </div>

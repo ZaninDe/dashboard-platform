@@ -27,6 +27,7 @@ export async function POST(req: Request) {
           age: parseInt(age),
           schoolId,
           classroom,
+          userId,
         },
       })
 

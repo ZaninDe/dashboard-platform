@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 import {
   ColumnDef,
@@ -57,6 +58,8 @@ export function DataTable<TData, TValue>({
     },
   })
 
+  const router = useRouter()
+
   return (
     <div>
       <div className="flex items-center py-4 justify-between">
@@ -101,6 +104,10 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  className="cursor-pointer"
+                  onClick={() =>
+                    router.push(`/avaliacoes/${row.getValue('id')}`)
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

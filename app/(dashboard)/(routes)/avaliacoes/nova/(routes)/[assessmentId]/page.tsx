@@ -1,5 +1,7 @@
 import { db } from '@/lib/db'
 import AssessmentForm from './_components/assessment-form'
+import ATAAssessmentForm from './_components/ata-assessment-form'
+import { cn } from '@/lib/utils'
 
 const AssesmentIdPage = async ({
   params,
@@ -24,13 +26,24 @@ const AssesmentIdPage = async ({
   return (
     <div className="w-full h-[calc(100vh-87px)]">
       <div className="h-[40%] w-full bg-cyan-200"></div>
-      <div className="absolute inset-0 m-auto w-1/2 h-1/2 bg-white rounded-lg">
+      <div
+        className={cn(
+          'absolute inset-0 m-auto w-1/2 h-1/2 bg-white rounded-lg',
+          assessment?.ratingScale === 'ATA' && 'h-[70%]',
+        )}
+      >
         {assessment && (
-          <AssessmentForm assessment={assessment} dialogs={dialogs} />
+          <div className="h-full">
+            {assessment.ratingScale !== 'ATA' ? (
+              <AssessmentForm assessment={assessment} dialogs={dialogs} />
+            ) : (
+              <ATAAssessmentForm assessment={assessment} dialogs={dialogs} />
+            )}
+          </div>
         )}
       </div>
       <div className="h-[60%] bg-cyan-600 flex justify-center items-end">
-        <h1 className="mb-20 text-5xl font-bold text-white">
+        <h1 className="mb-10 text-5xl font-bold text-white">
           Questionário<span className="text-yellow-400">.</span>
         </h1>
       </div>

@@ -175,7 +175,7 @@ const StudentForm = ({
               <FormItem>
                 <FormControl>
                   <Combobox
-                    placeholder="Selecione a idade"
+                    placeholder="Selecione a idade..."
                     options={ageOptions}
                     {...field}
                   />
@@ -192,7 +192,7 @@ const StudentForm = ({
               <FormItem>
                 <FormControl>
                   <Combobox
-                    placeholder="selecione um aluno..."
+                    placeholder="Ano Escolar..."
                     options={classOptions}
                     {...field}
                   />
@@ -213,7 +213,7 @@ const StudentForm = ({
                   <FormItem>
                     <FormControl>
                       <Combobox
-                        placeholder="selecione a escola..."
+                        placeholder="Selecione a escola..."
                         options={schoolOptions.map((school) => ({
                           label: school.name,
                           value: school.id,

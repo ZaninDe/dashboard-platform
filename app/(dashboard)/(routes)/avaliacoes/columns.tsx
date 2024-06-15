@@ -19,6 +19,21 @@ export interface AssessmentProps {
 
 export const columns: ColumnDef<AssessmentProps>[] = [
   {
+    accessorKey: 'id',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="pl-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          ID da Avaliação
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  },
+  {
     accessorKey: 'name',
     header: ({ column }) => {
       return (
@@ -72,7 +87,7 @@ export const columns: ColumnDef<AssessmentProps>[] = [
           className="pl-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Sala
+          Ano Escolar
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )

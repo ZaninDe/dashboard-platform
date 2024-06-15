@@ -17,6 +17,7 @@ model School {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   address   String
+  userId    String
   Student   Student[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -27,6 +28,7 @@ model Student {
   ra         String
   name       String
   age        Int
+  userId     String
   school     School       @relation(fields: [schoolId], references: [id])
   classroom  String
   createdAt  DateTime     @default(now())
@@ -58,6 +60,6 @@ model Dialog {
   assessment     Assessment @relation(fields: [assessmentId], references: [id])
   questionNumber Int
   question       String
-  answer         Int
+  answer         Json
   assessmentId   String     @db.ObjectId
 }
