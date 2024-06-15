@@ -10,18 +10,20 @@ interface NavbarProps {
 
 const NavBar = ({ absolute }: NavbarProps) => {
   return (
-    <div
-      className={cn(
-        'w-full bg-cyan-700/80',
-        absolute && 'absolute z-50 bg-transparent',
-      )}
-    >
-      <div className="w-full py-4 border-b border-white ">
-        <div className="max-w-[1440px] px-32 flex justify-between">
-          <Logo />
-          <NavbarRoutes />
-          <div className="border w-8 h-8 flex justify-center items-center rounded-full my-auto">
-            <UserButton afterSignOutUrl="/" />
+    <div>
+      <div
+        className={cn(
+          'w-full bg-cyan-700/80 hidden md:block',
+          absolute && 'absolute z-50 bg-transparent',
+        )}
+      >
+        <div className="w-full py-4 border-b border-white ">
+          <div className="max-w-[1440px] px-32 flex justify-between ">
+            <Logo />
+            <NavbarRoutes />
+            <div className="border w-8 h-8 flex justify-center items-center rounded-full my-auto">
+              <UserButton afterSignOutUrl="/" />
+            </div>
           </div>
         </div>
       </div>

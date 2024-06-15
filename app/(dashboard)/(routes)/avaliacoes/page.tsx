@@ -29,6 +29,7 @@ const Assessment = async () => {
     school: assessment?.Student?.school?.name,
     age: assessment?.Student?.age,
     classroom: assessment?.Student?.classroom,
+    scaleRating: assessment?.ratingScale,
     status: 'OK',
   }))
 

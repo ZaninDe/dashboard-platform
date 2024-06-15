@@ -14,7 +14,7 @@ export default function Home() {
   }
   return (
     <div className="w-full">
-      <div className="bg-cyan-700/80 h-[500px] relative z-0">
+      <div className="bg-cyan-700/80 h-[400px] md:h-[500px] relative z-0">
         <div className="absolute bottom-10 left-32 space-y-8">
           <h1 className="text-white text-5xl">
             Nossa Plataforma<span className="text-yellow-400">.</span>

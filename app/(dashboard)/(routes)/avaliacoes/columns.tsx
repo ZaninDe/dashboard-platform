@@ -24,13 +24,16 @@ export const columns: ColumnDef<AssessmentProps>[] = [
       return (
         <Button
           variant="ghost"
-          className="pl-0"
+          className="pl-0 hidden"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           ID da Avaliação
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
+    },
+    cell: () => {
+      return <div className="hidden"></div>
     },
   },
   {
@@ -94,6 +97,21 @@ export const columns: ColumnDef<AssessmentProps>[] = [
     },
   },
   {
+    accessorKey: 'scaleRating',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="pl-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Escala
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  },
+  {
     accessorKey: 'status',
     header: ({ column }) => {
       return (
@@ -102,7 +120,7 @@ export const columns: ColumnDef<AssessmentProps>[] = [
           className="pl-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Status
+          Indicativo
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
