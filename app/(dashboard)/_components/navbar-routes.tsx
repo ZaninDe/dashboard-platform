@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import { SidebarItem } from './sidebar-item'
 
-const routes = [
+export const routes = [
   {
     icon: Home,
     label: 'Home',

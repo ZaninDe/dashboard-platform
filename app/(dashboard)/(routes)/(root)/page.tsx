@@ -45,7 +45,7 @@ export default function Home() {
           className="right-0 pt-6 absolute"
         />
       </div>
-      <section id="about" className="px-52 pb-52 pt-80 space-y-40">
+      <section id="about" className="px-52 pt-80 space-y-20">
         <div className="space-y-6">
           <h2 className="text-2xl font-bold">Avaliação</h2>
           <p>
@@ -69,6 +69,59 @@ export default function Home() {
             (re)planejamento pedagógico que considere a priorização curricular
             ou a implementação de projetos, focando em intervenções.
           </p>
+        </div>
+        <Link
+          to="dsm"
+          spy={true}
+          smooth={true}
+          offset={100}
+          duration={700}
+          className="cursor-pointer mx-auto flex justify-center"
+        >
+          <Button className="flex gap-2">
+            CLIQUE PARA SABER MAIS
+            <ArrowDown className="h-4 w-4 animate-bounce" />
+          </Button>
+        </Link>
+      </section>
+      <section id="dsm" className="p-52 mt-24 bg-cyan-700/70 pb-[200px]">
+        <div className="flex justify-center items-center gap-12">
+          <Image src="/students.png" alt="students" width={460} height={365} />
+          <h1 className="max-w-[50%] text-2xl text-white">
+            Nossa Plataforma<span className="text-yellow-400">.</span> utiliza
+            escalas de avaliação baseadas na DSM-V, Manual Diagnóstico e
+            Estatístico de Transtornos Mentais, é uma publicação da Associação
+            Americana de Psiquiatria (APA) que fornece uma classificação
+            padronizada de transtornos mentais.
+          </h1>
+        </div>
+
+        <div className="flex justify-end items-center gap-12 mt-40 relative">
+          <h1 className="max-w-[80%] text-2xl text-white bg-black/80 pl-10 pr-72 py-32 relative z-0 right-60 rounded-lg">
+            Esquematizamos o sistema de pontuação com base em cada escala de
+            avaliação para garantir maior precisão nos mapeamentos
+          </h1>
+          <Image
+            src="/compute.png"
+            alt="students"
+            width={460}
+            height={365}
+            className="absolute z-10"
+          />
+        </div>
+
+        <div className="flex justify-center items-center gap-12 mt-40 ">
+          <Image
+            src="/dashboards.png"
+            alt="students"
+            width={460}
+            height={365}
+          />
+          <h1 className="max-w-[50%] text-2xl text-white">
+            Exibimos o resultado através de um mapeamento com o auxilio de
+            dashboards interativos de fácil compreensão visual para o
+            profissional da educação, utilizando tecnologias de programação web.
+          </h1>
         </div>
       </section>
     </div>

@@ -21,14 +21,14 @@ const AssessmentPage = async ({
     },
   })
   return (
-    <div>
+    <section className="min-h-screen py-20 space-y-4">
       {dialogs.map((dialog: Dialog) => (
-        <div key={dialog.id} className="space-y-4 pl-4">
+        <div key={dialog.id} className=" pl-4">
           <strong>{dialog?.question} :</strong>
           <p className="font-light">{JSON.stringify(dialog.answer)}</p>
         </div>
       ))}
-    </div>
+    </section>
   )
 }
 

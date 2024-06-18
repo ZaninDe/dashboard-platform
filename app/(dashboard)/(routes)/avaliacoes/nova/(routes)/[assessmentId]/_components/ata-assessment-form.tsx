@@ -1,17 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import {
-  ATAQuestions,
-  ATAQuestionsProps,
-  ButtonOption,
-  ELEButtonOptions,
-  ELEQuestions,
-  QuestionsProps,
-  SNAPButtonOptions,
-  SNAPQuestions,
-} from '@/const/rating-scales'
-import { cn } from '@/lib/utils'
+import { ATAQuestions, ATAQuestionsProps } from '@/const/rating-scales'
 import { Assessment, Dialog } from '@prisma/client'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
@@ -44,7 +34,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
       (dialog) => dialog.questionNumber === step,
     )
     if (newCurrentDialog) {
-      const array = jsonValueToNumberArray(newCurrentDialog.answer)
+      const array = jsonValueToNumberArray(newCurrentDialog?.answer)
       setSelectedItems(array)
     }
   }, [step, dialogs])
@@ -79,7 +69,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
 
   const onSubmit = async () => {
     try {
-      if (dialogs[step].answer === selectedItems) {
+      if (dialogs[step]?.answer === selectedItems) {
         return
       }
       const dialog = await axios.post(
@@ -93,6 +83,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
       console.log(dialog)
       router.refresh()
     } catch (err) {
+      console.log(err)
       toast.error('Algo deu errado.')
     } finally {
       setSelectedItems([])

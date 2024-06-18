@@ -36,7 +36,7 @@ const Assessment = async () => {
   console.log(assessments)
 
   return (
-    <div className="mx-auto mt-10 px-10">
+    <div className="mx-auto mt-10 px-10 mb-[180px]">
       <h1 className="text-4xl text-slate-900 mb-8">Avaliações</h1>
       <DataTable columns={columns} data={formatedAssessment} />
     </div>
