@@ -2,7 +2,6 @@
 
 import {
   BookCheck,
-  GraduationCap,
   Home,
   LayoutDashboard,
   MessageCircleQuestion,

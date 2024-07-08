@@ -80,6 +80,7 @@ const StudentForm = ({
   const [nameSchool, setNameSchool] = useState('')
   const [addressSchool, setAddressSchool] = useState('')
   const [newSchool, setNewSchool] = useState<OptionProps>()
+  console.log(newSchool)
 
   const router = useRouter()
 
@@ -236,7 +237,6 @@ const StudentForm = ({
               </Button>
             </div>
           ) : (
-            // <SchoolForm onClose={toggleNewSchool} />
             <div className="border border-slate-300 px-2 py-4 rounded-md">
               <h1 className="text-xl text-slate-900 mb-3">
                 Adicionar Nova Escola
