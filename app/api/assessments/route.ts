@@ -26,6 +26,7 @@ export async function POST(req: Request) {
           userId,
           studentId,
           ratingScale,
+          currentStep: 1,
         },
       })
 

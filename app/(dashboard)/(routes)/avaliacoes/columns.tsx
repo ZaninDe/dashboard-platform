@@ -2,6 +2,7 @@
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
@@ -132,6 +133,36 @@ export const columns: ColumnDef<AssessmentProps>[] = [
         <Badge className={cn('bg-sky-800/50', attention && 'bg-red-500/80')}>
           {attention ? 'Atenção' : 'OK'}
         </Badge>
+      )
+    },
+  },
+  {
+    accessorKey: 'progress',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="pl-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Progresso
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const progress: number = row.getValue('progress')
+
+      return (
+        <div className="flex items-center gap-2">
+          <p
+            className={cn(
+              'text-xs w-9 text-end',
+              progress !== 100 && 'text-red-700',
+            )}
+          >{`${Math.floor(progress)}%`}</p>
+          <Progress value={progress} />
+        </div>
       )
     },
   },

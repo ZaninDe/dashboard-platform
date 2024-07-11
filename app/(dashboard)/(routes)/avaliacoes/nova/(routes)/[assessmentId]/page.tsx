@@ -24,7 +24,7 @@ const AssesmentIdPage = async ({
   })
 
   return (
-    <div className="w-full h-[calc(100vh-87px)]">
+    <div className="w-full h-screen">
       <div className="h-[40%] w-full bg-cyan-200"></div>
       <div
         className={cn(

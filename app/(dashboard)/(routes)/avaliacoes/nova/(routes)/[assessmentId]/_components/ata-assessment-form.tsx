@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { Checkbox } from '@/components/ui/checkbox'
 import { JsonValue } from '@prisma/client/runtime/library'
+import { LoaderCircleIcon } from 'lucide-react'
 
 interface ATAAssessmentFormProps {
   assessment: Assessment
@@ -26,8 +27,9 @@ function jsonValueToNumberArray(value: JsonValue): number[] {
 }
 
 const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(assessment?.currentStep | 1)
   const [selectedItems, setSelectedItems] = useState<number[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const newCurrentDialog = dialogs.find(
@@ -68,6 +70,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
   }
 
   const onSubmit = async () => {
+    setIsSubmitting(true)
     try {
       if (dialogs[step]?.answer === selectedItems) {
         return
@@ -78,6 +81,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
           questionNumber: step,
           question: questions[step].question,
           answer: selectedItems,
+          step,
         },
       )
       console.log(dialog)
@@ -86,10 +90,13 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
       console.log(err)
       toast.error('Algo deu errado.')
     } finally {
+      setIsSubmitting(false)
       setSelectedItems([])
       nextStep()
     }
   }
+
+  const isDisabled = !questions.length || isSubmitting
   return (
     <div className="w-full h-full p-4">
       <p className="font-bold">{`Questão ${step}`}</p>
@@ -120,11 +127,19 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
           <Button variant="secondary" onClick={prevStep}>
             Voltar
           </Button>
-          <Button onClick={onSubmit} disabled={!questions.length}>
-            {step === questions.length ? 'Finalizar' : 'Próximo'}
+          <Button onClick={onSubmit} disabled={isDisabled} className="w-20">
+            {isSubmitting ? (
+              <LoaderCircleIcon className="animate-spin" />
+            ) : (
+              <p>{step === questions.length ? 'Finalizar' : 'Próximo'}</p>
+            )}
           </Button>
         </div>
       </div>
+      <p className="bg-yellow-500/80 w-full p-4 rounded-md text-white">
+        <strong>*ATENÇÃO*</strong> Não se preocupe em sair desta página, a
+        avaliação é salva automaticamente a cada resposta
+      </p>
     </div>
   )
 }

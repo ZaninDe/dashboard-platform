@@ -3,6 +3,11 @@ import { DataTable } from './_components/data-table'
 import { columns } from './columns'
 import { auth } from '@clerk/nextjs/server'
 import { db } from '@/lib/db'
+import {
+  ELEQuestions,
+  ATAQuestions,
+  SNAPQuestions,
+} from '@/const/rating-scales'
 
 const Assessment = async () => {
   const { userId } = auth()
@@ -23,17 +28,29 @@ const Assessment = async () => {
     },
   })
 
-  const formatedAssessment = assessments.map((assessment) => ({
-    id: assessment?.id,
-    name: assessment?.Student?.name,
-    school: assessment?.Student?.school?.name,
-    age: assessment?.Student?.age,
-    classroom: assessment?.Student?.classroom,
-    scaleRating: assessment?.ratingScale,
-    status: 'OK',
-  }))
+  const formatedAssessment = assessments.map((assessment) => {
+    let totalProgress = 0
+    if (assessment.ratingScale === 'ELE') {
+      totalProgress = ELEQuestions.length
+    } else if (assessment.ratingScale === 'ATA') {
+      totalProgress = ATAQuestions.length
+    } else {
+      totalProgress = SNAPQuestions.length
+    }
 
-  console.log(assessments)
+    const progress = assessment?.currentStep / totalProgress
+    const percentageProgress = progress * 100
+    return {
+      id: assessment?.id,
+      name: assessment?.Student?.name,
+      school: assessment?.Student?.school?.name,
+      age: assessment?.Student?.age,
+      classroom: assessment?.Student?.classroom,
+      scaleRating: assessment?.ratingScale,
+      status: 'OK',
+      progress: percentageProgress,
+    }
+  })
 
   return (
     <div className="mx-auto mt-10 px-10 mb-[180px]">
