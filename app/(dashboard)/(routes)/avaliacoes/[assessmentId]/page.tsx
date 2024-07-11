@@ -1,14 +1,28 @@
 import { db } from '@/lib/db'
-import { Dialog } from '@prisma/client'
+import { TabsNavigation } from '../_components/tabs-navigation'
+import { auth, clerkClient } from '@clerk/nextjs/server'
 
 const AssessmentPage = async ({
   params,
 }: {
   params: { assessmentId: string }
 }) => {
+  const { userId } = auth()
+  if (!userId) {
+    return
+  }
+  const user = await clerkClient.users.getUser(userId)
+
   const assessment = await db.assessment.findUnique({
     where: {
       id: params.assessmentId,
+    },
+    include: {
+      student: {
+        include: {
+          school: true,
+        },
+      },
     },
   })
 
@@ -21,13 +35,10 @@ const AssessmentPage = async ({
     },
   })
   return (
-    <section className="min-h-screen py-20 space-y-4">
-      {dialogs.map((dialog: Dialog) => (
-        <div key={dialog.id} className=" pl-4">
-          <strong>{dialog?.question} :</strong>
-          <p className="font-light">{JSON.stringify(dialog.answer)}</p>
-        </div>
-      ))}
+    <section className="min-h-screen px-4">
+      {assessment && user && (
+        <TabsNavigation dialogs={dialogs} assessment={assessment} />
+      )}
     </section>
   )
 }

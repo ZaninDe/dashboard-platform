@@ -2,6 +2,8 @@ import { db } from '@/lib/db'
 import AssessmentForm from './_components/assessment-form'
 import ATAAssessmentForm from './_components/ata-assessment-form'
 import { cn } from '@/lib/utils'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 const AssesmentIdPage = async ({
   params,
@@ -25,7 +27,15 @@ const AssesmentIdPage = async ({
 
   return (
     <div className="w-full h-screen">
-      <div className="h-[40%] w-full bg-cyan-200"></div>
+      <div className="h-[40%] w-full bg-cyan-200 p-4">
+        <Link
+          href="/avaliacoes"
+          className="flex items-center gap-2 hover:border-b border-black/50 hover:opacity-70 w-48"
+        >
+          <ArrowLeft />
+          Voltar para Avaliações
+        </Link>
+      </div>
       <div
         className={cn(
           'absolute inset-0 m-auto w-1/2 h-1/2 bg-white rounded-lg',

@@ -79,6 +79,7 @@ const StudentForm = ({
   const [isNewSchool, setIsNewSchool] = useState(false)
   const [nameSchool, setNameSchool] = useState('')
   const [addressSchool, setAddressSchool] = useState('')
+  const [phoneSchool, setPhoneSchool] = useState('')
   const [newSchool, setNewSchool] = useState<OptionProps>()
   console.log(newSchool)
 
@@ -114,6 +115,7 @@ const StudentForm = ({
       const response = await axios.post('/api/schools', {
         name: nameSchool,
         address: addressSchool,
+        phone: phoneSchool,
       })
 
       setNewSchool({
@@ -249,6 +251,10 @@ const StudentForm = ({
                 <Input
                   placeholder="Endereço da Escola"
                   onChange={(e) => setAddressSchool(e.target.value)}
+                />
+                <Input
+                  placeholder="Tepefone Principal"
+                  onChange={(e) => setPhoneSchool(e.target.value)}
                 />
                 <div className="flex gap-2">
                   <Button

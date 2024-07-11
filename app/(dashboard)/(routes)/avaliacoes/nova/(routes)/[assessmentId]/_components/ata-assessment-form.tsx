@@ -79,7 +79,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
         `/api/assessments/${assessment.id}/dialogs`,
         {
           questionNumber: step,
-          question: questions[step].question,
+          question: questions[step - 1].question,
           answer: selectedItems,
           step,
         },
@@ -104,10 +104,12 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
         <div>
           <div>
             <div className="h-20 flex flex-col items-center justify-center">
-              <p className="text-center text-xl">{questions[step]?.question}</p>
+              <p className="text-center text-xl">
+                {questions[step - 1]?.question}
+              </p>
             </div>
             <div className="">
-              {questions[step]?.options.map((option) => (
+              {questions[step - 1]?.options.map((option) => (
                 <div
                   key={option.index}
                   className="flex flex-row items-center space-x-3 space-y-2 border-b pb-2"

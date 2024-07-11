@@ -18,6 +18,7 @@ model School {
   name      String
   address   String
   userId    String
+  phone     String
   Student   Student[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -46,7 +47,7 @@ enum RatingScale {
 model Assessment {
   id           String      @id @default(auto()) @map("_id") @db.ObjectId
   userId       String
-  Student      Student     @relation(fields: [studentId], references: [id])
+  student      Student     @relation(fields: [studentId], references: [id])
   studentId    String      @db.ObjectId
   ratingScale  RatingScale
   currentStep  Int

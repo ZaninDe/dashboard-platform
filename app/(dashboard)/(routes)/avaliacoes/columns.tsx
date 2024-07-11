@@ -157,7 +157,7 @@ export const columns: ColumnDef<AssessmentProps>[] = [
         <div className="flex items-center gap-2">
           <p
             className={cn(
-              'text-xs w-9 text-end',
+              'text-xs w-9 text-end text-cyan-700/80',
               progress !== 100 && 'text-red-700',
             )}
           >{`${Math.floor(progress)}%`}</p>
