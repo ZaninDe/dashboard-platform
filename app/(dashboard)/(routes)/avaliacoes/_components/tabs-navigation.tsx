@@ -32,7 +32,7 @@ export function TabsNavigation({ assessment, dialogs }: TabsNavigationProps) {
     <Tabs defaultValue="account" className="w-full mt-10">
       <TabsList className="grid grid-cols-2 w-[400px] mx-auto">
         <TabsTrigger value="answers">Questionário</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
+        <TabsTrigger value="password">Dashboard</TabsTrigger>
       </TabsList>
       <TabsContent value="answers">
         <Card>
