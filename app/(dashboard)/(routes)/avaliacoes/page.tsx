@@ -20,7 +20,7 @@ const Assessment = async () => {
       userId,
     },
     include: {
-      Student: {
+      student: {
         include: {
           school: true,
         },
@@ -42,10 +42,10 @@ const Assessment = async () => {
     const percentageProgress = progress * 100
     return {
       id: assessment?.id,
-      name: assessment?.Student?.name,
-      school: assessment?.Student?.school?.name,
-      age: assessment?.Student?.age,
-      classroom: assessment?.Student?.classroom,
+      name: assessment?.student?.name,
+      school: assessment?.student?.school?.name,
+      age: assessment?.student?.age,
+      classroom: assessment?.student?.classroom,
       scaleRating: assessment?.ratingScale,
       status: 'OK',
       progress: percentageProgress,

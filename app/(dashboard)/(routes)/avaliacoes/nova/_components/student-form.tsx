@@ -45,7 +45,7 @@ interface OptionsProps {
   value: string
 }
 
-const ageOptions: OptionsProps[] = []
+export const ageOptions: OptionsProps[] = []
 for (let i = 6; i <= 16; i++) {
   ageOptions.push({
     value: i.toString(),
@@ -53,7 +53,7 @@ for (let i = 6; i <= 16; i++) {
   })
 }
 
-const classOptions: OptionsProps[] = []
+export const classOptions: OptionsProps[] = []
 for (let i = 1; i <= 9; i++) {
   classOptions.push({
     value: `${i}º Ano`,

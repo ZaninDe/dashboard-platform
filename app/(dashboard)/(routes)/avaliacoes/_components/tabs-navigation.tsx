@@ -13,6 +13,11 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Assessment, Dialog, School, Student } from '@prisma/client'
 import Answers from './answers'
+import { useRouter } from 'next/navigation'
+import React, { useRef } from 'react'
+import html2pdf from 'html2pdf.js'
+import { File } from 'lucide-react'
+import { Separator } from '@/components/ui/separator'
 
 export interface StudentSchool extends Student {
   school: School
@@ -28,26 +33,44 @@ interface TabsNavigationProps {
 }
 
 export function TabsNavigation({ assessment, dialogs }: TabsNavigationProps) {
+  const router = useRouter()
+  const reportRef = useRef<HTMLDivElement>(null)
+
+  const generatePDF = () => {
+    if (reportRef.current) {
+      html2pdf().from(reportRef.current).save('relatorio.pdf')
+    }
+  }
   return (
-    <Tabs defaultValue="account" className="w-full mt-10">
+    <Tabs defaultValue="answers" className="w-full mt-10">
       <TabsList className="grid grid-cols-2 w-[400px] mx-auto">
-        <TabsTrigger value="answers">Questionário</TabsTrigger>
+        <TabsTrigger value="answers">Espelho</TabsTrigger>
         <TabsTrigger value="password">Dashboard</TabsTrigger>
       </TabsList>
       <TabsContent value="answers">
         <Card>
-          <CardHeader>
-            <CardTitle>Questionário</CardTitle>
-            <CardDescription>
-              Aqui são apresentadas as respostas durante o preenchimento da
-              avaliação
-            </CardDescription>
+          <CardHeader className="">
+            <CardTitle>Espelho de Avaliação</CardTitle>
+            <div className="flex w-full items-center justify-between">
+              <CardDescription>
+                Aqui são apresentadas as respostas durante o preenchimento da
+                avaliação
+              </CardDescription>
+              <Button
+                onClick={generatePDF}
+                className="flex items-center justify-center gap-2"
+              >
+                Exportar Relatório
+                <File />
+              </Button>
+            </div>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <Separator />
+          <CardContent className="space-y-2" ref={reportRef}>
             <Answers dialogs={dialogs} assessment={assessment} />
           </CardContent>
           <CardFooter>
-            <Button>Save changes</Button>
+            <Button onClick={() => router.back()}>Voltar</Button>
           </CardFooter>
         </Card>
       </TabsContent>
@@ -70,7 +93,7 @@ export function TabsNavigation({ assessment, dialogs }: TabsNavigationProps) {
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Save password</Button>
+            <Button onClick={() => router.back()}>Voltar</Button>
           </CardFooter>
         </Card>
       </TabsContent>

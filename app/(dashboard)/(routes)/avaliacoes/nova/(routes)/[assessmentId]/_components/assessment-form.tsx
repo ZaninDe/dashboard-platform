@@ -23,6 +23,14 @@ interface AssessmentFormProps {
   dialogs: Dialog[]
 }
 
+function sumAnswers(dialogs: Dialog[]): number {
+  return dialogs.reduce((sum, dialog) => {
+    const answerValue = dialog.answer as number
+
+    return sum + answerValue
+  }, 0)
+}
+
 const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
   const [step, setStep] = useState(assessment?.currentStep | 1)
   const [answer, setAnswer] = useState<number | null>()
@@ -84,6 +92,14 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
         answer,
         step,
       })
+
+      if (step === questions.length) {
+        const sum = sumAnswers(dialogs)
+        await axios.put(`/api/assessments/${assessment.id}/finish`, {
+          sum,
+        })
+        console.log('resultado salvo com sucesso!')
+      }
 
       router.refresh()
     } catch (err) {

@@ -54,7 +54,7 @@ model Assessment {
   resultAmount Int?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-  Dialog       Dialog[]
+  dialog       Dialog[]
 }
 
 model Dialog {
