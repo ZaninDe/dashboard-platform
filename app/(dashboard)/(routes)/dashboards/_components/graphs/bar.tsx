@@ -8,6 +8,7 @@ import {
   Legend,
   BarChart,
   Bar,
+  ResponsiveContainer,
 } from 'recharts'
 
 interface BarChatComponentProps {
@@ -22,14 +23,21 @@ const BarChatComponent = ({
   dataKeyY,
 }: BarChatComponentProps) => {
   return (
-    <BarChart width={600} height={300} data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey={dataKeyX} />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey={dataKeyY} fill="rgb(14 116 144 / 0.8)" />
-    </BarChart>
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey={dataKeyX} />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar
+          dataKey={dataKeyY}
+          label="pontos"
+          fill="rgb(14 116 144 / 0.8)"
+          legendType="circle"
+        />
+      </BarChart>
+    </ResponsiveContainer>
   )
 }
 
