@@ -38,7 +38,9 @@ export function TabsNavigation({ assessment, dialogs }: TabsNavigationProps) {
 
   const generatePDF = () => {
     if (reportRef.current) {
-      html2pdf().from(reportRef.current).save('relatorio.pdf')
+      html2pdf()
+        .from(reportRef.current)
+        .save(`${assessment?.student?.name}_${assessment?.student?.ra}.pdf`)
     }
   }
   return (

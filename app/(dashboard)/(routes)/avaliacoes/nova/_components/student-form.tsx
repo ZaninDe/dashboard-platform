@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -21,6 +22,13 @@ import toast from 'react-hot-toast'
 import { School } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { GenderOptions, writingHypothesesOptions } from '@/const/rating-scales'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -34,6 +42,12 @@ const formSchema = z.object({
   }),
   classroom: z.string().min(2, {
     message: 'Sala é obrigatório',
+  }),
+  writingHypotheses: z.string().min(2, {
+    message: 'hipótese de escrita é obrigatório',
+  }),
+  gender: z.string().min(2, {
+    message: 'sexo é obrigatório',
   }),
   schoolId: z.string().min(2, {
     message: 'Escola é obrigatório',
@@ -76,12 +90,35 @@ const StudentForm = ({
   onClose,
   onChangeStudent,
 }: StudentFormProps) => {
+  // const [stateOptions, setStateOptions] = useState([])
   const [isNewSchool, setIsNewSchool] = useState(false)
   const [nameSchool, setNameSchool] = useState('')
   const [addressSchool, setAddressSchool] = useState('')
+  const [stateSchool, setStateSchool] = useState('')
+  const [citySchool, setCitySchool] = useState('')
+  const [neighborhoodSchool, setNeighborhoodSchool] = useState('')
+  const [regionSchool, setRegionSchool] = useState('')
   const [phoneSchool, setPhoneSchool] = useState('')
   const [newSchool, setNewSchool] = useState<OptionProps>()
   console.log(newSchool)
+
+  // useEffect(() => {
+  //   ;(async function getCities() {
+  //     try {
+  //       const response = await axios.get(
+  //         'https://servicodados.ibge.gov.br/api/v1/localidades/estados',
+  //       )
+  //       const states = response.data
+  //       // const statesOptions = states.map((item: any) => ({
+  //       //   label: item.nome,
+  //       //   value: item.nome,
+  //       // }))
+  //       setStateOptions(states)
+  //     } catch (err) {
+  //       console.log(err)
+  //     }
+  //   })()
+  // }, [])
 
   const router = useRouter()
 
@@ -115,6 +152,10 @@ const StudentForm = ({
       const response = await axios.post('/api/schools', {
         name: nameSchool,
         address: addressSchool,
+        state: stateSchool,
+        city: citySchool,
+        neighborhood: neighborhoodSchool,
+        region: regionSchool,
         phone: phoneSchool,
       })
 
@@ -124,7 +165,7 @@ const StudentForm = ({
       })
       router.refresh()
       toggleNewSchool()
-      toast.success('Escola criado com sucesso!')
+      toast.success('Escola criada com sucesso!')
       setValue('schoolId', response.data.id)
     } catch (err) {
       toast.error('Algo deu errado.')
@@ -190,6 +231,25 @@ const StudentForm = ({
 
           <FormField
             control={form.control}
+            name="gender"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Combobox
+                    placeholder="Sexo"
+                    options={GenderOptions}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
             name="classroom"
             render={({ field }) => (
               <FormItem>
@@ -204,6 +264,41 @@ const StudentForm = ({
               </FormItem>
             )}
           />
+
+          <div>
+            <FormField
+              control={form.control}
+              name="writingHypotheses"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Combobox
+                      placeholder="Hipótese de escrita"
+                      options={writingHypothesesOptions}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger className="mt-2 underline" type="button">
+                  Entenda qual escala utilizar
+                </TooltipTrigger>
+                <TooltipContent className="max-w-[300px]">
+                  A <strong>hipótese de escrita</strong> é uma ideia ou
+                  suposição que uma criança faz sobre como a escrita funciona
+                  enquanto ela está aprendendo a ler e escrever. Imagine que uma
+                  criança está tentando entender como as letras e palavras
+                  funcionam. Ela pode começar fazendo suposições sobre o que uma
+                  certa combinação de letras significa ou como formar palavras.
+                  Essas suposições são suas hipóteses de escrita.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
 
         <div>
@@ -253,7 +348,23 @@ const StudentForm = ({
                   onChange={(e) => setAddressSchool(e.target.value)}
                 />
                 <Input
-                  placeholder="Tepefone Principal"
+                  placeholder="Estado"
+                  onChange={(e) => setStateSchool(e.target.value)}
+                />
+                <Input
+                  placeholder="Cidade"
+                  onChange={(e) => setCitySchool(e.target.value)}
+                />
+                <Input
+                  placeholder="Bairro"
+                  onChange={(e) => setNeighborhoodSchool(e.target.value)}
+                />
+                <Input
+                  placeholder="Região"
+                  onChange={(e) => setRegionSchool(e.target.value)}
+                />
+                <Input
+                  placeholder="Telefone Principal"
                   onChange={(e) => setPhoneSchool(e.target.value)}
                 />
                 <div className="flex gap-2">

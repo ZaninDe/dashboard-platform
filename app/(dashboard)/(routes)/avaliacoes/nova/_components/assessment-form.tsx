@@ -98,11 +98,11 @@ const AssessmentForm = ({
             Novo Aluno <PlusCircle className="w-4 h-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="max-h-[80vh] overflow-y-scroll">
           <DialogClose />
           <DialogHeader>
             <DialogTitle className="text-2xl mb-10">
-              Cadastrar Novo Aluno
+              Cadastrar Novo Aluno 👨🏻‍🎓
             </DialogTitle>
             <DialogDescription>
               <StudentForm

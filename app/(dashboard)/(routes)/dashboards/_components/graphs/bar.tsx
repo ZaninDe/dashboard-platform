@@ -15,25 +15,27 @@ interface BarChatComponentProps {
   data: any
   dataKeyX: string
   dataKeyY: string
+  color: string
 }
 
 const BarChatComponent = ({
   data,
   dataKeyX,
   dataKeyY,
+  color,
 }: BarChatComponentProps) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={dataKeyX} />
-        <YAxis />
+        <YAxis minTickGap={1000} />
         <Tooltip />
         <Legend />
         <Bar
           dataKey={dataKeyY}
           label="pontos"
-          fill="rgb(14 116 144 / 0.8)"
+          fill={color}
           legendType="circle"
         />
       </BarChart>

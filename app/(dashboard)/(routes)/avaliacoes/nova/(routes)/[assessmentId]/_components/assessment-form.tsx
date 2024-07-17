@@ -111,7 +111,8 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
       nextStep()
     }
   }
-  const isDisabled = (!answer && !questions.length) || isSubmitting
+  const isDisabled =
+    (!answer && !questions.length) || isSubmitting || answer === null
   return (
     <div className="w-full h-full p-4">
       <p className="font-bold">{`Questão ${step} de ${questions.length}`}</p>

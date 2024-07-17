@@ -25,17 +25,19 @@ const DashboardsPage = async () => {
       dialog: true,
     },
   })
+
+  const schools = await db.school.findMany({})
   return (
     <div className="min-h-screen p-4">
       <Card>
         <CardHeader className="text-center">
-          <CardTitle>Apresentação de Resultados Gerais</CardTitle>
+          <CardTitle>Quantidade de Alunos por Pontuação</CardTitle>
           <CardDescription>
             Expore os filtros para uma análise completa e personalizada.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Dashboards assessments={assessments} />
+          <Dashboards assessments={assessments} schools={schools} />
         </CardContent>
       </Card>
     </div>

@@ -90,7 +90,7 @@ const Answers = ({ assessment, dialogs }: AnswersProps) => {
                   <p className="capitalize">{createdDate}</p>
                 </div>
                 <div className="flex items-center gap-2 whitespace-nowrap">
-                  <strong>Última Modificação: </strong>
+                  <strong>Última Alteração: </strong>
                   <p className="capitalize">{updatedDate}</p>
                 </div>
               </div>

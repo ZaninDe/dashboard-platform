@@ -638,3 +638,37 @@ export const ATAQuestions: ATAQuestionsProps[] = [
     ],
   },
 ]
+
+export const writingHypothesesOptions: ButtonOption[] = [
+  {
+    label: 'Pré silábico',
+    value: 'pre_silabico',
+  },
+  {
+    label: 'Silábico sem valor sonoro',
+    value: 'silabico_sem_valor_sonoro',
+  },
+  {
+    label: 'Silábico com valor sonoro',
+    value: 'silabico_com_valor_sonoro',
+  },
+  {
+    label: 'Silábico alfabético',
+    value: 'silabico_alfabetico',
+  },
+  {
+    label: 'Alfabético',
+    value: 'alfabetico',
+  },
+]
+
+export const GenderOptions: ButtonOption[] = [
+  {
+    label: 'Masculino',
+    value: 'masculino',
+  },
+  {
+    label: 'Feminino',
+    value: 'feminino',
+  },
+]
