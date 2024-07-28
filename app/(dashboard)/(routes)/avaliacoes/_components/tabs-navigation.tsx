@@ -8,8 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Assessment, Dialog, School, Student } from '@prisma/client'
 import Answers from './answers'
@@ -79,20 +77,14 @@ export function TabsNavigation({ assessment, dialogs }: TabsNavigationProps) {
       <TabsContent value="password">
         <Card>
           <CardHeader>
-            <CardTitle>Password</CardTitle>
+            <CardTitle>Dashboard</CardTitle>
             <CardDescription>
-              Change your password here. After saving, youll be logged out.
+              Explore os filtros para gerar gráficos personalizados em suas
+              análises.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="space-y-1">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="new">New password</Label>
-              <Input id="new" type="password" />
-            </div>
+          <CardContent className="space-y-2 flex justify-center">
+            TO DO
           </CardContent>
           <CardFooter>
             <Button onClick={() => router.back()}>Voltar</Button>

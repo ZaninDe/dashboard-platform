@@ -76,7 +76,7 @@ const AssessmentForm = ({
 
       toast.success('Aluno criado com sucesso!')
     } catch (err) {
-      toast.error('Algo deu errado.')
+      toast.error('Aluno já avaliado com a escala selecionada.')
     }
     console.log(values)
   }
