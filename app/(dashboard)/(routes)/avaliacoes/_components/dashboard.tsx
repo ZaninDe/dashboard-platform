@@ -81,7 +81,7 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
         className="h-10 rounded-none bg-green-600/40"
       />
       <div className="mt-16">
-        <h1 className="text-2xl font-bold">Tabuleiro de Mapeamento</h1>
+        <h1 className="text-2xl font-bold">Mapa de Cores</h1>
         <p className="text-muted-foreground">
           Cada cor mapeia o alerta em cima da resposta de cada questão.
           Selecione uma cor focar por nível de alerta.
