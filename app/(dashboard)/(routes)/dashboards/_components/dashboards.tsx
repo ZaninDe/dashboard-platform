@@ -63,12 +63,6 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
   useState<AssessmentWithDetails[]>(assessments)
 
   useEffect(() => {
-    console.log('ATUALIZAR FILTROS: ')
-    console.log(filterSchoolState)
-    console.log(filterSchoolCity)
-    console.log(filterSchoolNeighborhood)
-    console.log(filterSchoolRegion)
-
     const filteredData = assessments.filter((item) => {
       return (
         (filterAge === undefined ||
@@ -109,7 +103,6 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
     const SNAPIVAssessments = filteredData.filter(
       (item) => item.ratingScale === 'SnapIV',
     )
-    console.log('SNAP ASSESSMENTS', SNAPIVAssessments)
     const SNAPIVResultCounts = SNAPIVAssessments.reduce(
       (acc: Record<number, number>, assessment) => {
         if (assessment.resultAmount !== null) {
