@@ -13,7 +13,13 @@ import {
 } from '../../avaliacoes/nova/_components/student-form'
 import { EraserIcon, Trash2Icon } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
-import { cn } from '@/lib/utils'
+import {
+  calculateMean,
+  calculateMedian,
+  calculateMode,
+  cn,
+  countNumbersAndNulls,
+} from '@/lib/utils'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -22,6 +28,10 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import { GenderOptions, writingHypothesesOptions } from '@/const/rating-scales'
+import { Card, CardContent } from '@/components/ui/card'
+import SingleStatPieChart from './graphs/pie'
+import EvaluationComparisonChart from './graphs/finished'
+import { Progress } from '@/components/ui/progress'
 
 interface AssessmentWithDetails extends Assessment {
   student: Student & { school: School }
@@ -33,10 +43,25 @@ interface DashboardsProps {
   schools: School[]
 }
 
+interface DataPoint {
+  name: string
+  value: number
+}
+
+interface IAssesmentStats {
+  mean: number
+  mode: number
+  median: number
+  finishedAmount: number
+}
+
 const Dashboards = ({ assessments, schools }: DashboardsProps) => {
   const [ELEData, setELEData] = useState()
   const [SNAPIVData, setSNAPIVData] = useState()
   const [firstRender, setFirstRender] = useState(true)
+  const [ELEStats, setEleStats] = useState<IAssesmentStats>()
+  const [SNAPStats, setSNAPStats] = useState<IAssesmentStats>()
+  const [finishedAssessments, setFinishedAssessment] = useState(0)
   const [filterAge, setFilterAge] = useState<string | undefined>(undefined)
   const [filterGender, setFilterGender] = useState<string | undefined>(
     undefined,
@@ -84,8 +109,28 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
       )
     })
     const ELEAssessments = filteredData.filter(
-      (item) => item.ratingScale === 'ELE',
+      (item) => item.ratingScale === 'ELE' && item.currentStep === 16,
     )
+
+    const ELEValues = filteredData
+      .filter((item) => item.ratingScale === 'ELE')
+      .map((assessment) => assessment.resultAmount)
+
+    const eleFinishedAmount = countNumbersAndNulls(ELEValues)
+
+    const ELEmean = calculateMean(ELEValues)
+    const ELEmode = calculateMode(ELEValues)
+    const ELEmedian = calculateMedian(ELEValues)
+
+    const eleStats: IAssesmentStats = {
+      mean: ELEmean,
+      mode: ELEmode!,
+      median: ELEmedian,
+      finishedAmount: eleFinishedAmount,
+    }
+
+    setEleStats(eleStats)
+
     const ELEResultCounts = ELEAssessments.reduce(
       (acc: Record<number, number>, assessment) => {
         if (assessment.resultAmount !== null) {
@@ -101,7 +146,7 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
     }))
 
     const SNAPIVAssessments = filteredData.filter(
-      (item) => item.ratingScale === 'SnapIV',
+      (item) => item.ratingScale === 'SnapIV' && item.currentStep === 18,
     )
     const SNAPIVResultCounts = SNAPIVAssessments.reduce(
       (acc: Record<number, number>, assessment) => {
@@ -118,6 +163,25 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
       pontos: SNAPIVResultCounts[key],
     }))
 
+    const SNAPValues = SNAPIVAssessments.map(
+      (assessment) => assessment.resultAmount,
+    )
+
+    const snapFinishedAmount = countNumbersAndNulls(SNAPValues)
+
+    const SNAPmean = calculateMean(SNAPValues)
+    const SNAPmode = calculateMode(SNAPValues)
+    const SNAPmedian = calculateMedian(SNAPValues)
+
+    const SNAPStats: IAssesmentStats = {
+      mean: SNAPmean,
+      mode: SNAPmode!,
+      median: SNAPmedian,
+      finishedAmount: snapFinishedAmount,
+    }
+
+    setSNAPStats(SNAPStats)
+
     // @ts-ignore
     ELE && setELEData(ELE)
     // @ts-ignore
@@ -131,13 +195,14 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
     filterSchoolCity,
     filterSchoolNeighborhood,
     filterSchoolRegion,
+    assessments,
   ])
 
   useEffect(() => {
     if (firstRender) {
       setFirstRender(false)
     }
-  }, [])
+  }, [firstRender])
 
   const clearFilter = () => {
     setFilterAge(undefined)
@@ -172,6 +237,7 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
   // @ts-ignore
   const uniqueRegions = [...new Set(schools.map((school) => school.region))]
   console.log(uniqueStates)
+
   return (
     <div>
       {!firstRender && (
@@ -413,6 +479,100 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
           </div>
           <div
             className={cn(
+              'grid grid-col-1 gap-12 w-full',
+              // ratingScales.length === 2 && 'grid-cols-2',
+              // ratingScales.length === 3 && 'grid-cols-3',
+            )}
+          >
+            <Card className="flex flex-col items-center justify-center">
+              <CardContent className="w-full py-8">
+                <h1 className="text-center mb-16 font-bold text-3xl">
+                  ESCALA DE AVALIAÇÃO DE LEITURA E ESCRITA
+                </h1>
+                <div className="w-full grid gap-32 grid-cols-2 items-center">
+                  <div className="relative">
+                    <p className="text-muted-foreground mb-10">
+                      Quantidade de avaliações criadas X Quantidade de
+                      avaliações finalizadas
+                    </p>
+                    {ELEStats?.finishedAmount && (
+                      <p
+                        className="absolute mt-[-24px]"
+                        style={{ left: `${ELEStats?.finishedAmount}%` }}
+                      >
+                        {Math.trunc(ELEStats?.finishedAmount)}%
+                      </p>
+                    )}
+                    <Progress
+                      value={ELEStats?.finishedAmount}
+                      className="h-10 rounded-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-3">
+                    {ELEStats?.mean && (
+                      <div className="flex flex-col justify-center items-center">
+                        <h1 className="text-center mb-4 font-bold text-muted-foreground">
+                          Média de Pontuação
+                        </h1>
+                        <SingleStatPieChart
+                          value={ELEStats?.mean}
+                          name="Média"
+                          color="#3b82f6"
+                          title="Média de Pontuação"
+                        />
+                      </div>
+                    )}
+
+                    {ELEStats?.mode && (
+                      <div className="">
+                        <h1 className="text-center mb-4 font-bold text-muted-foreground">
+                          Moda de Pontuação
+                        </h1>
+                        <SingleStatPieChart
+                          value={ELEStats?.mode}
+                          name="Moda"
+                          color="#22c55e"
+                          title="Média de Pontuação"
+                        />
+                      </div>
+                    )}
+
+                    {ELEStats?.median && (
+                      <div className="">
+                        <h1 className="text-center mb-4 font-bold text-muted-foreground">
+                          Mediana de Pontuação
+                        </h1>
+                        <SingleStatPieChart
+                          value={ELEStats?.median}
+                          name="Mediana"
+                          color="#fde047"
+                          title="Média de Pontuação"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 justify-center relative mt-20">
+                  {ratingScales.includes(1) && (
+                    <div className="max-h-[60vh]">
+                      <h1 className="text-center mb-4 font-bold text-muted-foreground"></h1>
+                      <p className="absolute top-1/2 -rotate-90 text-muted-foreground">
+                        ALUNOS
+                      </p>
+                      <BarChatComponent
+                        data={ELEData}
+                        dataKeyX="resultAmount"
+                        dataKeyY="pontos"
+                        color="#3b82f6"
+                      />
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <div
+            className={cn(
               'grid grid-col-1 gap-12 w-full h-[60vh] relative',
               ratingScales.length === 2 && 'grid-cols-2',
               ratingScales.length === 3 && 'grid-cols-3',
@@ -420,9 +580,6 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
           >
             {ratingScales.includes(1) && (
               <div className="max-h-[60vh]">
-                <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                  ELE
-                </h1>
                 <BarChatComponent
                   data={ELEData}
                   dataKeyX="resultAmount"
