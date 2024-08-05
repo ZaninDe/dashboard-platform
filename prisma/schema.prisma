@@ -29,19 +29,20 @@ model School {
 }
 
 model Student {
-  id                String            @id @default(auto()) @map("_id") @db.ObjectId
-  ra                String
-  name              String
-  age               Int
-  userId            String
-  school            School            @relation(fields: [schoolId], references: [id])
-  classroom         String
-  writingHypotheses WritingHypotheses
-  gender            GenderEnum
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  Assessment        Assessment[]
-  schoolId          String            @db.ObjectId
+  id                   String            @id @default(auto()) @map("_id") @db.ObjectId
+  ra                   String
+  name                 String
+  age                  Int
+  individualMonitoring Boolean
+  userId               String
+  school               School            @relation(fields: [schoolId], references: [id])
+  classroom            String
+  writingHypotheses    WritingHypotheses
+  gender               GenderEnum
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  Assessment           Assessment[]
+  schoolId             String            @db.ObjectId
 }
 
 enum RatingScale {

@@ -485,7 +485,7 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
             )}
           >
             <Card className="flex flex-col items-center justify-center">
-              <CardContent className="w-full py-8">
+              <CardContent className="w-full py-8 px-10">
                 <h1 className="text-center mb-16 font-bold text-3xl">
                   ESCALA DE AVALIAÇÃO DE LEITURA E ESCRITA
                 </h1>

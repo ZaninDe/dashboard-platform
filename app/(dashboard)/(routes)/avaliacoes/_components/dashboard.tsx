@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Dialog } from '@prisma/client'
+import { Assessment, Dialog } from '@prisma/client'
 import { AssesmentUser } from './tabs-navigation'
 import { Progress } from '@/components/ui/progress'
-import { cn } from '@/lib/utils'
+import { cn, countNumbersAndNulls } from '@/lib/utils'
 
 import {
   HoverCard,
@@ -25,11 +25,13 @@ import { useEffect, useState } from 'react'
 
 interface DashBoardProps {
   assessment: AssesmentUser
+  assessments: Assessment[]
   dialogs: Dialog[]
 }
 
-const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
+const Dashboard = ({ assessment, assessments, dialogs }: DashBoardProps) => {
   const [progress, setProgress] = useState(0)
+  const [meanProgress, setMeanProgress] = useState(0)
   const [maxScore, setMaxScore] = useState(0)
   const [selectedCategory, setSelectedCategory] = useState('0') // 0 = all
 
@@ -47,13 +49,21 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
           ? 72
           : 72
 
+    const meanValues = assessments.map((assessment) => assessment.resultAmount)
+
+    const mean = countNumbersAndNulls(meanValues)
+
     const assessmentScorePercentage = (assessment.resultAmount! / max) * 100
     setMaxScore(max)
-    const timer = setTimeout(() => setProgress(assessmentScorePercentage), 500)
+    const timer = setTimeout(() => {
+      setProgress(assessmentScorePercentage)
+      setMeanProgress(mean)
+    }, 500)
     return () => clearTimeout(timer)
-  }, [assessment.ratingScale, assessment.resultAmount])
+  }, [assessment.ratingScale, assessment.resultAmount, assessments])
 
   const margin = `${Math.trunc(progress)}%`
+  const meanMargin = `${Math.trunc(meanProgress)}%`
   return (
     <div className="mb-10">
       <h1 className="text-2xl font-bold">Barra de Pontuação</h1>
@@ -62,16 +72,30 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
         características dos comportamentos da escala aplicada.
       </p>
       <div className="relative">
-        <p className={`absolute right-0 mt-[-24px] `}>{maxScore}</p>
-        <p className={cn(`absolute mt-[-24px]`)} style={{ left: margin }}>
+        <p className={`absolute right-0 `}>{maxScore}</p>
+        <p className={cn(`absolute`)} style={{ left: margin }}>
           {assessment.resultAmount} Pontos
         </p>
       </div>
 
-      <Progress
-        value={progress}
-        className="h-10 rounded-none bg-green-600/40"
-      />
+      <div>
+        <p>Pontuação do Aluno</p>
+        <Progress
+          value={progress}
+          className="h-10 rounded-none bg-green-600/40"
+        />
+      </div>
+
+      <div className="mt-10">
+        <p>Pontuação Média de Todos Alunos</p>
+        <div className="relative">
+          <p className={`absolute right-0 mt-[-24px] `}>{maxScore}</p>
+          <p className={cn(`absolute mt-[-24px]`)} style={{ left: meanMargin }}>
+            {Math.trunc((meanProgress * maxScore) / 100)} Pontos
+          </p>
+        </div>
+        <Progress value={meanProgress} className="bg-green-600/40" />
+      </div>
       <div className="mt-16">
         <h1 className="text-2xl font-bold">Mapa de Cores</h1>
         <div>

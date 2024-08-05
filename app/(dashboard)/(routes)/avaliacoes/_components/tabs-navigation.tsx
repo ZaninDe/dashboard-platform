@@ -29,10 +29,15 @@ export interface AssesmentUser extends Assessment {
 
 interface TabsNavigationProps {
   assessment: AssesmentUser
+  assessments: Assessment[]
   dialogs: Dialog[]
 }
 
-export function TabsNavigation({ assessment, dialogs }: TabsNavigationProps) {
+export function TabsNavigation({
+  assessment,
+  assessments,
+  dialogs,
+}: TabsNavigationProps) {
   const router = useRouter()
   const reportRef = useRef<HTMLDivElement>(null)
 
@@ -53,7 +58,11 @@ export function TabsNavigation({ assessment, dialogs }: TabsNavigationProps) {
         <Card className="px-0 md:px-10">
           <CardHeader></CardHeader>
           <CardContent>
-            <Dashboard assessment={assessment} dialogs={dialogs} />
+            <Dashboard
+              assessment={assessment}
+              assessments={assessments}
+              dialogs={dialogs}
+            />
           </CardContent>
           <CardFooter>
             <Button onClick={() => router.back()}>Voltar</Button>

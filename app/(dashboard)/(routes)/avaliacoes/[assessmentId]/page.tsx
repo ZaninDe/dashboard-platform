@@ -26,6 +26,12 @@ const AssessmentPage = async ({
     },
   })
 
+  const assessments = await db.assessment.findMany({
+    where: {
+      ratingScale: assessment?.ratingScale,
+    },
+  })
+
   const dialogs = await db.dialog.findMany({
     where: {
       assessmentId: assessment?.id,
@@ -37,7 +43,11 @@ const AssessmentPage = async ({
   return (
     <section className="min-h-screen px-4">
       {assessment && user && (
-        <TabsNavigation dialogs={dialogs} assessment={assessment} />
+        <TabsNavigation
+          dialogs={dialogs}
+          assessment={assessment}
+          assessments={assessments}
+        />
       )}
     </section>
   )

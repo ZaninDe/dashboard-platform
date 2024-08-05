@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
@@ -37,6 +38,7 @@ const formSchema = z.object({
   ra: z.string().min(2, {
     message: 'Registro do Aluno é obrigatório',
   }),
+  individualMonitoring: z.boolean().optional(),
   age: z.string().min(1, {
     message: 'Idade é obrigatório',
   }),
@@ -210,6 +212,27 @@ const StudentForm = ({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="individualMonitoring"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <div className="flex items-center space-x-2 mt-8">
+                  {/* @ts-ignore */}
+                  <input id="individualMonitoring" {...field} type="checkbox" />
+                  <label
+                    htmlFor="individualMonitoring"
+                    className="text-sm whitespace-nowrap font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Aluno faz acompanhamento individual
+                  </label>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="grid grid-cols-2 gap-4">
           <FormField
@@ -287,14 +310,35 @@ const StudentForm = ({
                 <TooltipTrigger className="mt-2 underline" type="button">
                   Entenda qual escala utilizar
                 </TooltipTrigger>
-                <TooltipContent className="max-w-[300px]">
-                  A <strong>hipótese de escrita</strong> é uma ideia ou
-                  suposição que uma criança faz sobre como a escrita funciona
-                  enquanto ela está aprendendo a ler e escrever. Imagine que uma
-                  criança está tentando entender como as letras e palavras
-                  funcionam. Ela pode começar fazendo suposições sobre o que uma
-                  certa combinação de letras significa ou como formar palavras.
-                  Essas suposições são suas hipóteses de escrita.
+                <TooltipContent className="max-w-[360px] mr-16">
+                  <p className="mb-2">
+                    <strong>Pré- Silábico:</strong> Não compreende a
+                    correspondência entre a escrita e os sons das palavras, mas
+                    elabora diversas hipóteses, podendo utilizar,
+                    simultaneamente, desenhos e outros sinais gráficos.
+                  </p>
+                  <p className="mb-2">
+                    <strong>Silábico Sem Valor Sonoro:</strong> Escreve uma
+                    letra para representar a sílaba sem se preocupar com o valor
+                    sonoro correspondente.
+                  </p>
+                  <p className="mb-2">
+                    <strong>Silábico Com Valor Sonoro:</strong> Escreve uma
+                    letra para cada sílaba, utilizando letras que correspondem
+                    ao som da sílaba; às vezes, ela usa só vogais e,outras
+                    vezes, consoantes vogais.
+                  </p>
+                  <p className="mb-2">
+                    <strong>Silábico Alfabético:</strong> Ora escreve uma letra
+                    para representar a sílaba, ora escreve a sílaba completa. A
+                    dificuldade é mais visível nas sílabas complexas.
+                  </p>
+                  <p className="mb-2">
+                    <strong>Alfabética:</strong> Compreende o sistema de escrita
+                    faltando apenas apropriar-se das convenções ortográficas;
+                    principalmente nas sílabas complexas, ou já escreve
+                    ortograficamente.
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
