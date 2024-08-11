@@ -30,7 +30,6 @@ import {
 import { GenderOptions, writingHypothesesOptions } from '@/const/rating-scales'
 import { Card, CardContent } from '@/components/ui/card'
 import SingleStatPieChart from './graphs/pie'
-import EvaluationComparisonChart from './graphs/finished'
 import { Progress } from '@/components/ui/progress'
 import {
   Tooltip,
@@ -48,11 +47,6 @@ interface DashboardsProps {
   schools: School[]
 }
 
-interface DataPoint {
-  name: string
-  value: number
-}
-
 interface IAssesmentStats {
   mean: number
   mode: number
@@ -66,7 +60,6 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
   const [firstRender, setFirstRender] = useState(true)
   const [ELEStats, setEleStats] = useState<IAssesmentStats>()
   const [SNAPStats, setSNAPStats] = useState<IAssesmentStats>()
-  const [finishedAssessments, setFinishedAssessment] = useState(0)
   const [filterAge, setFilterAge] = useState<string | undefined>(undefined)
   const [filterGender, setFilterGender] = useState<string | undefined>(
     undefined,

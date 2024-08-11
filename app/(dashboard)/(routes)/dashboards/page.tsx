@@ -1,14 +1,7 @@
 import { db } from '@/lib/db'
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import Dashboards from './_components/dashboards'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import StudentDashboard from './_components/student-dashboard'
 
 const DashboardsPage = async () => {
   const { userId } = auth()
@@ -16,6 +9,9 @@ const DashboardsPage = async () => {
     redirect('/')
   }
   const assessments = await db.assessment.findMany({
+    where: {
+      userId,
+    },
     include: {
       student: {
         include: {
@@ -26,20 +22,15 @@ const DashboardsPage = async () => {
     },
   })
 
-  const schools = await db.school.findMany({})
+  const students = await db.student.findMany({
+    where: {
+      userId,
+    },
+  })
+
   return (
     <div className="min-h-screen p-4">
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle>Quantidade de Alunos por Pontuação</CardTitle>
-          <CardDescription>
-            Expore os filtros para uma análise completa e personalizada.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Dashboards assessments={assessments} schools={schools} />
-        </CardContent>
-      </Card>
+      <StudentDashboard assessments={assessments} students={students} />
     </div>
   )
 }
