@@ -32,7 +32,12 @@ import { Card, CardContent } from '@/components/ui/card'
 import SingleStatPieChart from './graphs/pie'
 import EvaluationComparisonChart from './graphs/finished'
 import { Progress } from '@/components/ui/progress'
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 interface AssessmentWithDetails extends Assessment {
   student: Student & { school: School }
   dialog: Dialog[]
@@ -511,9 +516,22 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
                   <div className="grid grid-cols-3">
                     {ELEStats?.mean && (
                       <div className="flex flex-col justify-center items-center">
-                        <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                          Média de Pontuação
-                        </h1>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger
+                              className="mt-2 mb-4 underline text-muted-foreground"
+                              type="button"
+                            >
+                              Média de Pontuação
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[300px]">
+                              <strong>Média:</strong> É calculada somando todos
+                              os valores de um conjunto e dividindo pelo número
+                              total de valores. Por exemplo, para os números 2,
+                              3 e 5, a média é (2+3+5)/3 = 10/3 ≈ 3,33.
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                         <SingleStatPieChart
                           value={ELEStats?.mean}
                           name="Média"
@@ -524,10 +542,23 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
                     )}
 
                     {ELEStats?.mode && (
-                      <div className="">
-                        <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                          Moda de Pontuação
-                        </h1>
+                      <div className="flex flex-col justify-center items-center">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger
+                              className="mt-2 mb-4 underline text-muted-foreground"
+                              type="button"
+                            >
+                              Moda de Pontuação
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[300px]">
+                              <strong>Moda:</strong> É o valor que ocorre com
+                              maior frequência em um conjunto de dados. Por
+                              exemplo, em 2, 3, 3, 5, o número 3 é a moda porque
+                              aparece mais vezes.
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                         <SingleStatPieChart
                           value={ELEStats?.mode}
                           name="Moda"
@@ -538,10 +569,25 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
                     )}
 
                     {ELEStats?.median && (
-                      <div className="">
-                        <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                          Mediana de Pontuação
-                        </h1>
+                      <div className="flex flex-col justify-center items-center">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger
+                              className="mt-2 mb-4 underline text-muted-foreground"
+                              type="button"
+                            >
+                              Mediana de Pontuação
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[300px]">
+                              <strong>Mediana:</strong> É o valor central em um
+                              conjunto de dados ordenado. Se o conjunto tiver um
+                              número ímpar de valores, é o valor do meio. Se
+                              tiver um número par, é a média dos dois valores
+                              centrais. Por exemplo, para 2, 3, 5, 7, a mediana
+                              é 5. Para 2, 3, 5, 7, 8, a mediana é (5+7)/2 = 6.
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                         <SingleStatPieChart
                           value={ELEStats?.median}
                           name="Mediana"
