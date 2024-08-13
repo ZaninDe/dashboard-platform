@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { db } from '@/lib/db'
+import { snapivIndicatorCheck } from '@/lib/utils'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
@@ -23,13 +25,27 @@ export async function PUT(
     if (!assessment) {
       return new NextResponse('Assessment not exists', { status: 400 })
     } else {
+      const dialogs = await db.dialog.findMany({
+        where: {
+          assessmentId: params.assessmentId,
+        },
+      })
+
+      const data = {} as any
+      if (assessment.ratingScale === 'SnapIV') {
+        const hyperactivity = snapivIndicatorCheck(dialogs.slice(0, 8))
+        const inattention = snapivIndicatorCheck(dialogs.slice(9, 17))
+
+        data.hyperactivity = hyperactivity
+        data.inattention = inattention
+      }
+
+      data.resultAmount = sum
       const newAssessment = await db.assessment.update({
         where: {
           id: params.assessmentId,
         },
-        data: {
-          resultAmount: sum,
-        },
+        data,
       })
 
       return NextResponse.json(newAssessment)

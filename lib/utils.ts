@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge'
 
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { Dialog } from '@prisma/client'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -69,4 +70,16 @@ export const countNumbersAndNulls = (arr: (number | null)[]) => {
   return percentage
 
   // return { numberCount, nullCount }
+}
+
+export const snapivIndicatorCheck = (dialogs: Dialog[]) => {
+  let contador = 0
+
+  for (const dialog of dialogs) {
+    if (dialog.answer === 3 || dialog.answer === 4) {
+      contador++
+    }
+  }
+
+  return contador > 5
 }

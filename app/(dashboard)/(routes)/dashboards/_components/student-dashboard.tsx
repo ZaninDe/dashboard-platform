@@ -16,8 +16,9 @@ import {
 } from '@/components/ui/form'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
-import { Card, CardContent, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card'
 import ELEDashboard from './ele-dashboard'
+import SNAPDashboard from './snapiv-dashboard'
 
 export interface AssessmentWithDetails extends Assessment {
   student: Student & { school: School }
@@ -134,14 +135,16 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
               </div>
               <div className="font-light">{currentStudent?.classroom}</div>
             </CardTitle>
-            <CardContent className="min-h-[60vh] grid grid-cols-3 gap-2 mt-6">
+            <CardContent className="grid grid-cols-3 gap-2 mt-6">
               {ELEAssessment && <ELEDashboard assessment={ELEAssessment} />}
-              <div className="border border-slate-300 rounded-md"></div>
-              <div className="border border-slate-300 rounded-md"></div>
+              {SNAPIVAssessmentes && (
+                <SNAPDashboard assessment={SNAPIVAssessmentes} />
+              )}
+              {ELEAssessment && <ELEDashboard assessment={ELEAssessment} />}
             </CardContent>
           </div>
         ) : (
-          <CardContent className="min-h-[60vh] flex justify-center items-center">
+          <CardContent className="flex justify-center items-center min-h-[60vh]">
             Selecione um Aluno para visualizar os resultados
           </CardContent>
         )}

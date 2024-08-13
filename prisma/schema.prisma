@@ -65,16 +65,18 @@ enum GenderEnum {
 }
 
 model Assessment {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String
-  student      Student     @relation(fields: [studentId], references: [id])
-  studentId    String      @db.ObjectId
-  ratingScale  RatingScale
-  currentStep  Int
-  resultAmount Int?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  dialog       Dialog[]
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String
+  student       Student     @relation(fields: [studentId], references: [id])
+  studentId     String      @db.ObjectId
+  ratingScale   RatingScale
+  inattention   Boolean?
+  hyperactivity Boolean?
+  currentStep   Int
+  resultAmount  Int?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  dialog        Dialog[]
 }
 
 model Dialog {

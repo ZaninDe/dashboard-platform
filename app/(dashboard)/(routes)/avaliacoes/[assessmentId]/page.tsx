@@ -1,7 +1,6 @@
 import { db } from '@/lib/db'
 import { TabsNavigation } from '../_components/tabs-navigation'
 import { auth, clerkClient } from '@clerk/nextjs/server'
-
 const AssessmentPage = async ({
   params,
 }: {
