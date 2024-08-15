@@ -40,7 +40,35 @@ export async function PUT(
         data.inattention = inattention
       }
 
-      data.resultAmount = sum
+      let count = 0
+      if (assessment.ratingScale === 'ATA') {
+        dialogs.forEach((dialog) => {
+          const answerAmount = JSON.stringify(dialog.answer).length
+          console.log('RESPOSTAS: ', JSON.stringify(dialog.answer))
+          console.log(
+            'quantidade de respostas: ',
+            JSON.stringify(dialog.answer).length,
+          )
+          if (dialog.questionNumber === 23) {
+            if (JSON.stringify(dialog.answer).includes('2')) {
+              count = count + 2
+            }
+          } else if (answerAmount >= 5) {
+            count = count + 2
+          } else if (answerAmount >= 3) {
+            count++
+          }
+          console.log('PONTUAÇAO: ', count)
+        })
+      }
+
+      if (assessment.ratingScale === 'ATA') {
+        console.log('PONTUAÇAO total: ', count)
+        data.resultAmount = count
+      } else {
+        data.resultAmount = sum
+      }
+
       const newAssessment = await db.assessment.update({
         where: {
           id: params.assessmentId,

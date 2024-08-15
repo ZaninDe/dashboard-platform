@@ -84,6 +84,11 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
           step,
         },
       )
+
+      if (step === questions.length) {
+        await axios.put(`/api/assessments/${assessment.id}/finish`, {})
+        console.log('resultado salvo com sucesso!')
+      }
       console.log(dialog)
       router.refresh()
     } catch (err) {
