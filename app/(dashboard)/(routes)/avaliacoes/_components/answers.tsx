@@ -1,15 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import {
-  ATAQuestions,
-  ELEButtonOptions,
-  SNAPButtonOptions,
-} from '@/const/rating-scales'
+import { ELEButtonOptions, SNAPButtonOptions } from '@/const/rating-scales'
 import { Dialog } from '@prisma/client'
 import { AssesmentUser } from './tabs-navigation'
 import { useUser } from '@clerk/clerk-react'
-import { cn, formatDate } from '@/lib/utils'
+import { cn, formatDate, getItemsByIndexes } from '@/lib/utils'
 
 interface AnswersProps {
   assessment: AssesmentUser
@@ -23,17 +19,7 @@ const Answers = ({ assessment, dialogs }: AnswersProps) => {
   if (isSignedIn) {
     console.log(user)
   }
-  const getItemsByIndexes = (indexes: any[], step: number): string[] => {
-    const question = ATAQuestions.find((q) => q.step === step)
-    if (!question) {
-      return []
-    }
 
-    return indexes.map((index) => {
-      const option = question.options.find((opt) => opt.index === index)
-      return option ? `${option.item}, ` : 'Índice não encontrado'
-    })
-  }
   return (
     <section className="min-h-screen space-y-4">
       <div className="flex justify-between items-center my-10">

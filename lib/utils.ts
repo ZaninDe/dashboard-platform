@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Dialog } from '@prisma/client'
+import { ATAQuestions } from '@/const/rating-scales'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -82,4 +84,16 @@ export const snapivIndicatorCheck = (dialogs: Dialog[]) => {
   }
 
   return contador > 5
+}
+
+export const getItemsByIndexes = (indexes: any[], step: number): string[] => {
+  const question = ATAQuestions.find((q: any) => q.step === step + 1)
+  if (!question) {
+    return []
+  }
+
+  return indexes.map((index) => {
+    const option = question.options.find((opt: any) => opt.index === index)
+    return option ? `${option.item}; ` : ''
+  })
 }

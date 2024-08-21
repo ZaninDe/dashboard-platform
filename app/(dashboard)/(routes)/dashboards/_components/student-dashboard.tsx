@@ -16,9 +16,10 @@ import {
 } from '@/components/ui/form'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
-import { Card, CardContent, CardFooter, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardTitle } from '@/components/ui/card'
 import ELEDashboard from './ele-dashboard'
 import SNAPDashboard from './snapiv-dashboard'
+import ATADashboard from './ata-dashboard'
 
 export interface AssessmentWithDetails extends Assessment {
   student: Student & { school: School }
@@ -140,7 +141,7 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
               {SNAPIVAssessmentes && (
                 <SNAPDashboard assessment={SNAPIVAssessmentes} />
               )}
-              {ELEAssessment && <ELEDashboard assessment={ELEAssessment} />}
+              {ATAAssessmentes && <ATADashboard assessment={ATAAssessmentes} />}
             </CardContent>
           </div>
         ) : (
