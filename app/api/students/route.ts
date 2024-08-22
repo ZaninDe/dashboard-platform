@@ -26,6 +26,7 @@ export async function POST(req: Request) {
       },
     })
 
+    const monitoring = !!individualMonitoring
     if (student) {
       return new NextResponse('student already exists', { status: 400 })
     } else {
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
         data: {
           name,
           ra,
-          individualMonitoring,
+          individualMonitoring: monitoring,
           age: parseInt(age),
           schoolId,
           classroom,

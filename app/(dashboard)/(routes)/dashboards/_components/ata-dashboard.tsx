@@ -48,7 +48,9 @@ const ATADashboard = ({ assessment }: ATADashboardProps) => {
                 style={{ left: maxPercentage }}
               >
                 <ArrowUp />
-                <p className="absolute mt-10">Corte</p>
+                <p className="absolute mt-10 whitespace-nowrap">
+                  Corte 15 pontos
+                </p>
               </div>
             </div>
             <Progress value={progress} className="bg-green-600/40" />

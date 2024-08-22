@@ -79,6 +79,7 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
     }
   }
 
+  console.log(ELEAssessment)
   return (
     <div>
       <h1 className="text-2xl font-bold text-center">

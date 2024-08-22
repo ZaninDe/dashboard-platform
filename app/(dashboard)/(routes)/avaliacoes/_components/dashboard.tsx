@@ -94,7 +94,7 @@ const Dashboard = ({ assessment, assessments, dialogs }: DashBoardProps) => {
       <div className="mt-10">
         <p>
           {assessment.ratingScale === 'ATA'
-            ? 'Corte'
+            ? 'Corte 15 pontos'
             : 'Pontuação Média de Todos Alunos'}
         </p>
         <div className="relative">
