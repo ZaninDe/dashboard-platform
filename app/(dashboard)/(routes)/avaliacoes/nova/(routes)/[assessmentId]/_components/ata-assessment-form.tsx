@@ -104,7 +104,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
   const isDisabled = !questions.length || isSubmitting
   return (
     <div className="w-full h-full p-4">
-      <p className="font-bold">{`Questão ${step}`}</p>
+      <p className="font-bold">{`Questão ${step} de 23`}</p>
       <div className="w-full h-full flex flex-col justify-around items-center">
         <div>
           <div>

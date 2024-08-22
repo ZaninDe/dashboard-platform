@@ -106,42 +106,6 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
           item?.student?.school?.region === filterSchoolRegion)
       )
     })
-    const ELEAssessments = filteredData.filter(
-      (item) => item.ratingScale === 'ELE' && item.currentStep === 16,
-    )
-
-    const ELEValues = filteredData
-      .filter((item) => item.ratingScale === 'ELE')
-      .map((assessment) => assessment.resultAmount)
-
-    const eleFinishedAmount = countNumbersAndNulls(ELEValues)
-
-    const ELEmean = calculateMean(ELEValues)
-    const ELEmode = calculateMode(ELEValues)
-    const ELEmedian = calculateMedian(ELEValues)
-
-    const eleStats: IAssesmentStats = {
-      mean: ELEmean,
-      mode: ELEmode!,
-      median: ELEmedian,
-      finishedAmount: eleFinishedAmount,
-    }
-
-    setEleStats(eleStats)
-
-    const ELEResultCounts = ELEAssessments.reduce(
-      (acc: Record<number, number>, assessment) => {
-        if (assessment.resultAmount !== null) {
-          acc[assessment.resultAmount] = (acc[assessment.resultAmount] || 0) + 1
-        }
-        return acc
-      },
-      {},
-    )
-    const ELE = Object.keys(ELEResultCounts).map((key: any) => ({
-      resultAmount: Number(key),
-      pontos: ELEResultCounts[key],
-    }))
 
     const SNAPIVAssessments = filteredData.filter(
       (item) => item.ratingScale === 'SnapIV' && item.currentStep === 18,

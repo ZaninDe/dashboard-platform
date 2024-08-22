@@ -162,7 +162,7 @@ const AssessmentForm = ({
                   Entenda qual escala utilizar
                 </TooltipTrigger>
                 <TooltipContent className="max-w-[300px]">
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <strong>ELE</strong>
                     <p>
                       A escala de avaliação ELE (Escala de Leitura e Escrita) é
@@ -171,7 +171,7 @@ const AssessmentForm = ({
                       refere-se à capacidade de uma pessoa de usar palavras,
                       frases e sentenças para se comunicar de forma eficaz.
                     </p>
-                  </div>
+                  </div> */}
 
                   <div className="mb-4">
                     <strong>SNAP-IV</strong>

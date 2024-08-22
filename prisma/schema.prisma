@@ -46,7 +46,6 @@ model Student {
 }
 
 enum RatingScale {
-  ELE
   SnapIV
   ATA
 }

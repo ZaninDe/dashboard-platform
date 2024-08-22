@@ -17,7 +17,6 @@ import {
 import { Search } from 'lucide-react'
 import { useState } from 'react'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
-import ELEDashboard from './ele-dashboard'
 import SNAPDashboard from './snapiv-dashboard'
 import ATADashboard from './ata-dashboard'
 
@@ -37,7 +36,6 @@ const formSchema = z.object({
 
 const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
   const [currentStudent, setCurrentStudent] = useState<Student>()
-  const [ELEAssessment, setELEAssessment] = useState<AssessmentWithDetails>()
   const [SNAPIVAssessmentes, setSNAPIVAssessmentes] =
     useState<AssessmentWithDetails>()
   const [ATAAssessmentes, setATAAssessmentes] =
@@ -52,12 +50,6 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
         const newCurrentStudent = students.find(
           (student) => student.id === values.studentId,
         )
-        const newELE = assessments.find(
-          (assessment) =>
-            assessment.studentId === newCurrentStudent?.id &&
-            assessment.ratingScale === 'ELE',
-        )
-        newELE && setELEAssessment(newELE)
         const newSNAPIV = assessments.find(
           (assessment) =>
             assessment.studentId === newCurrentStudent?.id &&
@@ -79,7 +71,6 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
     }
   }
 
-  console.log(ELEAssessment)
   return (
     <div>
       <h1 className="text-2xl font-bold text-center">
@@ -137,8 +128,7 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
               </div>
               <div className="font-light">{currentStudent?.classroom}</div>
             </CardTitle>
-            <CardContent className="grid grid-cols-3 gap-2 mt-6">
-              {ELEAssessment && <ELEDashboard assessment={ELEAssessment} />}
+            <CardContent className="grid grid-cols-2 gap-2 mt-6">
               {SNAPIVAssessmentes && (
                 <SNAPDashboard assessment={SNAPIVAssessmentes} />
               )}
