@@ -29,20 +29,21 @@ model School {
 }
 
 model Student {
-  id                   String            @id @default(auto()) @map("_id") @db.ObjectId
+  id                   String               @id @default(auto()) @map("_id") @db.ObjectId
   ra                   String
   name                 String
   age                  Int
   individualMonitoring Boolean
   userId               String
-  school               School            @relation(fields: [schoolId], references: [id])
+  school               School               @relation(fields: [schoolId], references: [id])
   classroom            String
   writingHypotheses    WritingHypotheses
   gender               GenderEnum
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
   Assessment           Assessment[]
-  schoolId             String            @db.ObjectId
+  schoolId             String               @db.ObjectId
+  CriteriaAssessment   CriteriaAssessment[]
 }
 
 enum RatingScale {
@@ -64,10 +65,28 @@ enum GenderEnum {
 }
 
 model Assessment {
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String
+  student            Student              @relation(fields: [studentId], references: [id])
+  studentId          String               @db.ObjectId
+  ratingScale        RatingScale
+  inattention        Boolean?
+  hyperactivity      Boolean?
+  currentStep        Int
+  resultAmount       Int?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  dialog             Dialog[]
+  CriteriaAssessment CriteriaAssessment[]
+}
+
+model CriteriaAssessment {
   id            String      @id @default(auto()) @map("_id") @db.ObjectId
   userId        String
   student       Student     @relation(fields: [studentId], references: [id])
   studentId     String      @db.ObjectId
+  assessment    Assessment  @relation(fields: [assessmentId], references: [id])
+  assessmentId  String      @db.ObjectId
   ratingScale   RatingScale
   inattention   Boolean?
   hyperactivity Boolean?
@@ -85,4 +104,7 @@ model Dialog {
   question       String
   answer         Json
   assessmentId   String     @db.ObjectId
+
+  CriteriaAssessment   CriteriaAssessment? @relation(fields: [criteriaAssessmentId], references: [id])
+  criteriaAssessmentId String?             @db.ObjectId
 }

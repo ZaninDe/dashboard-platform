@@ -2,37 +2,27 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import {
-  ButtonOption,
-  ELEButtonOptions,
-  ELEQuestions,
-  QuestionsProps,
-  SNAPButtonOptions,
-  SNAPQuestions,
-} from '@/const/rating-scales'
+import { QuestionsProps } from '@/const/rating-scales'
 import { cn } from '@/lib/utils'
-import { Assessment, Dialog } from '@prisma/client'
+import { CriteriaAssessment, Dialog } from '@prisma/client'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { LoaderCircleIcon } from 'lucide-react'
+import {
+  criteriaOptions,
+  TDAHDiagnosticQuestions,
+  TEADiagnosticQuestions,
+} from '@/const/diagnostic-criteria'
 
-interface AssessmentFormProps {
-  assessment: Assessment
+interface CriteriaFormProps {
+  criteriaAssessment: CriteriaAssessment
   dialogs: Dialog[]
 }
 
-function sumAnswers(dialogs: Dialog[]): number {
-  return dialogs.reduce((sum, dialog) => {
-    const answerValue = dialog.answer as number
-
-    return sum + answerValue
-  }, 0)
-}
-
-const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
-  const [step, setStep] = useState(assessment?.currentStep | 1)
+const CriteriaForm = ({ criteriaAssessment, dialogs }: CriteriaFormProps) => {
+  const [step, setStep] = useState(criteriaAssessment?.currentStep | 1)
   const [answer, setAnswer] = useState<number | null>()
   const [currentDialog, setCurrentDialog] = useState<Dialog>()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -50,14 +40,15 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
 
   const router = useRouter()
 
-  const buttonOptions: ButtonOption[] =
-    assessment?.ratingScale === 'ATA' ? ELEButtonOptions : SNAPButtonOptions
-
   const questions: QuestionsProps[] =
-    assessment?.ratingScale === 'ATA' ? ELEQuestions : SNAPQuestions
+    criteriaAssessment?.ratingScale === 'ATA'
+      ? TEADiagnosticQuestions
+      : TDAHDiagnosticQuestions
 
   const nextStep = () => {
-    if (step < questions.length) {
+    if (step === questions.length) {
+      router.push(`/avaliacoes/${criteriaAssessment.assessmentId}`)
+    } else {
       setStep((state) => state + 1)
     }
   }
@@ -76,22 +67,18 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
       if (currentDialog?.answer === answer) {
         return
       }
-      await axios.post(`/api/assessments/${assessment.id}/dialogs`, {
-        questionNumber: step,
-        question: questions[step - 1].question,
-        answer,
-        step,
-      })
+      await axios.post(
+        `/api/criteria-assessments/${criteriaAssessment.id}/dialogs`,
+        {
+          questionNumber: step,
+          question: questions[step - 1].question,
+          answer,
+          step,
+        },
+      )
 
       if (step === questions.length) {
-        const sum = sumAnswers(dialogs)
-        const newCriteriaAssessment = await axios.put(
-          `/api/assessments/${assessment.id}/finish`,
-          {
-            sum,
-          },
-        )
-        router.push(`/criterio-de-diagnostico/${newCriteriaAssessment.data.id}`)
+        router.push(`/avaliacoes/${criteriaAssessment.assessmentId}`)
         console.log('resultado salvo com sucesso!')
       }
 
@@ -119,7 +106,7 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
               </p>
             </div>
             <div className="flex gap-4 justify-center">
-              {buttonOptions.map((button) => (
+              {criteriaOptions.map((button) => (
                 <Button
                   className={cn(
                     'bg-transparent',
@@ -158,4 +145,4 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
   )
 }
 
-export default AssessmentForm
+export default CriteriaForm

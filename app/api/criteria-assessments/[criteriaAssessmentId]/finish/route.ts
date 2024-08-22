@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 
 export async function PUT(
   req: Request,
-  { params }: { params: { assessmentId: string } },
+  { params }: { params: { criteriaAssessmentId: string } },
 ) {
   try {
     const { userId } = auth()
@@ -16,23 +16,23 @@ export async function PUT(
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const assessment = await db.assessment.findFirst({
+    const criteriaAssessment = await db.criteriaAssessment.findFirst({
       where: {
-        id: params.assessmentId,
+        id: params.criteriaAssessmentId,
       },
     })
 
-    if (!assessment) {
+    if (!criteriaAssessment) {
       return new NextResponse('Assessment not exists', { status: 400 })
     } else {
       const dialogs = await db.dialog.findMany({
         where: {
-          assessmentId: params.assessmentId,
+          assessmentId: params.criteriaAssessmentId,
         },
       })
 
       const data = {} as any
-      if (assessment.ratingScale === 'SnapIV') {
+      if (criteriaAssessment.ratingScale === 'SnapIV') {
         const hyperactivity = snapivIndicatorCheck(dialogs.slice(0, 8))
         const inattention = snapivIndicatorCheck(dialogs.slice(9, 17))
 
@@ -41,14 +41,14 @@ export async function PUT(
       }
 
       let count = 0
-      if (assessment.ratingScale === 'ATA') {
+      if (criteriaAssessment.ratingScale === 'ATA') {
         dialogs.forEach((dialog) => {
           const answerAmount = JSON.stringify(dialog.answer).length
-          console.log('RESPOSTAS: ', JSON.stringify(dialog.answer))
-          console.log(
-            'quantidade de respostas: ',
-            JSON.stringify(dialog.answer).length,
-          )
+          // console.log('RESPOSTAS: ', JSON.stringify(dialog.answer))
+          // console.log(
+          //   'quantidade de respostas: ',
+          //   JSON.stringify(dialog.answer).length,
+          // )
           if (dialog.questionNumber === 23) {
             if (JSON.stringify(dialog.answer).includes('2')) {
               count = count + 2
@@ -61,7 +61,7 @@ export async function PUT(
         })
       }
 
-      if (assessment.ratingScale === 'ATA') {
+      if (criteriaAssessment.ratingScale === 'ATA') {
         data.resultAmount = count
       } else {
         data.resultAmount = sum
@@ -69,24 +69,10 @@ export async function PUT(
 
       const newAssessment = await db.assessment.update({
         where: {
-          id: params.assessmentId,
+          id: params.criteriaAssessmentId,
         },
         data,
       })
-
-      if (assessment?.ratingScale) {
-        const newCriteriaAssessment = await db.criteriaAssessment.create({
-          data: {
-            currentStep: 1,
-            assessmentId: assessment.id,
-            ratingScale: assessment?.ratingScale,
-            userId: assessment.userId,
-            studentId: assessment.studentId,
-          },
-        })
-
-        return NextResponse.json(newCriteriaAssessment)
-      }
 
       return NextResponse.json(newAssessment)
     }

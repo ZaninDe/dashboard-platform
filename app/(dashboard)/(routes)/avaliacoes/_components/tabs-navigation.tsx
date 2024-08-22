@@ -9,7 +9,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Assessment, Dialog, School, Student } from '@prisma/client'
+import {
+  Assessment,
+  CriteriaAssessment,
+  Dialog,
+  School,
+  Student,
+} from '@prisma/client'
 import Answers from './answers'
 import { useRouter } from 'next/navigation'
 import React, { useRef } from 'react'
@@ -29,17 +35,23 @@ export interface AssesmentUser extends Assessment {
 
 interface TabsNavigationProps {
   assessment: AssesmentUser
+  criteriaAssessment: CriteriaAssessment | null
   assessments: Assessment[]
   dialogs: Dialog[]
+  criteriaDialogs: Dialog[]
 }
 
 export function TabsNavigation({
   assessment,
   assessments,
+  criteriaAssessment,
+  criteriaDialogs,
   dialogs,
 }: TabsNavigationProps) {
   const router = useRouter()
   const reportRef = useRef<HTMLDivElement>(null)
+
+  console.log('criteria dialogs', criteriaDialogs)
 
   const generatePDF = () => {
     if (reportRef.current) {

@@ -46,12 +46,7 @@ const Dashboard = ({ assessment, assessments, dialogs }: DashBoardProps) => {
   }
 
   useEffect(() => {
-    const max =
-      assessment.ratingScale === 'ELE'
-        ? 64
-        : assessment.ratingScale === 'SnapIV'
-          ? 72
-          : 46
+    const max = assessment.ratingScale === 'SnapIV' ? 72 : 46
 
     const meanValues = assessments.map((assessment) => assessment.resultAmount)
 

@@ -3,11 +3,7 @@ import { DataTable } from './_components/data-table'
 import { columns } from './columns'
 import { auth } from '@clerk/nextjs/server'
 import { db } from '@/lib/db'
-import {
-  ELEQuestions,
-  ATAQuestions,
-  SNAPQuestions,
-} from '@/const/rating-scales'
+import { ATAQuestions, SNAPQuestions } from '@/const/rating-scales'
 
 const Assessment = async () => {
   const { userId } = auth()
@@ -30,9 +26,7 @@ const Assessment = async () => {
 
   const formatedAssessment = assessments.map((assessment) => {
     let totalProgress = 0
-    if (assessment.ratingScale === 'ELE') {
-      totalProgress = ELEQuestions.length
-    } else if (assessment.ratingScale === 'ATA') {
+    if (assessment.ratingScale === 'ATA') {
       totalProgress = ATAQuestions.length
     } else {
       totalProgress = SNAPQuestions.length
