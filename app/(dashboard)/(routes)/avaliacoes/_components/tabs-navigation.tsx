@@ -51,8 +51,6 @@ export function TabsNavigation({
   const router = useRouter()
   const reportRef = useRef<HTMLDivElement>(null)
 
-  console.log('criteria dialogs', criteriaDialogs)
-
   const generatePDF = () => {
     if (reportRef.current) {
       html2pdf()
@@ -87,6 +85,7 @@ export function TabsNavigation({
                 assessment={assessment}
                 assessments={assessments}
                 dialogs={dialogs}
+                criteriaDialogs={criteriaDialogs}
               />
             </CardContent>
             <CardFooter>
@@ -114,7 +113,12 @@ export function TabsNavigation({
             </CardHeader>
             <Separator />
             <CardContent className="space-y-2" ref={reportRef}>
-              <Answers dialogs={dialogs} assessment={assessment} />
+              <Answers
+                dialogs={dialogs}
+                assessment={assessment}
+                criteriaAssessment={criteriaAssessment}
+                criteriaDialogs={criteriaDialogs}
+              />
             </CardContent>
             <CardFooter>
               <Button onClick={() => router.back()}>Voltar</Button>

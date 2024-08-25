@@ -1,17 +1,32 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import { ELEButtonOptions, SNAPButtonOptions } from '@/const/rating-scales'
-import { Dialog } from '@prisma/client'
+import { SNAPButtonOptions } from '@/const/rating-scales'
+import { CriteriaAssessment, Dialog } from '@prisma/client'
 import { AssesmentUser } from './tabs-navigation'
 import { useUser } from '@clerk/clerk-react'
 import { cn, formatDate, getItemsByIndexes } from '@/lib/utils'
+import { criteriaOptions } from '@/const/diagnostic-criteria'
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 interface AnswersProps {
   assessment: AssesmentUser
   dialogs: Dialog[]
+  criteriaAssessment: CriteriaAssessment | null
+  criteriaDialogs: Dialog[]
 }
-const Answers = ({ assessment, dialogs }: AnswersProps) => {
+const Answers = ({
+  assessment,
+  dialogs,
+  criteriaAssessment,
+  criteriaDialogs,
+}: AnswersProps) => {
   const { isSignedIn, user } = useUser()
   const createdDate = formatDate(assessment?.createdAt)
   const updatedDate = formatDate(assessment?.updatedAt)
@@ -101,40 +116,99 @@ const Answers = ({ assessment, dialogs }: AnswersProps) => {
         </div>
       </div>
 
-      {dialogs.map((dialog: Dialog, index: number) => {
-        let answer: any
-        if (assessment?.ratingScale === 'ELE') {
-          answer = ELEButtonOptions.find(
-            (option) => option.value === JSON.stringify(dialog.answer),
-          )
-        } else if (assessment?.ratingScale === 'SnapIV') {
-          answer = SNAPButtonOptions.find(
-            (option) => option.value === JSON.stringify(dialog.answer),
-          )
-        }
-        return (
-          <div
-            key={dialog.id}
-            className={cn(
-              'bg-muted/50 text-neutral-900/80 p-2 rounded-md',
-              answer?.value === '1' && 'bg-red-50/50',
-              answer?.value === '2' && 'bg-red-100',
-              answer?.value === '3' && 'bg-red-300/60',
-              answer?.value === '4' && 'bg-red-400/90 text-white',
-            )}
-          >
-            <strong>
-              {index + 1}. {dialog?.question} :
-            </strong>
-            {assessment?.ratingScale !== 'ATA' ? (
-              <p className="font-light">{answer?.label}</p>
-            ) : (
-              // @ts-ignore
-              <>{<p>{getItemsByIndexes(dialog.answer, index)}</p>}</>
-            )}
-          </div>
-        )
-      })}
+      <section id="escala" className="">
+        <Accordion
+          type="single"
+          collapsible
+          defaultValue="item-1"
+          className="mb-24"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="text-2xl">
+              QUESTIONÁRIO ESCALA DE AVALIAÇÃO
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-2">
+                {dialogs.map((dialog: Dialog, index: number) => {
+                  let answer: any
+                  if (assessment?.ratingScale === 'SnapIV') {
+                    answer = SNAPButtonOptions.find(
+                      (option) =>
+                        option.value === JSON.stringify(dialog.answer),
+                    )
+                  }
+                  return (
+                    <div
+                      key={dialog.id}
+                      className={cn(
+                        'bg-muted/50 text-neutral-900/80 p-2 rounded-md',
+                        answer?.value === '1' && 'bg-red-50/50',
+                        answer?.value === '2' && 'bg-red-100',
+                        answer?.value === '3' && 'bg-red-300/60',
+                        answer?.value === '4' && 'bg-red-400/90 text-white',
+                      )}
+                    >
+                      <strong>
+                        {index + 1}. {dialog?.question} :
+                      </strong>
+                      {assessment?.ratingScale !== 'ATA' ? (
+                        <p className="font-light">{answer?.label}</p>
+                      ) : (
+                        <p>
+                          {/* @ts-ignore */}
+                          {getItemsByIndexes(dialog.answer, index).length === 0
+                            ? 'Nada assinalado'
+                            : // @ts-ignore
+                              getItemsByIndexes(dialog.answer, index)}
+                        </p>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
+
+      <section id="criterio">
+        <Accordion type="single" collapsible defaultValue="item-2">
+          <AccordionItem value="item-2">
+            <AccordionTrigger className="text-2xl">
+              <div className="flex items-center justify-start gap-4">
+                QUESTIONÁRIO CRITÉRIO DE DIAGNÓSTICO
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-2">
+                {criteriaDialogs &&
+                  criteriaDialogs.map((dialog: Dialog, index: number) => {
+                    const answer = criteriaOptions.find(
+                      (option) =>
+                        option.value === JSON.stringify(dialog.answer),
+                    )
+
+                    return (
+                      <div
+                        key={dialog.id}
+                        className={cn(
+                          'bg-muted/50 text-neutral-900/80 p-2 rounded-md',
+                          answer?.value === '0' && 'bg-slate-100',
+                          answer?.value === '1' && 'bg-red-100',
+                        )}
+                      >
+                        <strong>
+                          {index + 1}. {dialog?.question} :
+                        </strong>
+                        <p className="font-light">{answer?.label}</p>
+                      </div>
+                    )
+                  })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
     </section>
   )
 }

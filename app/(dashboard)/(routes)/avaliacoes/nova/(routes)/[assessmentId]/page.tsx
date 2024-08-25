@@ -43,7 +43,7 @@ const AssesmentIdPage = async ({
         )}
       >
         {assessment && (
-          <div className="h-full">
+          <div className="h-full relative">
             {assessment.ratingScale !== 'ATA' ? (
               <AssessmentForm assessment={assessment} dialogs={dialogs} />
             ) : (

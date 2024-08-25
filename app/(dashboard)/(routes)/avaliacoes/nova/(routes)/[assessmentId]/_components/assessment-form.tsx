@@ -82,19 +82,6 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
         answer,
         step,
       })
-
-      if (step === questions.length) {
-        const sum = sumAnswers(dialogs)
-        const newCriteriaAssessment = await axios.put(
-          `/api/assessments/${assessment.id}/finish`,
-          {
-            sum,
-          },
-        )
-        router.push(`/criterio-de-diagnostico/${newCriteriaAssessment.data.id}`)
-        console.log('resultado salvo com sucesso!')
-      }
-
       router.refresh()
     } catch (err) {
       toast.error('Algo deu errado.')
@@ -105,52 +92,104 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
       nextStep()
     }
   }
+
+  const onSubmitFinish = async () => {
+    setIsSubmitting(true)
+    try {
+      if (step === questions.length) {
+        const sum = sumAnswers(dialogs)
+        const newCriteriaAssessment = await axios.put(
+          `/api/assessments/${assessment.id}/finish`,
+          {
+            sum,
+          },
+        )
+        router.push(
+          `/avaliacoes/nova/criterio-de-diagnostico/${newCriteriaAssessment.data.id}`,
+        )
+        console.log('resultado salvo com sucesso!')
+      }
+
+      router.refresh()
+    } catch (err) {
+      toast.error('Algo deu errado.')
+      console.log(err)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
   const isDisabled =
     (!answer && !questions.length) || isSubmitting || answer === null
   return (
-    <div className="w-full h-full p-4">
-      <p className="font-bold">{`Questão ${step} de ${questions.length}`}</p>
-      <div className="w-full h-full flex flex-col justify-around items-center">
-        <div>
-          <div>
-            <div className="h-40 flex flex-col items-center justify-center">
-              <p className="text-center text-xl">
-                {questions[step - 1]?.question}
-              </p>
-            </div>
-            <div className="flex gap-4 justify-center">
-              {buttonOptions.map((button) => (
-                <Button
-                  className={cn(
-                    'bg-transparent',
-                    button.value === answer?.toString() && 'bg-slate-200',
-                  )}
-                  key={button.value}
-                  variant="outline"
-                  onClick={() => {
-                    setAnswer(parseInt(button.value))
-                  }}
-                >
-                  {button.label}
+    <div className="h-full">
+      <div className="h-full">
+        {step < questions.length ? (
+          <div className="w-full h-full p-4">
+            <p className="font-bold">{`Questão ${step} de ${questions.length}`}</p>
+            <div className="w-full h-full flex flex-col justify-around items-center">
+              <div>
+                <div>
+                  <div className="h-40 flex flex-col items-center justify-center">
+                    <p className="text-center text-xl">
+                      {questions[step - 1]?.question}
+                    </p>
+                  </div>
+                  <div className="flex gap-4 justify-center">
+                    {buttonOptions.map((button) => (
+                      <Button
+                        className={cn(
+                          'bg-transparent',
+                          button.value === answer?.toString() && 'bg-slate-200',
+                        )}
+                        key={button.value}
+                        variant="outline"
+                        onClick={() => {
+                          setAnswer(parseInt(button.value))
+                        }}
+                      >
+                        {button.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="w-full flex justify-between">
+                <Button variant="secondary" onClick={prevStep}>
+                  Voltar
                 </Button>
-              ))}
+                <Button
+                  onClick={onSubmit}
+                  disabled={isDisabled}
+                  className="w-20"
+                >
+                  {isSubmitting ? (
+                    <LoaderCircleIcon className="animate-spin" />
+                  ) : (
+                    <p>Próximo</p>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-full flex justify-between">
-          <Button variant="secondary" onClick={prevStep}>
-            Voltar
-          </Button>
-          <Button onClick={onSubmit} disabled={isDisabled} className="w-20">
-            {isSubmitting ? (
-              <LoaderCircleIcon className="animate-spin" />
-            ) : (
-              <p>{step === questions.length ? 'Finalizar' : 'Próximo'}</p>
-            )}
-          </Button>
-        </div>
+        ) : (
+          <div className="flex flex-col justify-center items-center gap-8 h-full p-8">
+            <h1 className="text-3xl">Muito Bem!</h1>
+            <h1 className="text-xl">
+              Agora, vamos aplicar o questionário de Critério de Avaliação, ele
+              servirá para a confirmação dos resultados obtidos no questionário
+              anterior, vamos lá?
+            </h1>
+            <Button onClick={onSubmitFinish} className="w-20">
+              {isSubmitting ? (
+                <LoaderCircleIcon className="animate-spin" />
+              ) : (
+                <p>Iniciar</p>
+              )}
+            </Button>
+          </div>
+        )}
       </div>
-      <p className="bg-yellow-500/80 w-full p-4 rounded-md text-white">
+      <p className="bg-yellow-500/80 w-full p-4 rounded-b-md text-white absolute bottom-[-100px]">
         <strong>*ATENÇÃO*</strong> Não se preocupe em sair desta página, a
         avaliação é salva automaticamente a cada resposta
       </p>

@@ -4,6 +4,10 @@ import { columns } from './columns'
 import { auth } from '@clerk/nextjs/server'
 import { db } from '@/lib/db'
 import { ATAQuestions, SNAPQuestions } from '@/const/rating-scales'
+import {
+  TDAHDiagnosticQuestions,
+  TEADiagnosticQuestions,
+} from '@/const/diagnostic-criteria'
 
 const Assessment = async () => {
   const { userId } = auth()
@@ -23,6 +27,11 @@ const Assessment = async () => {
       },
     },
   })
+  const criteriaAssessments = await db.criteriaAssessment.findMany({
+    where: {
+      userId,
+    },
+  })
 
   const formatedAssessment = assessments.map((assessment) => {
     let totalProgress = 0
@@ -32,8 +41,28 @@ const Assessment = async () => {
       totalProgress = SNAPQuestions.length
     }
 
+    const criteriaAssessment = criteriaAssessments.find(
+      (criteriaAssessment) => criteriaAssessment.assessmentId === assessment.id,
+    )
+
+    let criteriaTotalProgress = 0
+    let criteriaProgress = 0
+    if (criteriaAssessment) {
+      if (criteriaAssessment.ratingScale === 'ATA') {
+        criteriaTotalProgress = TEADiagnosticQuestions.length
+      } else {
+        criteriaTotalProgress = TDAHDiagnosticQuestions.length
+      }
+
+      criteriaProgress =
+        criteriaAssessment?.currentStep === 1
+          ? 0
+          : (criteriaAssessment?.currentStep / criteriaTotalProgress) * 100
+    }
+
     const progress = assessment?.currentStep / totalProgress
-    const percentageProgress = progress * 100
+    const percentageProgress =
+      assessment?.currentStep === 1 ? 0 : progress * 100
     return {
       id: assessment?.id,
       name: assessment?.student?.name,
@@ -41,7 +70,7 @@ const Assessment = async () => {
       age: assessment?.student?.age,
       classroom: assessment?.student?.classroom,
       scaleRating: assessment?.ratingScale,
-      status: 'OK',
+      criteriaProgress,
       progress: percentageProgress,
     }
   })

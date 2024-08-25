@@ -23,14 +23,21 @@ import { Card, CardContent } from '@/components/ui/card'
 
 import { ELEButtonOptions, SNAPButtonOptions } from '@/const/rating-scales'
 import { useEffect, useState } from 'react'
+import QuestionnairePieChart from './questionCriteriaChart'
 
 interface DashBoardProps {
   assessment: AssesmentUser
   assessments: Assessment[]
   dialogs: Dialog[]
+  criteriaDialogs: Dialog[]
 }
 
-const Dashboard = ({ assessment, assessments, dialogs }: DashBoardProps) => {
+const Dashboard = ({
+  assessment,
+  assessments,
+  dialogs,
+  criteriaDialogs,
+}: DashBoardProps) => {
   const [progress, setProgress] = useState(0)
   const [meanProgress, setMeanProgress] = useState(0)
   const [maxScore, setMaxScore] = useState(0)
@@ -209,17 +216,14 @@ const Dashboard = ({ assessment, assessments, dialogs }: DashBoardProps) => {
             >
               {dialogs.map((dialog, index) => {
                 let answer: any
-                if (assessment?.ratingScale === 'ELE') {
-                  answer = ELEButtonOptions.find(
-                    (option) => option.value === JSON.stringify(dialog.answer),
-                  )
-                } else if (assessment?.ratingScale === 'SnapIV') {
+                if (assessment?.ratingScale === 'SnapIV') {
                   answer = SNAPButtonOptions.find(
                     (option) => option.value === JSON.stringify(dialog.answer),
                   )
-                } else if (assessment?.ratingScale === 'ATA') {
+                } else if (isAtaRatingScale) {
                   // @ts-ignore
                   answer = getItemsByIndexes(dialog.answer, index)
+                  console.log(answer)
                 }
 
                 return (
@@ -299,12 +303,7 @@ const Dashboard = ({ assessment, assessments, dialogs }: DashBoardProps) => {
                 <div>
                   {dialogs.map((dialog, index) => {
                     let answer: any
-                    if (assessment?.ratingScale === 'ELE') {
-                      answer = ELEButtonOptions.find(
-                        (option) =>
-                          option.value === JSON.stringify(dialog.answer),
-                      )
-                    } else if (assessment?.ratingScale === 'SnapIV') {
+                    if (assessment?.ratingScale === 'SnapIV') {
                       answer = SNAPButtonOptions.find(
                         (option) =>
                           option.value === JSON.stringify(dialog.answer),
@@ -328,7 +327,7 @@ const Dashboard = ({ assessment, assessments, dialogs }: DashBoardProps) => {
 
                             <p>
                               <strong className="mt-8">Resposta: </strong>
-                              {answer}
+                              {answer.length === 0 ? 'Nada assinalado' : answer}
                             </p>
                           </div>
                         )}
@@ -353,6 +352,9 @@ const Dashboard = ({ assessment, assessments, dialogs }: DashBoardProps) => {
             </CardContent>
           </Card>
         </div>
+
+        <QuestionnairePieChart criteriaDialogs={criteriaDialogs} />
+
         {assessment.ratingScale === 'SnapIV' && (
           <div className="mt-16">
             <p>

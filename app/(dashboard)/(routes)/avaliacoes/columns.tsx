@@ -1,9 +1,9 @@
 'use client'
 
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
+import { RatingScale } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
@@ -15,7 +15,9 @@ export interface AssessmentProps {
   school: string
   age: number
   classroom: string
-  status: string
+  scaleRating: RatingScale
+  criteriaProgress: number
+  progress: number
 }
 
 export const columns: ColumnDef<AssessmentProps>[] = [
@@ -113,30 +115,6 @@ export const columns: ColumnDef<AssessmentProps>[] = [
     },
   },
   {
-    accessorKey: 'status',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="pl-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Indicativo
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const attention = row.getValue('status') === 'attention'
-
-      return (
-        <Badge className={cn('bg-sky-800/50', attention && 'bg-red-500/80')}>
-          {attention ? 'Atenção' : 'OK'}
-        </Badge>
-      )
-    },
-  },
-  {
     accessorKey: 'progress',
     header: ({ column }) => {
       return (
@@ -145,13 +123,43 @@ export const columns: ColumnDef<AssessmentProps>[] = [
           className="pl-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Progresso
+          Escala de Avaliação
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => {
       const progress: number = row.getValue('progress')
+
+      return (
+        <div className="flex items-center gap-2">
+          <p
+            className={cn(
+              'text-xs w-9 text-end text-cyan-700/80',
+              progress !== 100 && 'text-red-700',
+            )}
+          >{`${Math.floor(progress)}%`}</p>
+          <Progress value={progress} />
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'criteriaProgress',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="pl-0"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Critério de Diagnóstico
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const progress: number = row.getValue('criteriaProgress')
 
       return (
         <div className="flex items-center gap-2">

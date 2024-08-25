@@ -92,6 +92,9 @@ export const getItemsByIndexes = (indexes: any[], step: number): string[] => {
     return []
   }
 
+  if (indexes.length === 0) {
+    return []
+  }
   return indexes.map((index) => {
     const option = question.options.find((opt: any) => opt.index === index)
     return option ? `${option.item}; ` : ''
