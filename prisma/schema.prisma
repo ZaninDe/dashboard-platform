@@ -92,6 +92,7 @@ model CriteriaAssessment {
   hyperactivity Boolean?
   currentStep   Int
   resultAmount  Int?
+  observation   String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   dialog        Dialog[]

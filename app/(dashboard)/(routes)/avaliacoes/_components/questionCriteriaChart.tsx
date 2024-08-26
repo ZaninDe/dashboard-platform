@@ -1,12 +1,11 @@
 import { Card, CardContent } from '@/components/ui/card'
-import { criteriaOptions } from '@/const/diagnostic-criteria'
 import { Dialog } from '@prisma/client'
 import React, { useState } from 'react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 
 interface QuestionData {
   question: string
-  answer: 'Sim' | 'Não'
+  answer: string
 }
 
 interface QuestionCriteriaChart {
@@ -27,15 +26,7 @@ const QuestionCriteriaChart = ({ criteriaDialogs }: QuestionCriteriaChart) => {
     dataQuestions.push(question)
   })
 
-  const data: QuestionData[] = [
-    { question: 'Pergunta 1', answer: 'Sim' },
-    { question: 'Pergunta 2', answer: 'Não' },
-    { question: 'Pergunta 3', answer: 'Sim' },
-    { question: 'Pergunta 4', answer: 'Não' },
-    // Continue com as demais perguntas...
-  ]
-
-  const aggregateData = (data: QuestionData[]) => {
+  const aggregateData = () => {
     const result = {
       Sim: 0,
       Não: 0,
@@ -55,7 +46,7 @@ const QuestionCriteriaChart = ({ criteriaDialogs }: QuestionCriteriaChart) => {
     ]
   }
 
-  const pieChartData = aggregateData(dataQuestions)
+  const pieChartData = aggregateData()
 
   const handleClick = (data: { name: string }) => {
     setSelectedAnswer(data.name)

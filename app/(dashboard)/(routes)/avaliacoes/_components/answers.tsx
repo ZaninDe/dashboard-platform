@@ -14,6 +14,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { useEffect, useState } from 'react'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import toast from 'react-hot-toast'
+import axios from 'axios'
+import { Button } from '@/components/ui/button'
 
 interface AnswersProps {
   assessment: AssesmentUser
@@ -27,12 +33,27 @@ const Answers = ({
   criteriaAssessment,
   criteriaDialogs,
 }: AnswersProps) => {
+  const [observation, setObservation] = useState(
+    criteriaAssessment?.observation,
+  )
   const { isSignedIn, user } = useUser()
   const createdDate = formatDate(assessment?.createdAt)
   const updatedDate = formatDate(assessment?.updatedAt)
 
   if (isSignedIn) {
     console.log(user)
+  }
+
+  const handleSave = async () => {
+    try {
+      await axios.put(`/api/criteria-assessments/${criteriaAssessment?.id}`, {
+        observation,
+      })
+      toast.success('Observação atualizada com sucesso.')
+    } catch (err) {
+      console.log(err)
+      toast.error('Algo deu errado ao salvar observação')
+    }
   }
 
   return (
@@ -121,7 +142,7 @@ const Answers = ({
           type="single"
           collapsible
           defaultValue="item-1"
-          className="mb-24"
+          className="mb-20"
         >
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-2xl">
@@ -172,7 +193,12 @@ const Answers = ({
       </section>
 
       <section id="criterio">
-        <Accordion type="single" collapsible defaultValue="item-2">
+        <Accordion
+          type="single"
+          collapsible
+          defaultValue="item-2"
+          className="mb-20"
+        >
           <AccordionItem value="item-2">
             <AccordionTrigger className="text-2xl">
               <div className="flex items-center justify-start gap-4">
@@ -209,6 +235,27 @@ const Answers = ({
           </AccordionItem>
         </Accordion>
       </section>
+      <Accordion type="single" collapsible defaultValue="item-3">
+        <AccordionItem value="item-3">
+          <AccordionTrigger className="uppercase text-2xl">
+            Observações
+          </AccordionTrigger>
+          <AccordionContent>
+            <form className="grid w-full gap-1.5 p-1" action={handleSave}>
+              <Textarea
+                id="message"
+                onBlur={handleSave}
+                onChange={(e) => setObservation(e.target.value)}
+                value={observation || 'Digite suas observações sobre o aluno'}
+              />
+              <p className="text-sm text-muted-foreground">
+                As observações ajudam profissionais compreender cada aluno de
+                forma individual
+              </p>
+            </form>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </section>
   )
 }
