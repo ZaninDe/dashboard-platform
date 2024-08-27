@@ -33,8 +33,9 @@ const Faq = () => {
             Para onde vão os dados?
           </AccordionTrigger>
           <AccordionContent className="text-xl">
-            Yes. It comes with default styles that matches the other
-            components&apos; aesthetic.
+            Os dados dos alunos cadastrados, assim como o resultado das
+            avaliações são salvos em nuvem em um banco de dados (MongoDB) onde
+            você não corre o risco de perder tudo que já cadastrou.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3">
@@ -42,17 +43,21 @@ const Faq = () => {
             A plataforma dá um diágnóstico?
           </AccordionTrigger>
           <AccordionContent className="text-xl">
-            Yes. It&apos;s animated by default, but you can disable it if you
-            prefer.
+            Não, a plataforma tem finalidade de mapear as características
+            encontradas na literatura, tornando possível rastrear situações onde
+            intervenções na forma de proporcionar a educação sejam de extrema
+            importância.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-4">
           <AccordionTrigger className="text-2xl">
-            A plataforma é somente para profissionais da educação?
+            A plataforma é somente para profissionais especialistas da educação?
           </AccordionTrigger>
           <AccordionContent className="text-xl">
-            Yes. It&apos;s animated by default, but you can disable it if you
-            prefer.
+            Não, a plataforma pode ser usada por qualquer profissional da
+            educação que tenha contato contínuo com o aluno avaliado, onde
+            entende a necessidade de descartar a presença de dificuldades
+            específicas.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-5">
@@ -60,8 +65,8 @@ const Faq = () => {
             A plataforma é paga?
           </AccordionTrigger>
           <AccordionContent className="text-xl">
-            Yes. It&apos;s animated by default, but you can disable it if you
-            prefer.
+            Não, a plataforma é totalmente gratuíta e incentiva seu uso
+            principalmente no ensino público.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-6">
@@ -69,17 +74,8 @@ const Faq = () => {
             Tenho um limite para cadastro de alunos?
           </AccordionTrigger>
           <AccordionContent className="text-xl">
-            Yes. It&apos;s animated by default, but you can disable it if you
-            prefer.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="item-7">
-          <AccordionTrigger className="text-2xl">
-            Não lembro minha senha, como posso recuperá-la?
-          </AccordionTrigger>
-          <AccordionContent className="text-xl">
-            Yes. It&apos;s animated by default, but you can disable it if you
-            prefer.
+            Atualmente não, você pode realizar uma avaliação de cada escala por
+            aluno, de quantos alunos precisar.
           </AccordionContent>
         </AccordionItem>
       </Accordion>
