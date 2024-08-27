@@ -18,7 +18,7 @@ import {
 import Answers from './answers'
 import { useRouter } from 'next/navigation'
 import React, { useRef } from 'react'
-import html2pdf from 'html2pdf.js'
+// import html2pdf from 'html2pdf.js'
 import { ArrowLeftIcon, File } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 
@@ -50,13 +50,13 @@ export function TabsNavigation({
   const router = useRouter()
   const reportRef = useRef<HTMLDivElement>(null)
 
-  const generatePDF = () => {
-    if (reportRef.current) {
-      html2pdf()
-        .from(reportRef.current)
-        .save(`${assessment?.student?.name}_${assessment?.student?.ra}.pdf`)
-    }
-  }
+  // const generatePDF = () => {
+  //   if (reportRef.current) {
+  //     html2pdf()
+  //       .from(reportRef.current)
+  //       .save(`${assessment?.student?.name}_${assessment?.student?.ra}.pdf`)
+  //   }
+  // }
 
   const handleBack = () => {
     router.back()
@@ -98,13 +98,13 @@ export function TabsNavigation({
                   Aqui são apresentadas as respostas durante o preenchimento da
                   avaliação
                 </CardDescription>
-                <Button
+                {/* <Button
                   onClick={generatePDF}
                   className="flex items-center justify-center gap-2"
                 >
                   Exportar Relatório
                   <File />
-                </Button>
+                </Button> */}
               </div>
             </CardHeader>
             <Separator />
