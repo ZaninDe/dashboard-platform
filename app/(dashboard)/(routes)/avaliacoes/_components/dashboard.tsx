@@ -93,23 +93,23 @@ const Dashboard = ({
         />
       </div>
 
-      <div className="mt-10">
-        <p>
-          {assessment.ratingScale === 'ATA'
-            ? 'Corte 15 pontos'
-            : 'Pontuação Média de Todos Alunos'}
-        </p>
-        <div className="relative">
-          <p className={`absolute right-0 mt-[-24px] `}>{maxScore}</p>
-          <p className={cn(`absolute mt-[-24px]`)} style={{ left: meanMargin }}>
-            {meanProgress} Pontos
-          </p>
+      {isAtaRatingScale && (
+        <div className="mt-10">
+          <div className="relative">
+            <p className={`absolute right-0 mt-[-24px] `}>{maxScore}</p>
+            <p
+              className={cn(`absolute mt-[-24px]`)}
+              style={{ left: meanMargin }}
+            >
+              {meanProgress} Pontos
+            </p>
+          </div>
+          <Progress
+            value={(meanProgress / maxScore) * 100}
+            className="bg-green-600/40"
+          />
         </div>
-        <Progress
-          value={(meanProgress / maxScore) * 100}
-          className="bg-green-600/40"
-        />
-      </div>
+      )}
       <div className="mt-16">
         <h1 className="text-2xl font-bold">Mapa de Cores</h1>
         <div>
@@ -162,7 +162,7 @@ const Dashboard = ({
                 ))}
           </div>
         </div>
-        <div className="grid grid-cols-3 justify-start mt-8">
+        <div className="md:grid md:grid-cols-3 justify-start mt-8">
           <div>
             <Select onValueChange={setSelectedCategory}>
               <SelectTrigger
@@ -210,7 +210,7 @@ const Dashboard = ({
             </Select>
             <div
               className={cn(
-                'grid grid-cols-4 grid-rows-4 mt-10 border justify-center items-center gap-1 w-[320px]',
+                'grid grid-cols-4 grid-rows-4 mt-10 border justify-center items-center gap-1 md:w-[320px]',
                 assessment?.ratingScale === 'SnapIV' && 'grid-cols-5',
               )}
             >
@@ -268,7 +268,7 @@ const Dashboard = ({
                       <HoverCardTrigger className="text-transparent">
                         <p>.</p>
                         <p>.</p>
-                        <p>.</p>
+                        <p className="hidden md:block">.</p>
                       </HoverCardTrigger>
                       <HoverCardContent className="w-96">
                         <p>
@@ -308,17 +308,21 @@ const Dashboard = ({
                         (option) =>
                           option.value === JSON.stringify(dialog.answer),
                       )
-                    } else if (assessment?.ratingScale === 'ATA') {
+                    } else if (isAtaRatingScale) {
                       // @ts-ignore
                       answer = getItemsByIndexes(dialog.answer, index)
                     }
 
                     const ataOption = (
-                      answer.length === 0 ? 1 : answer.length === 1 ? 2 : 3
+                      isAtaRatingScale && answer.length === 0
+                        ? 1
+                        : answer.length === 1
+                          ? 2
+                          : 3
                     ).toString()
                     return (
                       <div key={dialog?.id}>
-                        {ataOption === selectedCategory && (
+                        {isAtaRatingScale && ataOption === selectedCategory && (
                           <div className="mb-4 bg-slate-100 p-2 rounded-xl">
                             <p>
                               <strong>Pergunta: </strong>
@@ -327,23 +331,26 @@ const Dashboard = ({
 
                             <p>
                               <strong className="mt-8">Resposta: </strong>
-                              {answer.length === 0 ? 'Nada assinalado' : answer}
+                              {isAtaRatingScale && answer.length === 0
+                                ? 'Nada assinalado'
+                                : answer}
                             </p>
                           </div>
                         )}
-                        {answer?.value === selectedCategory && (
-                          <div className="mb-4 bg-slate-100 p-2 rounded-xl">
-                            <p>
-                              <strong>Pergunta: </strong>
-                              {dialog.question}
-                            </p>
+                        {!isAtaRatingScale &&
+                          answer?.value === selectedCategory && (
+                            <div className="mb-4 bg-slate-100 p-2 rounded-xl">
+                              <p>
+                                <strong>Pergunta: </strong>
+                                {dialog.question}
+                              </p>
 
-                            <p>
-                              <strong className="mt-8">Resposta: </strong>
-                              {answer?.label}
-                            </p>
-                          </div>
-                        )}
+                              <p>
+                                <strong className="mt-8">Resposta: </strong>
+                                {answer?.label}
+                              </p>
+                            </div>
+                          )}
                       </div>
                     )
                   })}

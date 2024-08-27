@@ -14,8 +14,8 @@ export default function Home() {
   }
   return (
     <div className="w-full">
-      <div className="bg-cyan-700/80 h-[400px] md:h-[500px] relative z-0">
-        <div className="absolute bottom-10 left-32 space-y-8">
+      <div className="bg-cyan-700/80 h-[400px] md:h-[500px] relative z-0 p-4">
+        <div className="md:absolute bottom-10 left-32 space-y-8">
           <h1 className="text-white text-5xl">
             Nossa Plataforma<span className="text-yellow-400">.</span>
           </h1>
@@ -45,7 +45,7 @@ export default function Home() {
           className="right-0 pt-6 absolute"
         />
       </div>
-      <section id="about" className="px-52 pt-80 space-y-20">
+      <section id="about" className="md:px-52 p-4 pt-48 md:pt-80 space-y-20">
         <div className="space-y-6">
           <h2 className="text-2xl font-bold">Avaliação</h2>
           <p>
@@ -84,10 +84,10 @@ export default function Home() {
           </Button>
         </Link>
       </section>
-      <section id="dsm" className="p-52 mt-24 bg-cyan-700/70 pb-[200px]">
-        <div className="flex justify-center items-center gap-12">
+      <section id="dsm" className="md:p-52 mt-24 bg-cyan-700/70 pb-[200px] p-4">
+        <div className="md:flex justify-center items-center gap-12">
           <Image src="/students.png" alt="students" width={460} height={365} />
-          <h1 className="max-w-[50%] text-2xl text-white">
+          <h1 className="md:max-w-[50%] md:text-2xl text-white mt-4 md:mt-0">
             Nossa Plataforma<span className="text-yellow-400">.</span> utiliza
             escalas de avaliação baseadas na DSM-V, Manual Diagnóstico e
             Estatístico de Transtornos Mentais, é uma publicação da Associação
@@ -96,8 +96,8 @@ export default function Home() {
           </h1>
         </div>
 
-        <div className="flex justify-end items-center gap-12 mt-40 relative">
-          <h1 className="max-w-[80%] text-2xl text-white bg-black/80 pl-10 pr-72 py-32 relative z-0 right-60 rounded-lg">
+        <div className="md:flex justify-end items-center gap-12 mt-10 md:mt-40 relative">
+          <h1 className="md:max-w-[80%] md:text-2xl p-4 md:p-0 text-white bg-black/80 md:pl-10 md:pr-72 md:py-32 relative z-0 md:right-60 rounded-lg">
             Esquematizamos o sistema de pontuação com base em cada escala de
             avaliação para garantir maior precisão nos mapeamentos
           </h1>
@@ -106,18 +106,18 @@ export default function Home() {
             alt="students"
             width={460}
             height={365}
-            className="absolute z-10"
+            className="absolute z-10 mt-6 md:mt-0"
           />
         </div>
 
-        <div className="flex justify-center items-center gap-12 mt-40 ">
+        <div className="flex flex-col-reverse md:flex-col justify-center items-center gap-12 mt-80 md:mt-40 ">
           <Image
             src="/dashboards.png"
             alt="students"
             width={460}
             height={365}
           />
-          <h1 className="max-w-[50%] text-2xl text-white">
+          <h1 className="md:max-w-[50%] md:text-2xl text-white">
             Exibimos o resultado através de um mapeamento com o auxilio de
             dashboards interativos de fácil compreensão visual para o
             profissional da educação, utilizando tecnologias de programação web.

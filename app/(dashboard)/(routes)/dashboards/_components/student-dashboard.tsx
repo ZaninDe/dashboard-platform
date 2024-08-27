@@ -1,5 +1,5 @@
 'use client'
-import { Assessment, Student, School, Dialog } from '@prisma/client'
+import { Assessment, Student, School, Dialog, CriteriaAssessment } from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Combobox } from '@/components/ui/combobox'
@@ -25,8 +25,14 @@ export interface AssessmentWithDetails extends Assessment {
   dialog: Dialog[]
 }
 
+export interface CriteriaAssessmentWithDetails extends CriteriaAssessment {
+  student: Student & { school: School }
+  dialog: Dialog[]
+}
+
 interface DashboardsProps {
   assessments: AssessmentWithDetails[]
+  criteriaAssessments: CriteriaAssessmentWithDetails[]
   students: Student[]
 }
 
@@ -34,7 +40,7 @@ const formSchema = z.object({
   studentId: z.string().min(1),
 })
 
-const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
+const StudentDashboard = ({ assessments, criteriaAssessments, students }: DashboardsProps) => {
   const [currentStudent, setCurrentStudent] = useState<Student>()
   const [SNAPIVAssessmentes, setSNAPIVAssessmentes] =
     useState<AssessmentWithDetails>()
@@ -73,7 +79,7 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-center">
+      <h1 className="text-2xl font-bold text-center mt-4">
         Resultado Individual por Aluno
       </h1>
       <p className="text-muted-foreground text-center">
@@ -83,13 +89,13 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex gap-4 items-center mx-auto mt-8 justify-center"
+          className="md:flex gap-4 items-center mx-auto mt-8 justify-center space-y-2 md:space-y-0"
         >
           <FormField
             control={form.control}
             name="studentId"
             render={({ field }) => (
-              <FormItem className=" w-96">
+              <FormItem className="md:w-96">
                 <FormControl>
                   <Combobox
                     placeholder="selecione um aluno..."
@@ -107,7 +113,7 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
           />
 
           <Button
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 w-full md:w-auto"
             type="submit"
             disabled={!form.formState.isValid || form.formState.isSubmitting}
           >
@@ -119,20 +125,22 @@ const StudentDashboard = ({ assessments, students }: DashboardsProps) => {
       <Card className="mt-8 p-4">
         {currentStudent ? (
           <div>
-            <CardTitle className="flex gap-10">
-              <div className="border-r-2 border-muted-foreground pr-10">
+            <CardTitle className="flex justify-center md:justify-start md:gap-10 text-md md:text-xl px-6 pt-2">
+              <div className="border-r-2 border-muted-foreground px-2 md:pr-10">
                 {currentStudent?.name}
               </div>
-              <div className="border-r-2 font-light border-muted-foreground pr-10">
+              <div className="border-r-2 font-light border-muted-foreground px-2 md:pr-10">
                 {currentStudent?.age} Anos
               </div>
-              <div className="font-light">{currentStudent?.classroom}</div>
+              <div className="font-light px-2 md:px-0">
+                {currentStudent?.classroom}
+              </div>
             </CardTitle>
-            <CardContent className="grid grid-cols-2 gap-2 mt-6">
+            <CardContent className="md:grid md:grid-cols-2 space-y-4 md:space-y-0 gap-2 mt-6 p-0">
               {SNAPIVAssessmentes && (
-                <SNAPDashboard assessment={SNAPIVAssessmentes} />
+                <SNAPDashboard criteriaAssessment={criteriaAssessments.find((criteriaAssessment) => criteriaAssessment.assessmentId === SNAPIVAssessmentes.id)} assessment={SNAPIVAssessmentes} />
               )}
-              {ATAAssessmentes && <ATADashboard assessment={ATAAssessmentes} />}
+              {ATAAssessmentes && <ATADashboard criteriaAssessment={criteriaAssessments.find((criteriaAssessment) => criteriaAssessment.assessmentId === ATAAssessmentes.id)} assessment={ATAAssessmentes} />}
             </CardContent>
           </div>
         ) : (

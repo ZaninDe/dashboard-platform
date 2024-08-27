@@ -99,12 +99,12 @@ model CriteriaAssessment {
 }
 
 model Dialog {
-  id             String     @id @default(auto()) @map("_id") @db.ObjectId
-  assessment     Assessment @relation(fields: [assessmentId], references: [id])
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  assessment     Assessment? @relation(fields: [assessmentId], references: [id])
   questionNumber Int
   question       String
   answer         Json
-  assessmentId   String     @db.ObjectId
+  assessmentId   String?     @db.ObjectId
 
   CriteriaAssessment   CriteriaAssessment? @relation(fields: [criteriaAssessmentId], references: [id])
   criteriaAssessmentId String?             @db.ObjectId

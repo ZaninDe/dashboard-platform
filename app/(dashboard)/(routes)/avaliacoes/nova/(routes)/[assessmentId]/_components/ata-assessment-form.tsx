@@ -46,16 +46,11 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
   const questions: ATAQuestionsProps[] = ATAQuestions
 
   const nextStep = () => {
-    if (step === questions.length) {
-      router.push(`/avaliacoes/${assessment.id}`)
-    } else {
       setStep((state) => state + 1)
-    }
   }
 
   const prevStep = () => {
     if (step === 1) {
-      console.log('PRIMEIRA QUESTAO')
     } else {
       setStep((state) => state - 1)
     }
@@ -94,9 +89,14 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
   const onSubmitFinish = async () => {
     setIsSubmitting(true)
     try {
-      if (step === questions.length) {
-        await axios.put(`/api/assessments/${assessment.id}/finish`, {})
-      }
+      const newCriteriaAssessment = await axios.put(
+        `/api/assessments/${assessment.id}/finish`,
+        {},
+      )
+      router.push(
+        `/avaliacoes/nova/criterio-de-diagnostico/${newCriteriaAssessment.data.id}`,
+      )
+      console.log('resultado salvo com sucesso!')
       router.refresh()
     } catch (err) {
       console.log(err)
@@ -111,7 +111,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
   const isDisabled = !questions.length || isSubmitting
   return (
     <div className="h-full">
-      {step < questions.length ? (
+      {step <= questions.length ? (
         <div className="w-full h-full p-4">
           <p className="font-bold">{`Questão ${step} de 23`}</p>
           <div className="w-full h-full flex flex-col justify-around items-center">

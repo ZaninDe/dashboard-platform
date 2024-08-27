@@ -47,7 +47,7 @@ const AssessmentPage = async ({
 
   const criteriaDialogs = await db.dialog.findMany({
     where: {
-      assessmentId: criteriaAssessment?.id,
+      criteriaAssessmentId: criteriaAssessment?.id,
     },
   })
 

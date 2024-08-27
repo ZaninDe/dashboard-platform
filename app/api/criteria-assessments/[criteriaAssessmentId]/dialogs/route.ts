@@ -34,7 +34,7 @@ export async function POST(
     } else {
       const newDialog = await db.dialog.create({
         data: {
-          assessmentId: params.criteriaAssessmentId,
+          criteriaAssessmentId: params.criteriaAssessmentId,
           questionNumber,
           question,
           answer,
@@ -50,18 +50,6 @@ export async function POST(
       if (!criteriaAssessment) {
         return new NextResponse('Assessment not exists', { status: 400 })
       } else {
-        // let totalProgress = 0
-        // if (assessment.ratingScale === 'ELE') {
-        //   totalProgress = ELEQuestions.length
-        // } else if (assessment.ratingScale === 'ATA') {
-        //   totalProgress = ATAQuestions.length
-        // } else {
-        //   totalProgress = SNAPQuestions.length
-        // }
-
-        // const progress = step / totalProgress
-        // const percentageProgress = progress * 100
-
         if (step > criteriaAssessment?.currentStep) {
           await db.criteriaAssessment.update({
             where: {

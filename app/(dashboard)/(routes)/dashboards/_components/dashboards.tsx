@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react'
 import { Assessment, Dialog, School, Student } from '@prisma/client'
 
 import { Button } from '@/components/ui/button'
-import BarChatComponent from './graphs/bar'
 import { Combobox } from '@/components/ui/combobox'
 import {
   ageOptions,
@@ -13,13 +12,7 @@ import {
 } from '../../avaliacoes/nova/_components/student-form'
 import { EraserIcon, Trash2Icon } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  calculateMean,
-  calculateMedian,
-  calculateMode,
-  cn,
-  countNumbersAndNulls,
-} from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -29,14 +22,6 @@ import {
 } from '@/components/ui/navigation-menu'
 import { GenderOptions, writingHypothesesOptions } from '@/const/rating-scales'
 import { Card, CardContent } from '@/components/ui/card'
-import SingleStatPieChart from './graphs/pie'
-import { Progress } from '@/components/ui/progress'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 interface AssessmentWithDetails extends Assessment {
   student: Student & { school: School }
   dialog: Dialog[]
@@ -47,19 +32,8 @@ interface DashboardsProps {
   schools: School[]
 }
 
-interface IAssesmentStats {
-  mean: number
-  mode: number
-  median: number
-  finishedAmount: number
-}
-
 const Dashboards = ({ assessments, schools }: DashboardsProps) => {
-  const [ELEData, setELEData] = useState()
-  const [SNAPIVData, setSNAPIVData] = useState()
   const [firstRender, setFirstRender] = useState(true)
-  const [ELEStats, setEleStats] = useState<IAssesmentStats>()
-  const [SNAPStats, setSNAPStats] = useState<IAssesmentStats>()
   const [filterAge, setFilterAge] = useState<string | undefined>(undefined)
   const [filterGender, setFilterGender] = useState<string | undefined>(
     undefined,
@@ -84,81 +58,6 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
     undefined,
   )
   useState<AssessmentWithDetails[]>(assessments)
-
-  useEffect(() => {
-    const filteredData = assessments.filter((item) => {
-      return (
-        (filterAge === undefined ||
-          item.student.age.toString() === filterAge) &&
-        (filterClassroom === undefined ||
-          item?.student?.classroom === filterClassroom) &&
-        (filterGender === undefined ||
-          item?.student?.gender === filterGender) &&
-        (filterWriting === undefined ||
-          item?.student?.writingHypotheses === filterWriting) &&
-        (filterSchoolState === undefined ||
-          item?.student?.school?.state === filterSchoolState) &&
-        (filterSchoolCity === undefined ||
-          item?.student?.school?.city === filterSchoolCity) &&
-        (filterSchoolNeighborhood === undefined ||
-          item?.student?.school?.neighborhood === filterSchoolNeighborhood) &&
-        (filterSchoolRegion === undefined ||
-          item?.student?.school?.region === filterSchoolRegion)
-      )
-    })
-
-    const SNAPIVAssessments = filteredData.filter(
-      (item) => item.ratingScale === 'SnapIV' && item.currentStep === 18,
-    )
-    const SNAPIVResultCounts = SNAPIVAssessments.reduce(
-      (acc: Record<number, number>, assessment) => {
-        if (assessment.resultAmount !== null) {
-          acc[assessment.resultAmount] = (acc[assessment.resultAmount] || 0) + 1
-        }
-        console.log('ACC', acc)
-        return acc
-      },
-      {},
-    )
-    const SNAPIV = Object.keys(SNAPIVResultCounts).map((key: any) => ({
-      resultAmount: Number(key),
-      pontos: SNAPIVResultCounts[key],
-    }))
-
-    const SNAPValues = SNAPIVAssessments.map(
-      (assessment) => assessment.resultAmount,
-    )
-
-    const snapFinishedAmount = countNumbersAndNulls(SNAPValues)
-
-    const SNAPmean = calculateMean(SNAPValues)
-    const SNAPmode = calculateMode(SNAPValues)
-    const SNAPmedian = calculateMedian(SNAPValues)
-
-    const SNAPStats: IAssesmentStats = {
-      mean: SNAPmean,
-      mode: SNAPmode!,
-      median: SNAPmedian,
-      finishedAmount: snapFinishedAmount,
-    }
-
-    setSNAPStats(SNAPStats)
-
-    // @ts-ignore
-    ELE && setELEData(ELE)
-    // @ts-ignore
-    SNAPIV && setSNAPIVData(SNAPIV)
-  }, [
-    filterAge,
-    filterClassroom,
-    filterGender,
-    filterWriting,
-    filterSchoolState,
-    filterSchoolCity,
-    filterSchoolNeighborhood,
-    filterSchoolRegion,
-    assessments,
-  ])
 
   useEffect(() => {
     if (firstRender) {
@@ -457,119 +356,7 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
                       Quantidade de avaliações criadas X Quantidade de
                       avaliações finalizadas
                     </p>
-                    {ELEStats?.finishedAmount && (
-                      <p
-                        className="absolute mt-[-24px]"
-                        style={{ left: `${ELEStats?.finishedAmount}%` }}
-                      >
-                        {Math.trunc(ELEStats?.finishedAmount)}%
-                      </p>
-                    )}
-                    <Progress
-                      value={ELEStats?.finishedAmount}
-                      className="h-10 rounded-none"
-                    />
                   </div>
-                  <div className="grid grid-cols-3">
-                    {ELEStats?.mean && (
-                      <div className="flex flex-col justify-center items-center">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger
-                              className="mt-2 mb-4 underline text-muted-foreground"
-                              type="button"
-                            >
-                              Média de Pontuação
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-[300px]">
-                              <strong>Média:</strong> É calculada somando todos
-                              os valores de um conjunto e dividindo pelo número
-                              total de valores. Por exemplo, para os números 2,
-                              3 e 5, a média é (2+3+5)/3 = 10/3 ≈ 3,33.
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <SingleStatPieChart
-                          value={ELEStats?.mean}
-                          name="Média"
-                          color="#3b82f6"
-                          title="Média de Pontuação"
-                        />
-                      </div>
-                    )}
-
-                    {ELEStats?.mode && (
-                      <div className="flex flex-col justify-center items-center">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger
-                              className="mt-2 mb-4 underline text-muted-foreground"
-                              type="button"
-                            >
-                              Moda de Pontuação
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-[300px]">
-                              <strong>Moda:</strong> É o valor que ocorre com
-                              maior frequência em um conjunto de dados. Por
-                              exemplo, em 2, 3, 3, 5, o número 3 é a moda porque
-                              aparece mais vezes.
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <SingleStatPieChart
-                          value={ELEStats?.mode}
-                          name="Moda"
-                          color="#22c55e"
-                          title="Média de Pontuação"
-                        />
-                      </div>
-                    )}
-
-                    {ELEStats?.median && (
-                      <div className="flex flex-col justify-center items-center">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger
-                              className="mt-2 mb-4 underline text-muted-foreground"
-                              type="button"
-                            >
-                              Mediana de Pontuação
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-[300px]">
-                              <strong>Mediana:</strong> É o valor central em um
-                              conjunto de dados ordenado. Se o conjunto tiver um
-                              número ímpar de valores, é o valor do meio. Se
-                              tiver um número par, é a média dos dois valores
-                              centrais. Por exemplo, para 2, 3, 5, 7, a mediana
-                              é 5. Para 2, 3, 5, 7, 8, a mediana é (5+7)/2 = 6.
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <SingleStatPieChart
-                          value={ELEStats?.median}
-                          name="Mediana"
-                          color="#fde047"
-                          title="Média de Pontuação"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 justify-center relative mt-20">
-                  {ratingScales.includes(1) && (
-                    <div className="max-h-[60vh]">
-                      <h1 className="text-center mb-4 font-bold text-muted-foreground"></h1>
-                      <p className="absolute top-1/2 -rotate-90 text-muted-foreground">
-                        ALUNOS
-                      </p>
-                      <BarChatComponent
-                        data={ELEData}
-                        dataKeyX="resultAmount"
-                        dataKeyY="pontos"
-                        color="#3b82f6"
-                      />
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
@@ -580,46 +367,7 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
               ratingScales.length === 2 && 'grid-cols-2',
               ratingScales.length === 3 && 'grid-cols-3',
             )}
-          >
-            {ratingScales.includes(1) && (
-              <div className="max-h-[60vh]">
-                <BarChatComponent
-                  data={ELEData}
-                  dataKeyX="resultAmount"
-                  dataKeyY="pontos"
-                  color="#3b82f6"
-                />
-              </div>
-            )}
-
-            {ratingScales.includes(2) && (
-              <div className="max-h-[60vh]">
-                <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                  SNAPIV
-                </h1>
-                <BarChatComponent
-                  data={SNAPIVData}
-                  dataKeyX="resultAmount"
-                  dataKeyY="pontos"
-                  color="#22c55e"
-                />
-              </div>
-            )}
-
-            {ratingScales.includes(3) && (
-              <div className="max-h-[60vh]">
-                <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                  ATA
-                </h1>
-                <BarChatComponent
-                  data={SNAPIVData}
-                  dataKeyX="resultAmount"
-                  dataKeyY="pontos"
-                  color="#fde047"
-                />
-              </div>
-            )}
-          </div>
+          ></div>
         </div>
       )}
     </div>

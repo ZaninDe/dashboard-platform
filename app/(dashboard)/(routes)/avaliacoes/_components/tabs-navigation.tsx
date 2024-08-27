@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -63,17 +62,17 @@ export function TabsNavigation({
     router.back()
   }
   return (
-    <div>
+    <div className="mb-40">
       <Button
         variant="link"
-        className="flex gap-2 absolute"
+        className="flex gap-2 md:absolute mt-4 md:mt-0"
         onClick={handleBack}
       >
         <ArrowLeftIcon className="text-black" />
         Voltar
       </Button>
-      <Tabs defaultValue="dashboard" className="w-full mt-10">
-        <TabsList className="grid grid-cols-2 w-[400px] mx-auto">
+      <Tabs defaultValue="dashboard" className="w-full mt-2 md:mt-10">
+        <TabsList className="grid grid-cols-2 md:w-[400px] mx-auto">
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="answers">Espelho</TabsTrigger>
         </TabsList>
@@ -88,16 +87,13 @@ export function TabsNavigation({
                 criteriaDialogs={criteriaDialogs}
               />
             </CardContent>
-            <CardFooter>
-              <Button onClick={() => router.back()}>Voltar</Button>
-            </CardFooter>
           </Card>
         </TabsContent>
         <TabsContent value="answers">
-          <Card>
-            <CardHeader className="">
+          <Card className="">
+            <CardHeader className="p-2">
               <CardTitle>Espelho de Avaliação</CardTitle>
-              <div className="flex w-full items-center justify-between">
+              <div className="md:flex w-full items-center justify-between space-y-4 md:space-y-0">
                 <CardDescription>
                   Aqui são apresentadas as respostas durante o preenchimento da
                   avaliação
@@ -112,7 +108,7 @@ export function TabsNavigation({
               </div>
             </CardHeader>
             <Separator />
-            <CardContent className="space-y-2" ref={reportRef}>
+            <CardContent className="p-2 space-y-2" ref={reportRef}>
               <Answers
                 dialogs={dialogs}
                 assessment={assessment}
@@ -120,9 +116,6 @@ export function TabsNavigation({
                 criteriaDialogs={criteriaDialogs}
               />
             </CardContent>
-            <CardFooter>
-              <Button onClick={() => router.back()}>Voltar</Button>
-            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>

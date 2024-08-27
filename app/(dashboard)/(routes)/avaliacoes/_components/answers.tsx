@@ -14,12 +14,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
 interface AnswersProps {
   assessment: AssesmentUser
@@ -34,11 +33,12 @@ const Answers = ({
   criteriaDialogs,
 }: AnswersProps) => {
   const [observation, setObservation] = useState(
-    criteriaAssessment?.observation,
+    criteriaAssessment?.observation || '',
   )
   const { isSignedIn, user } = useUser()
   const createdDate = formatDate(assessment?.createdAt)
   const updatedDate = formatDate(assessment?.updatedAt)
+  const router = useRouter()
 
   if (isSignedIn) {
     console.log(user)
@@ -50,6 +50,7 @@ const Answers = ({
         observation,
       })
       toast.success('Observação atualizada com sucesso.')
+      router.refresh()
     } catch (err) {
       console.log(err)
       toast.error('Algo deu errado ao salvar observação')
@@ -58,7 +59,7 @@ const Answers = ({
 
   return (
     <section className="min-h-screen space-y-4">
-      <div className="flex justify-between items-center my-10">
+      <div className="md:flex justify-between items-center my-10">
         <div>
           <div className="text-2xl">
             <p className="whitespace-nowrap">
@@ -71,8 +72,8 @@ const Answers = ({
           <div className="w-2 h-2 bg-yellow-400 mb-[6px] rounded-full"></div>
         </div>
       </div>
-      <div className="text-sm w-full grid grid-cols-3 my-8 text-white border border-neutral-900 rounded-md">
-        <div className="bg-cyan-700 px-2 py-4 rounded-l-md flex flex-col justify-center">
+      <div className="text-sm w-full md:grid md:grid-cols-3 my-8 text-white border border-neutral-900 rounded-md">
+        <div className="bg-cyan-700 px-2 py-4 md:rounded-l-md flex flex-col justify-center">
           {/* <strong className="uppercase text-md">Aluno</strong> */}
           <div className="flex items-center gap-2">
             <strong>Nome: </strong>
@@ -120,7 +121,7 @@ const Answers = ({
           )}
         </div>
 
-        <div className="bg-cyan-700 px-2 py-4 rounded-r-md flex flex-col justify-center">
+        <div className="bg-cyan-700 px-2 py-4 md:rounded-r-md flex flex-col justify-center">
           {/* <strong className="uppercase text-md">Escola</strong> */}
           <div className="flex items-center gap-2">
             <strong>Escola: </strong>
@@ -142,10 +143,10 @@ const Answers = ({
           type="single"
           collapsible
           defaultValue="item-1"
-          className="mb-20"
+          className="mb-10 md:mb-20"
         >
           <AccordionItem value="item-1">
-            <AccordionTrigger className="text-2xl">
+            <AccordionTrigger className="md:text-2xl">
               QUESTIONÁRIO ESCALA DE AVALIAÇÃO
             </AccordionTrigger>
             <AccordionContent>
@@ -197,13 +198,13 @@ const Answers = ({
           type="single"
           collapsible
           defaultValue="item-2"
-          className="mb-20"
+          className="mb-10 md:mb-20"
         >
           <AccordionItem value="item-2">
-            <AccordionTrigger className="text-2xl">
-              <div className="flex items-center justify-start gap-4">
+            <AccordionTrigger className="md:text-2xl">
+              <h1 className="md:text-2xl">
                 QUESTIONÁRIO CRITÉRIO DE DIAGNÓSTICO
-              </div>
+              </h1>
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-2">
@@ -237,7 +238,7 @@ const Answers = ({
       </section>
       <Accordion type="single" collapsible defaultValue="item-3">
         <AccordionItem value="item-3">
-          <AccordionTrigger className="uppercase text-2xl">
+          <AccordionTrigger className="uppercase md:text-2xl">
             Observações
           </AccordionTrigger>
           <AccordionContent>
@@ -246,7 +247,7 @@ const Answers = ({
                 id="message"
                 onBlur={handleSave}
                 onChange={(e) => setObservation(e.target.value)}
-                value={observation || 'Digite suas observações sobre o aluno'}
+                value={observation}
               />
               <p className="text-sm text-muted-foreground">
                 As observações ajudam profissionais compreender cada aluno de

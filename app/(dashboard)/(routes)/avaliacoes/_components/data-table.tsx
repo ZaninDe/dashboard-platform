@@ -61,23 +61,23 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4 justify-between">
+      <div className="md:flex gap-2 items-center py-4 px-4 md:px-0 justify-between">
         <Input
           placeholder="Filtrar Aluno..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn('name')?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm mb-4 md:mb-0"
         />
         <Link href="/avaliacoes/nova">
-          <Button>
+          <Button className="w-full md:w-auto">
             <PlusCircle className="h-4 w-4 mr-2" />
             Nova Avaliação
           </Button>
         </Link>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border ml-4 md:ml-0">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -128,14 +128,14 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Nenhuma avaliação para exibir.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-4 px-4">
         <Button
           variant="outline"
           size="sm"

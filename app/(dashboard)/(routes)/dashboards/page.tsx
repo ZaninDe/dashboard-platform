@@ -22,6 +22,20 @@ const DashboardsPage = async () => {
     },
   })
 
+  const criteriaAssessments = await db.criteriaAssessment.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      student: {
+        include: {
+          school: true,
+        },
+      },
+      dialog: true,
+    },
+  })
+
   const students = await db.student.findMany({
     where: {
       userId,
@@ -29,8 +43,8 @@ const DashboardsPage = async () => {
   })
 
   return (
-    <div className="min-h-screen p-4">
-      <StudentDashboard assessments={assessments} students={students} />
+    <div className="min-h-screen p-4 mb-40">
+      <StudentDashboard criteriaAssessments={criteriaAssessments} assessments={assessments} students={students} />
     </div>
   )
 }
