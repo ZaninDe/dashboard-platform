@@ -1,24 +1,23 @@
 import { db } from '@/lib/db'
-import AssessmentForm from './_components/assessment-form'
-import ATAAssessmentForm from './_components/ata-assessment-form'
 import { cn } from '@/lib/utils'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import CriteriaForm from './_components/criteria-form'
 
-const AssesmentIdPage = async ({
+const CriteriaAssesmentIdPage = async ({
   params,
 }: {
-  params: { assessmentId: string }
+  params: { criteriaAssessmentId: string }
 }) => {
-  const assessment = await db.assessment.findUnique({
+  const criteriaAssessment = await db.criteriaAssessment.findUnique({
     where: {
-      id: params.assessmentId,
+      id: params.criteriaAssessmentId,
     },
   })
 
   const dialogs = await db.dialog.findMany({
     where: {
-      assessmentId: assessment?.id,
+      assessmentId: criteriaAssessment?.id,
     },
     orderBy: {
       questionNumber: 'asc',
@@ -39,26 +38,26 @@ const AssesmentIdPage = async ({
       <div
         className={cn(
           'absolute inset-0 m-auto w-1/2 h-1/2 bg-white rounded-lg',
-          assessment?.ratingScale === 'ATA' && 'h-[70%]',
+          criteriaAssessment?.ratingScale === 'ATA' && 'h-[70%]',
         )}
       >
-        {assessment && (
-          <div className="h-full relative">
-            {assessment.ratingScale !== 'ATA' ? (
-              <AssessmentForm assessment={assessment} dialogs={dialogs} />
-            ) : (
-              <ATAAssessmentForm assessment={assessment} dialogs={dialogs} />
-            )}
+        {criteriaAssessment && (
+          <div className="h-full">
+            <CriteriaForm
+              criteriaAssessment={criteriaAssessment}
+              dialogs={dialogs}
+            />
           </div>
         )}
       </div>
       <div className="h-[60%] bg-cyan-600 flex justify-center items-end">
         <h1 className="mb-10 text-5xl font-bold text-white">
-          Questionário<span className="text-yellow-400">.</span>
+          Questionário Critério de Diagnostico
+          <span className="text-yellow-400">.</span>
         </h1>
       </div>
     </div>
   )
 }
 
-export default AssesmentIdPage
+export default CriteriaAssesmentIdPage

@@ -1,42 +1,65 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import {
-  ATAQuestions,
-  ELEButtonOptions,
-  SNAPButtonOptions,
-} from '@/const/rating-scales'
-import { Dialog } from '@prisma/client'
+import { SNAPButtonOptions } from '@/const/rating-scales'
+import { CriteriaAssessment, Dialog } from '@prisma/client'
 import { AssesmentUser } from './tabs-navigation'
 import { useUser } from '@clerk/clerk-react'
-import { cn, formatDate } from '@/lib/utils'
+import { cn, formatDate, getItemsByIndexes } from '@/lib/utils'
+import { criteriaOptions } from '@/const/diagnostic-criteria'
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { useState } from 'react'
+import { Textarea } from '@/components/ui/textarea'
+import toast from 'react-hot-toast'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
 
 interface AnswersProps {
   assessment: AssesmentUser
   dialogs: Dialog[]
+  criteriaAssessment: CriteriaAssessment | null
+  criteriaDialogs: Dialog[]
 }
-const Answers = ({ assessment, dialogs }: AnswersProps) => {
+const Answers = ({
+  assessment,
+  dialogs,
+  criteriaAssessment,
+  criteriaDialogs,
+}: AnswersProps) => {
+  const [observation, setObservation] = useState(
+    criteriaAssessment?.observation || '',
+  )
   const { isSignedIn, user } = useUser()
   const createdDate = formatDate(assessment?.createdAt)
   const updatedDate = formatDate(assessment?.updatedAt)
+  const router = useRouter()
 
   if (isSignedIn) {
     console.log(user)
   }
-  const getItemsByIndexes = (indexes: any[], step: number): string[] => {
-    const question = ATAQuestions.find((q) => q.step === step)
-    if (!question) {
-      return []
-    }
 
-    return indexes.map((index) => {
-      const option = question.options.find((opt) => opt.index === index)
-      return option ? `${option.item}, ` : 'Índice não encontrado'
-    })
+  const handleSave = async () => {
+    try {
+      await axios.put(`/api/criteria-assessments/${criteriaAssessment?.id}`, {
+        observation,
+      })
+      toast.success('Observação atualizada com sucesso.')
+      router.refresh()
+    } catch (err) {
+      console.log(err)
+      toast.error('Algo deu errado ao salvar observação')
+    }
   }
+
   return (
     <section className="min-h-screen space-y-4">
-      <div className="flex justify-between items-center my-10">
+      <div className="md:flex justify-between items-center my-10">
         <div>
           <div className="text-2xl">
             <p className="whitespace-nowrap">
@@ -49,8 +72,8 @@ const Answers = ({ assessment, dialogs }: AnswersProps) => {
           <div className="w-2 h-2 bg-yellow-400 mb-[6px] rounded-full"></div>
         </div>
       </div>
-      <div className="text-sm w-full grid grid-cols-3 my-8 text-white border border-neutral-900 rounded-md">
-        <div className="bg-cyan-700 px-2 py-4 rounded-l-md flex flex-col justify-center">
+      <div className="text-sm w-full md:grid md:grid-cols-3 my-8 text-white border border-neutral-900 rounded-md">
+        <div className="bg-cyan-700 px-2 py-4 md:rounded-l-md flex flex-col justify-center">
           {/* <strong className="uppercase text-md">Aluno</strong> */}
           <div className="flex items-center gap-2">
             <strong>Nome: </strong>
@@ -98,7 +121,7 @@ const Answers = ({ assessment, dialogs }: AnswersProps) => {
           )}
         </div>
 
-        <div className="bg-cyan-700 px-2 py-4 rounded-r-md flex flex-col justify-center">
+        <div className="bg-cyan-700 px-2 py-4 md:rounded-r-md flex flex-col justify-center">
           {/* <strong className="uppercase text-md">Escola</strong> */}
           <div className="flex items-center gap-2">
             <strong>Escola: </strong>
@@ -115,40 +138,125 @@ const Answers = ({ assessment, dialogs }: AnswersProps) => {
         </div>
       </div>
 
-      {dialogs.map((dialog: Dialog, index: number) => {
-        let answer: any
-        if (assessment?.ratingScale === 'ELE') {
-          answer = ELEButtonOptions.find(
-            (option) => option.value === JSON.stringify(dialog.answer),
-          )
-        } else if (assessment?.ratingScale === 'SnapIV') {
-          answer = SNAPButtonOptions.find(
-            (option) => option.value === JSON.stringify(dialog.answer),
-          )
-        }
-        return (
-          <div
-            key={dialog.id}
-            className={cn(
-              'bg-muted/50 text-neutral-900/80 p-2 rounded-md',
-              answer?.value === '1' && 'bg-red-50/50',
-              answer?.value === '2' && 'bg-red-100',
-              answer?.value === '3' && 'bg-red-300/60',
-              answer?.value === '4' && 'bg-red-400/90 text-white',
-            )}
-          >
-            <strong>
-              {index + 1}. {dialog?.question} :
-            </strong>
-            {assessment?.ratingScale !== 'ATA' ? (
-              <p className="font-light">{answer?.label}</p>
-            ) : (
-              // @ts-ignore
-              <>{<p>{getItemsByIndexes(dialog.answer, index)}</p>}</>
-            )}
-          </div>
-        )
-      })}
+      <section id="escala" className="">
+        <Accordion
+          type="single"
+          collapsible
+          defaultValue="item-1"
+          className="mb-10 md:mb-20"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="md:text-2xl">
+              QUESTIONÁRIO ESCALA DE AVALIAÇÃO
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-2">
+                {dialogs.map((dialog: Dialog, index: number) => {
+                  let answer: any
+                  if (assessment?.ratingScale === 'SnapIV') {
+                    answer = SNAPButtonOptions.find(
+                      (option) =>
+                        option.value === JSON.stringify(dialog.answer),
+                    )
+                  }
+                  return (
+                    <div
+                      key={dialog.id}
+                      className={cn(
+                        'bg-muted/50 text-neutral-900/80 p-2 rounded-md',
+                        answer?.value === '1' && 'bg-red-50/50',
+                        answer?.value === '2' && 'bg-red-100',
+                        answer?.value === '3' && 'bg-red-300/60',
+                        answer?.value === '4' && 'bg-red-400/90 text-white',
+                      )}
+                    >
+                      <strong>
+                        {index + 1}. {dialog?.question} :
+                      </strong>
+                      {assessment?.ratingScale !== 'ATA' ? (
+                        <p className="font-light">{answer?.label}</p>
+                      ) : (
+                        <p>
+                          {/* @ts-ignore */}
+                          {getItemsByIndexes(dialog.answer, index).length === 0
+                            ? 'Nada assinalado'
+                            : // @ts-ignore
+                              getItemsByIndexes(dialog.answer, index)}
+                        </p>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
+
+      <section id="criterio">
+        <Accordion
+          type="single"
+          collapsible
+          defaultValue="item-2"
+          className="mb-10 md:mb-20"
+        >
+          <AccordionItem value="item-2">
+            <AccordionTrigger className="md:text-2xl">
+              <h1 className="md:text-2xl">
+                QUESTIONÁRIO CRITÉRIO DE DIAGNÓSTICO
+              </h1>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-2">
+                {criteriaDialogs &&
+                  criteriaDialogs.map((dialog: Dialog, index: number) => {
+                    const answer = criteriaOptions.find(
+                      (option) =>
+                        option.value === JSON.stringify(dialog.answer),
+                    )
+
+                    return (
+                      <div
+                        key={dialog.id}
+                        className={cn(
+                          'bg-muted/50 text-neutral-900/80 p-2 rounded-md',
+                          answer?.value === '0' && 'bg-slate-100',
+                          answer?.value === '1' && 'bg-red-100',
+                        )}
+                      >
+                        <strong>
+                          {index + 1}. {dialog?.question} :
+                        </strong>
+                        <p className="font-light">{answer?.label}</p>
+                      </div>
+                    )
+                  })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
+      <Accordion type="single" collapsible defaultValue="item-3">
+        <AccordionItem value="item-3">
+          <AccordionTrigger className="uppercase md:text-2xl">
+            Observações
+          </AccordionTrigger>
+          <AccordionContent>
+            <form className="grid w-full gap-1.5 p-1" action={handleSave}>
+              <Textarea
+                id="message"
+                onBlur={handleSave}
+                onChange={(e) => setObservation(e.target.value)}
+                value={observation}
+              />
+              <p className="text-sm text-muted-foreground">
+                As observações ajudam profissionais compreender cada aluno de
+                forma individual
+              </p>
+            </form>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </section>
   )
 }

@@ -637,6 +637,14 @@ export const ATAQuestions: ATAQuestionsProps[] = [
       { index: 3, item: 'Parece insensível à dor' },
     ],
   },
+  {
+    step: 23,
+    question: 'APARECIMENTO DOS SINTOMAS ANTES DOS 36 MESES (DSM-IV)',
+    options: [
+      { index: 1, item: 'Não' },
+      { index: 2, item: 'Sim' },
+    ],
+  },
 ]
 
 export const writingHypothesesOptions: ButtonOption[] = [

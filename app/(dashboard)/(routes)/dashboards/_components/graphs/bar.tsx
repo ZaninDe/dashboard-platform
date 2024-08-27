@@ -26,7 +26,7 @@ const BarChatComponent = ({
 }: BarChatComponentProps) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={data}>
+      <BarChart data={data} layout="horizontal">
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={dataKeyX} />
         <YAxis minTickGap={1000} />

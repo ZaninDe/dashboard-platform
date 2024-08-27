@@ -7,11 +7,11 @@ import { Logo } from './logo'
 export const MobileSidebar = () => {
   return (
     <Sheet>
-      <SheetTrigger className="md:hidden pr-4 hover:opacity-75 transition flex p-8 w-full justify-between items-center bg-cyan-700/80">
+      <SheetTrigger className="md:hidden pr-4 hover:opacity-75 transition flex p-4 w-full justify-between items-center bg-cyan-700/80">
         <Logo />
         <Menu className="text-white" />
       </SheetTrigger>
-      <SheetContent side="left" className="px-0 py-10 bg-black">
+      <SheetContent side="left" className="px-4 py-10 bg-white">
         <NavbarRoutes />
       </SheetContent>
     </Sheet>

@@ -5,7 +5,6 @@ import React, { useEffect, useState } from 'react'
 import { Assessment, Dialog, School, Student } from '@prisma/client'
 
 import { Button } from '@/components/ui/button'
-import BarChatComponent from './graphs/bar'
 import { Combobox } from '@/components/ui/combobox'
 import {
   ageOptions,
@@ -22,7 +21,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import { GenderOptions, writingHypothesesOptions } from '@/const/rating-scales'
-
+import { Card, CardContent } from '@/components/ui/card'
 interface AssessmentWithDetails extends Assessment {
   student: Student & { school: School }
   dialog: Dialog[]
@@ -34,8 +33,6 @@ interface DashboardsProps {
 }
 
 const Dashboards = ({ assessments, schools }: DashboardsProps) => {
-  const [ELEData, setELEData] = useState()
-  const [SNAPIVData, setSNAPIVData] = useState()
   const [firstRender, setFirstRender] = useState(true)
   const [filterAge, setFilterAge] = useState<string | undefined>(undefined)
   const [filterGender, setFilterGender] = useState<string | undefined>(
@@ -63,81 +60,10 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
   useState<AssessmentWithDetails[]>(assessments)
 
   useEffect(() => {
-    const filteredData = assessments.filter((item) => {
-      return (
-        (filterAge === undefined ||
-          item.student.age.toString() === filterAge) &&
-        (filterClassroom === undefined ||
-          item?.student?.classroom === filterClassroom) &&
-        (filterGender === undefined ||
-          item?.student?.gender === filterGender) &&
-        (filterWriting === undefined ||
-          item?.student?.writingHypotheses === filterWriting) &&
-        (filterSchoolState === undefined ||
-          item?.student?.school?.state === filterSchoolState) &&
-        (filterSchoolCity === undefined ||
-          item?.student?.school?.city === filterSchoolCity) &&
-        (filterSchoolNeighborhood === undefined ||
-          item?.student?.school?.neighborhood === filterSchoolNeighborhood) &&
-        (filterSchoolRegion === undefined ||
-          item?.student?.school?.region === filterSchoolRegion)
-      )
-    })
-    const ELEAssessments = filteredData.filter(
-      (item) => item.ratingScale === 'ELE',
-    )
-    const ELEResultCounts = ELEAssessments.reduce(
-      (acc: Record<number, number>, assessment) => {
-        if (assessment.resultAmount !== null) {
-          acc[assessment.resultAmount] = (acc[assessment.resultAmount] || 0) + 1
-        }
-        return acc
-      },
-      {},
-    )
-    const ELE = Object.keys(ELEResultCounts).map((key: any) => ({
-      resultAmount: Number(key),
-      pontos: ELEResultCounts[key],
-    }))
-
-    const SNAPIVAssessments = filteredData.filter(
-      (item) => item.ratingScale === 'SnapIV',
-    )
-    const SNAPIVResultCounts = SNAPIVAssessments.reduce(
-      (acc: Record<number, number>, assessment) => {
-        if (assessment.resultAmount !== null) {
-          acc[assessment.resultAmount] = (acc[assessment.resultAmount] || 0) + 1
-        }
-        console.log('ACC', acc)
-        return acc
-      },
-      {},
-    )
-    const SNAPIV = Object.keys(SNAPIVResultCounts).map((key: any) => ({
-      resultAmount: Number(key),
-      pontos: SNAPIVResultCounts[key],
-    }))
-
-    // @ts-ignore
-    ELE && setELEData(ELE)
-    // @ts-ignore
-    SNAPIV && setSNAPIVData(SNAPIV)
-  }, [
-    filterAge,
-    filterClassroom,
-    filterGender,
-    filterWriting,
-    filterSchoolState,
-    filterSchoolCity,
-    filterSchoolNeighborhood,
-    filterSchoolRegion,
-  ])
-
-  useEffect(() => {
     if (firstRender) {
       setFirstRender(false)
     }
-  }, [])
+  }, [firstRender])
 
   const clearFilter = () => {
     setFilterAge(undefined)
@@ -172,6 +98,7 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
   // @ts-ignore
   const uniqueRegions = [...new Set(schools.map((school) => school.region))]
   console.log(uniqueStates)
+
   return (
     <div>
       {!firstRender && (
@@ -413,53 +340,34 @@ const Dashboards = ({ assessments, schools }: DashboardsProps) => {
           </div>
           <div
             className={cn(
+              'grid grid-col-1 gap-12 w-full',
+              // ratingScales.length === 2 && 'grid-cols-2',
+              // ratingScales.length === 3 && 'grid-cols-3',
+            )}
+          >
+            <Card className="flex flex-col items-center justify-center">
+              <CardContent className="w-full py-8 px-10">
+                <h1 className="text-center mb-16 font-bold text-3xl">
+                  ESCALA DE AVALIAÇÃO DE LEITURA E ESCRITA
+                </h1>
+                <div className="w-full grid gap-32 grid-cols-2 items-center">
+                  <div className="relative">
+                    <p className="text-muted-foreground mb-10">
+                      Quantidade de avaliações criadas X Quantidade de
+                      avaliações finalizadas
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <div
+            className={cn(
               'grid grid-col-1 gap-12 w-full h-[60vh] relative',
               ratingScales.length === 2 && 'grid-cols-2',
               ratingScales.length === 3 && 'grid-cols-3',
             )}
-          >
-            {ratingScales.includes(1) && (
-              <div className="max-h-[60vh]">
-                <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                  ELE
-                </h1>
-                <BarChatComponent
-                  data={ELEData}
-                  dataKeyX="resultAmount"
-                  dataKeyY="pontos"
-                  color="#3b82f6"
-                />
-              </div>
-            )}
-
-            {ratingScales.includes(2) && (
-              <div className="max-h-[60vh]">
-                <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                  SNAPIV
-                </h1>
-                <BarChatComponent
-                  data={SNAPIVData}
-                  dataKeyX="resultAmount"
-                  dataKeyY="pontos"
-                  color="#22c55e"
-                />
-              </div>
-            )}
-
-            {ratingScales.includes(3) && (
-              <div className="max-h-[60vh]">
-                <h1 className="text-center mb-4 font-bold text-muted-foreground">
-                  ATA
-                </h1>
-                <BarChatComponent
-                  data={SNAPIVData}
-                  dataKeyX="resultAmount"
-                  dataKeyY="pontos"
-                  color="#fde047"
-                />
-              </div>
-            )}
-          </div>
+          ></div>
         </div>
       )}
     </div>

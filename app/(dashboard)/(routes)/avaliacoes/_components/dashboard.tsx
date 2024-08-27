@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Dialog } from '@prisma/client'
+import { Assessment, Dialog } from '@prisma/client'
 import { AssesmentUser } from './tabs-navigation'
 import { Progress } from '@/components/ui/progress'
-import { cn } from '@/lib/utils'
+import { cn, countNumbersAndNulls, getItemsByIndexes } from '@/lib/utils'
 
 import {
   HoverCard,
@@ -22,56 +23,99 @@ import { Card, CardContent } from '@/components/ui/card'
 
 import { ELEButtonOptions, SNAPButtonOptions } from '@/const/rating-scales'
 import { useEffect, useState } from 'react'
+import QuestionnairePieChart from './questionCriteriaChart'
 
 interface DashBoardProps {
   assessment: AssesmentUser
+  assessments: Assessment[]
   dialogs: Dialog[]
+  criteriaDialogs: Dialog[]
 }
 
-const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
+const Dashboard = ({
+  assessment,
+  assessments,
+  dialogs,
+  criteriaDialogs,
+}: DashBoardProps) => {
   const [progress, setProgress] = useState(0)
+  const [meanProgress, setMeanProgress] = useState(0)
   const [maxScore, setMaxScore] = useState(0)
   const [selectedCategory, setSelectedCategory] = useState('0') // 0 = all
 
+  const isAtaRatingScale = assessment.ratingScale === 'ATA'
+
   const options = []
 
-  for (let i = 0; i <= 4; i++) {
+  const totalOptions = isAtaRatingScale ? 3 : 4
+  for (let i = 0; i <= totalOptions; i++) {
     options.push({ value: i.toString(), label: i.toString() })
   }
 
   useEffect(() => {
-    const max =
-      assessment.ratingScale === 'ELE'
-        ? 64
-        : assessment.ratingScale === 'SnapIV'
-          ? 72
-          : 72
+    const max = assessment.ratingScale === 'SnapIV' ? 72 : 46
+
+    const meanValues = assessments.map((assessment) => assessment.resultAmount)
+
+    const mean =
+      assessment.ratingScale === 'ATA' ? 15 : countNumbersAndNulls(meanValues)
 
     const assessmentScorePercentage = (assessment.resultAmount! / max) * 100
     setMaxScore(max)
-    const timer = setTimeout(() => setProgress(assessmentScorePercentage), 500)
+    const timer = setTimeout(() => {
+      setProgress(assessmentScorePercentage)
+      setMeanProgress(mean)
+    }, 500)
     return () => clearTimeout(timer)
-  }, [assessment.ratingScale, assessment.resultAmount])
+  }, [assessment.ratingScale, assessment.resultAmount, assessments])
 
   const margin = `${Math.trunc(progress)}%`
+  const meanMargin = `${(meanProgress / maxScore) * 100}%`
   return (
     <div className="mb-10">
-      <h1 className="text-2xl font-bold">Barra de Pontuação</h1>
+      <h1 className="text-xl font-bold">{assessment.student.name}</h1>
+      <h1>{assessment.student.ra}</h1>
+      <h1>
+        Escala {assessment.ratingScale}{' '}
+        {assessment.ratingScale === 'ATA' ? '(Aspectro Autista)' : '(TDAH)'}
+      </h1>
+      <h1 className="text-2xl font-bold mt-4">Barra de Pontuação</h1>
       <p className="mb-10 text-muted-foreground">
         Aqui, temos que quanto menor a pontuação, significa que menor são as
         características dos comportamentos da escala aplicada.
       </p>
       <div className="relative">
-        <p className={`absolute right-0 mt-[-24px] `}>{maxScore}</p>
-        <p className={cn(`absolute mt-[-24px]`)} style={{ left: margin }}>
+        <p className={`absolute right-0 `}>{maxScore}</p>
+        <p className={cn(`absolute`)} style={{ left: margin }}>
           {assessment.resultAmount} Pontos
         </p>
       </div>
 
-      <Progress
-        value={progress}
-        className="h-10 rounded-none bg-green-600/40"
-      />
+      <div>
+        <p>Pontuação do Aluno</p>
+        <Progress
+          value={progress}
+          className="h-10 rounded-none bg-green-600/40"
+        />
+      </div>
+
+      {isAtaRatingScale && (
+        <div className="mt-10">
+          <div className="relative">
+            <p className={`absolute right-0 mt-[-24px] `}>{maxScore}</p>
+            <p
+              className={cn(`absolute mt-[-24px]`)}
+              style={{ left: meanMargin }}
+            >
+              Corte {meanProgress} Pontos
+            </p>
+          </div>
+          <Progress
+            value={(meanProgress / maxScore) * 100}
+            className="bg-green-600/40"
+          />
+        </div>
+      )}
       <div className="mt-16">
         <h1 className="text-2xl font-bold">Mapa de Cores</h1>
         <div>
@@ -80,27 +124,51 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
             deve ter em relação ao seu alerta, legenda:
           </p>
           <div className="">
-            {assessment.ratingScale === 'ELE' &&
-              ELEButtonOptions.map((option, index) => (
-                <div
-                  key={option.value}
-                  className="flex gap-2 items-center space-y-2"
-                >
-                  <div
-                    className={cn(
-                      'h-8 w-12 mt-2',
-                      index === 0 && 'bg-red-50 text-white',
-                      index === 1 && 'bg-red-100 text-white',
-                      index === 2 && 'bg-red-300 text-white',
-                      index === 3 && 'bg-red-400 text-white',
+            {isAtaRatingScale
+              ? options.map((option, index) => (
+                  <div key={option.value}>
+                    {index > 0 && (
+                      <div className="flex gap-2 items-center space-y-2">
+                        <div
+                          className={cn(
+                            'h-8 w-12 mt-2',
+                            index === 0 && 'bg-red-50 text-white',
+                            index === 1 && 'bg-red-100 text-white',
+                            index === 2 && 'bg-red-300 text-white',
+                            index === 3 && 'bg-red-400 text-white',
+                          )}
+                        ></div>
+                        <p>
+                          {index === 1
+                            ? 'Nenhum comportamento identificado na sub escala'
+                            : index === 2
+                              ? '1 comportamento identificado'
+                              : '2 ou mais comportamentos identificados'}
+                        </p>
+                      </div>
                     )}
-                  ></div>
-                  <p>{option.label}</p>
-                </div>
-              ))}
+                  </div>
+                ))
+              : ELEButtonOptions.map((option, index) => (
+                  <div
+                    key={option.value}
+                    className="flex gap-2 items-center space-y-2"
+                  >
+                    <div
+                      className={cn(
+                        'h-8 w-12 mt-2',
+                        index === 0 && 'bg-red-50 text-white',
+                        index === 1 && 'bg-red-100 text-white',
+                        index === 2 && 'bg-red-300 text-white',
+                        index === 3 && 'bg-red-400 text-white',
+                      )}
+                    ></div>
+                    <p>{option.label}</p>
+                  </div>
+                ))}
           </div>
         </div>
-        <div className="grid grid-cols-3 justify-start mt-8">
+        <div className="md:grid md:grid-cols-3 justify-start mt-8">
           <div>
             <Select onValueChange={setSelectedCategory}>
               <SelectTrigger
@@ -123,10 +191,22 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
                     className={cn(
                       'mt-1',
                       option.label === '0' && 'bg-slate-200',
-                      option.label === '1' && 'bg-red-50/50',
-                      option.label === '2' && 'bg-red-100',
-                      option.label === '3' && 'bg-red-300/60',
-                      option.label === '4' && 'bg-red-400/90',
+                      !isAtaRatingScale &&
+                        option.label === '1' &&
+                        'bg-red-50/50',
+                      !isAtaRatingScale && option.label === '2' && 'bg-red-100',
+                      !isAtaRatingScale &&
+                        option.label === '3' &&
+                        'bg-red-300/60',
+                      !isAtaRatingScale &&
+                        option.label === '4' &&
+                        'bg-red-400/90',
+
+                      isAtaRatingScale &&
+                        option.label === '1' &&
+                        'bg-green-200',
+                      isAtaRatingScale && option.label === '2' && 'bg-red-200',
+                      isAtaRatingScale && option.label === '3' && 'bg-red-400',
                     )}
                   >
                     <div className="h-4">{option.value === '0' && 'TODAS'}</div>
@@ -136,26 +216,42 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
             </Select>
             <div
               className={cn(
-                'grid grid-cols-4 grid-rows-4 mt-10 border justify-center items-center gap-1 w-[320px]',
+                'grid grid-cols-4 grid-rows-4 mt-10 border justify-center items-center gap-1 md:w-[320px]',
                 assessment?.ratingScale === 'SnapIV' && 'grid-cols-5',
               )}
             >
-              {dialogs.map((dialog) => {
+              {dialogs.map((dialog, index) => {
                 let answer: any
-                if (assessment?.ratingScale === 'ELE') {
-                  answer = ELEButtonOptions.find(
-                    (option) => option.value === JSON.stringify(dialog.answer),
-                  )
-                } else if (assessment?.ratingScale === 'SnapIV') {
+                if (assessment?.ratingScale === 'SnapIV') {
                   answer = SNAPButtonOptions.find(
                     (option) => option.value === JSON.stringify(dialog.answer),
                   )
+                } else if (isAtaRatingScale) {
+                  // @ts-ignore
+                  answer = getItemsByIndexes(dialog.answer, index)
+                  console.log(answer)
                 }
+
                 return (
                   <div
                     key={dialog?.id}
                     className={cn(
-                      'border-1 w-18',
+                      'border-1 w-18 bg-red-500',
+                      isAtaRatingScale &&
+                        answer.length === 0 &&
+                        (selectedCategory === '0' || selectedCategory === '1'
+                          ? 'bg-green-200'
+                          : 'bg-transparent'),
+                      isAtaRatingScale &&
+                        answer.length === 1 &&
+                        (selectedCategory === '0' || selectedCategory === '2'
+                          ? 'bg-red-200'
+                          : 'bg-transparent'),
+                      isAtaRatingScale &&
+                        answer.length >= 2 &&
+                        (selectedCategory === '0' || selectedCategory === '3'
+                          ? 'bg-red-400'
+                          : 'bg-transparent'),
                       dialog.answer === 1 &&
                         (selectedCategory === '0' || selectedCategory === '1'
                           ? 'bg-red-50'
@@ -178,7 +274,7 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
                       <HoverCardTrigger className="text-transparent">
                         <p>.</p>
                         <p>.</p>
-                        <p>.</p>
+                        <p className="hidden md:block">.</p>
                       </HoverCardTrigger>
                       <HoverCardContent className="w-96">
                         <p>
@@ -187,7 +283,11 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
                         </p>
 
                         <strong className="mt-8">Resposta: </strong>
-                        {answer?.label}
+                        {isAtaRatingScale
+                          ? answer.length === 0
+                            ? 'Nada assinalado'
+                            : answer
+                          : answer?.label}
                       </HoverCardContent>
                     </HoverCard>
                   </div>
@@ -207,22 +307,28 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
                 </div>
               ) : (
                 <div>
-                  {dialogs.map((dialog) => {
+                  {dialogs.map((dialog, index) => {
                     let answer: any
-                    if (assessment?.ratingScale === 'ELE') {
-                      answer = ELEButtonOptions.find(
-                        (option) =>
-                          option.value === JSON.stringify(dialog.answer),
-                      )
-                    } else if (assessment?.ratingScale === 'SnapIV') {
+                    if (assessment?.ratingScale === 'SnapIV') {
                       answer = SNAPButtonOptions.find(
                         (option) =>
                           option.value === JSON.stringify(dialog.answer),
                       )
+                    } else if (isAtaRatingScale) {
+                      // @ts-ignore
+                      answer = getItemsByIndexes(dialog.answer, index)
                     }
+
+                    const ataOption = (
+                      isAtaRatingScale && answer.length === 0
+                        ? 1
+                        : answer.length === 1
+                          ? 2
+                          : 3
+                    ).toString()
                     return (
                       <div key={dialog?.id}>
-                        {answer?.value === selectedCategory && (
+                        {isAtaRatingScale && ataOption === selectedCategory && (
                           <div className="mb-4 bg-slate-100 p-2 rounded-xl">
                             <p>
                               <strong>Pergunta: </strong>
@@ -231,10 +337,26 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
 
                             <p>
                               <strong className="mt-8">Resposta: </strong>
-                              {answer?.label}
+                              {isAtaRatingScale && answer.length === 0
+                                ? 'Nada assinalado'
+                                : answer}
                             </p>
                           </div>
                         )}
+                        {!isAtaRatingScale &&
+                          answer?.value === selectedCategory && (
+                            <div className="mb-4 bg-slate-100 p-2 rounded-xl">
+                              <p>
+                                <strong>Pergunta: </strong>
+                                {dialog.question}
+                              </p>
+
+                              <p>
+                                <strong className="mt-8">Resposta: </strong>
+                                {answer?.label}
+                              </p>
+                            </div>
+                          )}
                       </div>
                     )
                   })}
@@ -243,6 +365,45 @@ const Dashboard = ({ assessment, dialogs }: DashBoardProps) => {
             </CardContent>
           </Card>
         </div>
+
+        <QuestionnairePieChart criteriaDialogs={criteriaDialogs} />
+
+        {assessment.ratingScale === 'SnapIV' && (
+          <div className="mt-16">
+            <p>
+              <strong>Indicativo de desatenção: </strong>
+              {assessment?.inattention ? 'Sim' : 'Não'}
+            </p>
+            <p>
+              <strong>Indicativo de hiperatividade: </strong>
+              {assessment?.hyperactivity ? 'Sim' : 'Não'}
+            </p>
+            <div className="space-y-2">
+              <p className="my-10">
+                <strong>IMPORTANTE: </strong> Não se pode fazer o diagnóstico de
+                TDAH apenas com critério “A”. Veja abaixo os demais critérios.
+              </p>
+              <p className="">
+                <strong>CRITÉRIO B:</strong>Alguns desses sintomas devem estar
+                presentes antes dos 7 anos de idade.
+              </p>
+              <p className="">
+                <strong>CRITÉRIO C: </strong>Existem problemas causados pelos
+                sintomas acima em pelo menos 2 contextos diferentes (por ex., na
+                escola, no trabalho, na vida social e em casa).
+              </p>
+              <p className="">
+                <strong>CRITÉRIO D: </strong>Há problemas evidentes na vida
+                escolar, social ou familiar por conta dos sintomas.
+              </p>
+              <p className="">
+                <strong>CRITÉRIO E: </strong>Se existe um outro problema (tal
+                como depressão, deficiência mental, psicose, etc.), os sintomas
+                não podem ser atribuídos exclusivamente a ele.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

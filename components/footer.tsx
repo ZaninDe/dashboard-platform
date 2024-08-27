@@ -9,16 +9,16 @@ const Footer = () => {
   const router = useRouter()
 
   return (
-    <section className="w-full px-32 py-10 bg-cyan-700/80 grid grid-cols-3 text-white">
-      <div>
+    <section className="w-full md:px-32 py-10 bg-cyan-700/80 flex flex-col-reverse md:grid grid-cols-3 text-white">
+      <div className="p-4 md:p-0 space-y-2 md:space-y-0">
         <Logo />
-        <div className="mt-20">
+        <div className="md:mt-20">
           <p> © 2022- MinhaPlataforma</p>
           <p>Todos os direitos reservados.</p>
         </div>
       </div>
 
-      <div className="flex flex-col justify-between items-center">
+      <div className="flex flex-col justify-between items-center mt-10 md:mt-0 gap-4 md:gap-0">
         {routes.map((item) => (
           <div
             key={item.href}

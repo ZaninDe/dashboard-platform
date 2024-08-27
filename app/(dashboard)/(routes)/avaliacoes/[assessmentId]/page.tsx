@@ -1,7 +1,7 @@
 import { db } from '@/lib/db'
 import { TabsNavigation } from '../_components/tabs-navigation'
 import { auth, clerkClient } from '@clerk/nextjs/server'
-
+import { redirect } from 'next/navigation'
 const AssessmentPage = async ({
   params,
 }: {
@@ -26,6 +26,37 @@ const AssessmentPage = async ({
     },
   })
 
+  if (!assessment) {
+    return null
+  }
+
+  const criteriaAssessment = await db.criteriaAssessment.findFirst({
+    where: {
+      assessmentId: assessment.id,
+    },
+  })
+
+  if (criteriaAssessment) {
+    const total = criteriaAssessment.ratingScale === 'ATA' ? 10 : 22
+    if (criteriaAssessment.currentStep < total) {
+      return redirect(
+        `/avaliacoes/nova/criterio-de-diagnostico/${criteriaAssessment.id}`,
+      )
+    }
+  }
+
+  const criteriaDialogs = await db.dialog.findMany({
+    where: {
+      criteriaAssessmentId: criteriaAssessment?.id,
+    },
+  })
+
+  const assessments = await db.assessment.findMany({
+    where: {
+      ratingScale: assessment?.ratingScale,
+    },
+  })
+
   const dialogs = await db.dialog.findMany({
     where: {
       assessmentId: assessment?.id,
@@ -37,7 +68,13 @@ const AssessmentPage = async ({
   return (
     <section className="min-h-screen px-4">
       {assessment && user && (
-        <TabsNavigation dialogs={dialogs} assessment={assessment} />
+        <TabsNavigation
+          dialogs={dialogs}
+          assessment={assessment}
+          assessments={assessments}
+          criteriaAssessment={criteriaAssessment}
+          criteriaDialogs={criteriaDialogs}
+        />
       )}
     </section>
   )
