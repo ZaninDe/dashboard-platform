@@ -1,5 +1,11 @@
 'use client'
-import { Assessment, Student, School, Dialog, CriteriaAssessment } from '@prisma/client'
+import {
+  Assessment,
+  Student,
+  School,
+  Dialog,
+  CriteriaAssessment,
+} from '@prisma/client'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Combobox } from '@/components/ui/combobox'
@@ -40,7 +46,11 @@ const formSchema = z.object({
   studentId: z.string().min(1),
 })
 
-const StudentDashboard = ({ assessments, criteriaAssessments, students }: DashboardsProps) => {
+const StudentDashboard = ({
+  assessments,
+  criteriaAssessments,
+  students,
+}: DashboardsProps) => {
   const [currentStudent, setCurrentStudent] = useState<Student>()
   const [SNAPIVAssessmentes, setSNAPIVAssessmentes] =
     useState<AssessmentWithDetails>()
@@ -138,9 +148,23 @@ const StudentDashboard = ({ assessments, criteriaAssessments, students }: Dashbo
             </CardTitle>
             <CardContent className="md:grid md:grid-cols-2 space-y-4 md:space-y-0 gap-2 mt-6 p-0">
               {SNAPIVAssessmentes && (
-                <SNAPDashboard criteriaAssessment={criteriaAssessments.find((criteriaAssessment) => criteriaAssessment.assessmentId === SNAPIVAssessmentes.id)} assessment={SNAPIVAssessmentes} />
+                <SNAPDashboard
+                  criteriaAssessment={criteriaAssessments.find(
+                    (criteriaAssessment) =>
+                      criteriaAssessment.assessmentId === SNAPIVAssessmentes.id,
+                  )}
+                  assessment={SNAPIVAssessmentes}
+                />
               )}
-              {ATAAssessmentes && <ATADashboard criteriaAssessment={criteriaAssessments.find((criteriaAssessment) => criteriaAssessment.assessmentId === ATAAssessmentes.id)} assessment={ATAAssessmentes} />}
+              {ATAAssessmentes && (
+                <ATADashboard
+                  criteriaAssessment={criteriaAssessments.find(
+                    (criteriaAssessment) =>
+                      criteriaAssessment.assessmentId === ATAAssessmentes.id,
+                  )}
+                  assessment={ATAAssessmentes}
+                />
+              )}
             </CardContent>
           </div>
         ) : (

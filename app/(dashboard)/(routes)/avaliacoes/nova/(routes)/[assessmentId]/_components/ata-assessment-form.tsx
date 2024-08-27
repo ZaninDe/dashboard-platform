@@ -46,14 +46,11 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
   const questions: ATAQuestionsProps[] = ATAQuestions
 
   const nextStep = () => {
-      setStep((state) => state + 1)
+    setStep((state) => state + 1)
   }
 
   const prevStep = () => {
-    if (step === 1) {
-    } else {
-      setStep((state) => state - 1)
-    }
+    setStep((state) => state - 1)
   }
 
   const handleCheckboxChange = (itemId: number) => {

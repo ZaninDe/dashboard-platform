@@ -57,7 +57,7 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
     assessment?.ratingScale === 'ATA' ? ELEQuestions : SNAPQuestions
 
   const nextStep = () => {
-      setStep((state) => state + 1)
+    setStep((state) => state + 1)
   }
 
   const prevStep = () => {
@@ -94,17 +94,17 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
   const onSubmitFinish = async () => {
     setIsSubmitting(true)
     try {
-        const sum = sumAnswers(dialogs)
-        const newCriteriaAssessment = await axios.put(
-          `/api/assessments/${assessment.id}/finish`,
-          {
-            sum,
-          },
-        )
-        router.push(
-          `/avaliacoes/nova/criterio-de-diagnostico/${newCriteriaAssessment.data.id}`,
-        )
-        console.log('resultado salvo com sucesso!')
+      const sum = sumAnswers(dialogs)
+      const newCriteriaAssessment = await axios.put(
+        `/api/assessments/${assessment.id}/finish`,
+        {
+          sum,
+        },
+      )
+      router.push(
+        `/avaliacoes/nova/criterio-de-diagnostico/${newCriteriaAssessment.data.id}`,
+      )
+      console.log('resultado salvo com sucesso!')
 
       router.refresh()
     } catch (err) {

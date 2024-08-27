@@ -73,7 +73,13 @@ const Dashboard = ({
   const meanMargin = `${(meanProgress / maxScore) * 100}%`
   return (
     <div className="mb-10">
-      <h1 className="text-2xl font-bold">Barra de Pontuação</h1>
+      <h1 className="text-xl font-bold">{assessment.student.name}</h1>
+      <h1>{assessment.student.ra}</h1>
+      <h1>
+        Escala {assessment.ratingScale}{' '}
+        {assessment.ratingScale === 'ATA' ? '(Aspectro Autista)' : '(TDAH)'}
+      </h1>
+      <h1 className="text-2xl font-bold mt-4">Barra de Pontuação</h1>
       <p className="mb-10 text-muted-foreground">
         Aqui, temos que quanto menor a pontuação, significa que menor são as
         características dos comportamentos da escala aplicada.
@@ -101,7 +107,7 @@ const Dashboard = ({
               className={cn(`absolute mt-[-24px]`)}
               style={{ left: meanMargin }}
             >
-              {meanProgress} Pontos
+              Corte {meanProgress} Pontos
             </p>
           </div>
           <Progress

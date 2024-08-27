@@ -91,7 +91,7 @@ export function TabsNavigation({
         </TabsContent>
         <TabsContent value="answers">
           <Card className="">
-            <CardHeader className="p-2">
+            <CardHeader className="p-2 md:py-6">
               <CardTitle>Espelho de Avaliação</CardTitle>
               <div className="md:flex w-full items-center justify-between space-y-4 md:space-y-0">
                 <CardDescription>

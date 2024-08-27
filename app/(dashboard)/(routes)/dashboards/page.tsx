@@ -44,7 +44,11 @@ const DashboardsPage = async () => {
 
   return (
     <div className="min-h-screen p-4 mb-40">
-      <StudentDashboard criteriaAssessments={criteriaAssessments} assessments={assessments} students={students} />
+      <StudentDashboard
+        criteriaAssessments={criteriaAssessments}
+        assessments={assessments}
+        students={students}
+      />
     </div>
   )
 }
