@@ -3,9 +3,9 @@ import Image from 'next/image'
 
 export default function Page() {
   return (
-    <div className="w-full h-full flex justify-between items-center px-32">
+    <div className="w-full h-full md:flex justify-between items-center md:px-32 p-4">
       <div className="">
-        <div className="pl-10">
+        <div className="md:pl-10">
           <h1 className="text-white text-5xl">
             Nossa Plataforma<span className="text-yellow-400">.</span>
           </h1>
