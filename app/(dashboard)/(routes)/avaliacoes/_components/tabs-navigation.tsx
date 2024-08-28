@@ -19,7 +19,7 @@ import Answers from './answers'
 import { useRouter } from 'next/navigation'
 import React, { useRef } from 'react'
 // import html2pdf from 'html2pdf.js'
-import { ArrowLeftIcon } from 'lucide-react'
+import { ArrowLeftIcon, File } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 
 import Dashboard from './dashboard'
