@@ -125,12 +125,12 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
             <div className="w-full h-full flex flex-col justify-around items-center">
               <div>
                 <div>
-                  <div className="h-40 flex flex-col items-center justify-center">
-                    <p className="text-center text-xl">
+                  <div className="min-h-40 flex flex-col items-center justify-center">
+                    <p className="text-center md:text-xl max-w-[80vw] md:max-w-auto">
                       {questions[step - 1]?.question}
                     </p>
                   </div>
-                  <div className="flex gap-4 justify-center">
+                  <div className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center">
                     {buttonOptions.map((button) => (
                       <Button
                         className={cn(

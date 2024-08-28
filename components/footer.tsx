@@ -13,7 +13,7 @@ const Footer = () => {
       <div className="p-4 md:p-0 space-y-2 md:space-y-0">
         <Logo />
         <div className="md:mt-20">
-          <p> © 2022- MinhaPlataforma</p>
+          <p> © 2022- Nossa Plataforma</p>
           <p>Todos os direitos reservados.</p>
         </div>
       </div>

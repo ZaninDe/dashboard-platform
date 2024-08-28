@@ -2,6 +2,7 @@
 import { usePathname, useRouter } from 'next/navigation'
 import { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useIsMobile } from '@/hooks/useIsMobile'
 
 interface SidebarItemsProps {
   icon: LucideIcon

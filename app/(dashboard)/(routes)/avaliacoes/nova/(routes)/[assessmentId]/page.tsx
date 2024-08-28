@@ -26,8 +26,8 @@ const AssesmentIdPage = async ({
   })
 
   return (
-    <div className="w-full h-screen">
-      <div className="h-[40%] w-full bg-cyan-200 p-4">
+    <div className="w-full h-[130vh] md:h-screen">
+      <div className="md:h-[40%] w-full bg-cyan-200 p-4">
         <Link
           href="/avaliacoes"
           className="flex items-center gap-2 hover:border-b border-black/50 hover:opacity-70 w-48"
@@ -38,8 +38,8 @@ const AssesmentIdPage = async ({
       </div>
       <div
         className={cn(
-          'absolute inset-0 m-auto w-1/2 h-1/2 bg-white rounded-lg',
-          assessment?.ratingScale === 'ATA' && 'h-[70%]',
+          'absolute inset-0 m-auto w-[90vw] mt-44 md:w-1/2 h-2/3 bg-white rounded-lg',
+          assessment?.ratingScale === 'ATA' && 'h-[90%] md:mt-0 md:h-[70%]',
         )}
       >
         {assessment && (
@@ -52,7 +52,7 @@ const AssesmentIdPage = async ({
           </div>
         )}
       </div>
-      <div className="h-[60%] bg-cyan-600 flex justify-center items-end">
+      <div className="h-[80%] md:h-[60%] bg-cyan-600 flex justify-center items-end">
         <h1 className="mb-10 text-5xl font-bold text-white">
           Questionário<span className="text-yellow-400">.</span>
         </h1>
