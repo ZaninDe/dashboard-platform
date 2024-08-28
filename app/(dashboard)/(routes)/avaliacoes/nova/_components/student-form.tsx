@@ -84,14 +84,9 @@ export interface OptionProps {
 interface StudentFormProps {
   schoolOptions: School[]
   onChangeStudent: ({ label, value }: OptionProps) => void
-  onClose: (value: boolean) => void
 }
 
-const StudentForm = ({
-  schoolOptions,
-  onClose,
-  onChangeStudent,
-}: StudentFormProps) => {
+const StudentForm = ({ schoolOptions, onChangeStudent }: StudentFormProps) => {
   // const [stateOptions, setStateOptions] = useState([])
   const [isNewSchool, setIsNewSchool] = useState(false)
   const [nameSchool, setNameSchool] = useState('')
@@ -141,11 +136,13 @@ const StudentForm = ({
         label: response.data.name,
         value: response.data.id,
       })
-      onClose(false)
       toast.success('Aluno criado com sucesso!')
     } catch (err) {
       toast.error('Algo deu errado.')
+    } finally {
+      router.push('/avaliacoes/nova')
     }
+    location.reload()
     console.log(values)
   }
 

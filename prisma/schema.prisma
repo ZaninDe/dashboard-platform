@@ -53,7 +53,7 @@ enum RatingScale {
 
 enum WritingHypotheses {
   pre_silabico
-  silabico_sem_valor_sonora
+  silabico_sem_valor_sonoro
   silabico_com_valor_sonoro
   silabico_alfabetico
   alfabetico

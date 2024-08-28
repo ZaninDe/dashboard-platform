@@ -1,5 +1,6 @@
 import { db } from '@/lib/db'
 import AssessmentForm from '../_components/assessment-form'
+import { auth } from '@clerk/nextjs/server'
 
 import {
   Card,
@@ -8,8 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { redirect } from 'next/navigation'
 
 const NewAssessment = async () => {
+  const { userId } = auth()
+  if (!userId) {
+    redirect('/')
+  }
   const schoolOptions = await db.school.findMany({
     orderBy: {
       createdAt: 'desc',
@@ -17,6 +23,9 @@ const NewAssessment = async () => {
   })
 
   const studentsOptions = await db.student.findMany({
+    where: {
+      userId,
+    },
     orderBy: {
       createdAt: 'desc',
     },

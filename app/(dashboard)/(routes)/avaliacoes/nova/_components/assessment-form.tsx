@@ -56,7 +56,6 @@ const AssessmentForm = ({
   schoolOptions,
   studentOptions,
 }: AssessmentFormProps) => {
-  const [newStudentIsOpen, setNewStudentIsOpen] = useState(false)
   const [newStudent, setNewStudent] = useState<OptionProps>()
 
   const router = useRouter()
@@ -90,12 +89,9 @@ const AssessmentForm = ({
   }))
   return (
     <div className="space-y-4">
-      <Dialog
-        onOpenChange={() => setNewStudentIsOpen(true)}
-        open={newStudentIsOpen}
-      >
+      <Dialog>
         <DialogTrigger asChild>
-          <Button className="mt-2 flex gap-2">
+          <Button className="mt-2 flex gap-2" type="button">
             Novo Aluno <PlusCircle className="w-4 h-4" />
           </Button>
         </DialogTrigger>
@@ -109,7 +105,6 @@ const AssessmentForm = ({
               <StudentForm
                 onChangeStudent={setNewStudent}
                 schoolOptions={schoolOptions}
-                onClose={setNewStudentIsOpen}
               />
             </DialogDescription>
           </DialogHeader>

@@ -53,7 +53,7 @@ export const Combobox = ({
         <Command className="w-full ">
           <CommandInput placeholder={placeholder} />
           <CommandEmpty>nenhum aluno encontrado.</CommandEmpty>
-          <CommandGroup>
+          <CommandGroup className="max-h-64 overflow-y-auto">
             {options.map((option) => (
               <CommandItem
                 key={option.value}
