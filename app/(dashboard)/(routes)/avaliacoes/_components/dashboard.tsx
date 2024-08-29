@@ -371,6 +371,9 @@ const Dashboard = ({
           </Card>
         </div>
 
+        <h1 className="text-2xl font-bold mt-20">
+          Resultados Critério de Diagóstico
+        </h1>
         <QuestionnairePieChart criteriaDialogs={criteriaDialogs} />
 
         {assessment.ratingScale === 'SnapIV' && (
