@@ -73,6 +73,9 @@ const SNAPDashboard = ({
               <Progress value={progress} className="bg-green-600/40" />
             </div>
             <div className="mt-16">
+              <h1 className="text-2xl font-bold mb-4">
+                Resultados para o critério A obtidos através da escala SNAP-IV
+              </h1>
               <p>
                 <strong>Indicativo de desatenção: </strong>
                 {assessment?.inattention ? 'Sim' : 'Não'}
@@ -82,10 +85,11 @@ const SNAPDashboard = ({
                 {assessment?.hyperactivity ? 'Sim' : 'Não'}
               </p>
               <div className="space-y-2">
-                <p className="my-4">
-                  <strong>IMPORTANTE: </strong> Não se pode fazer o diagnóstico
-                  de TDAH apenas com critério “A”. Veja abaixo os demais
-                  critérios.
+                <p className="my-10">
+                  <strong>IMPORTANTE: </strong>O Critério A foi satisfeito,
+                  porém Não se pode fazer o diagnóstico de TDAH apenas com
+                  critério “A”. Veja abaixo os demais critérios que precisam ser
+                  satisfeitos.
                 </p>
                 <p className="">
                   <strong>CRITÉRIO B:</strong>Alguns desses sintomas devem estar

@@ -371,25 +371,32 @@ const Dashboard = ({
           </Card>
         </div>
 
-        <h1 className="text-2xl font-bold mt-20">
-          Resultados Critério de Diagóstico
-        </h1>
-        <QuestionnairePieChart criteriaDialogs={criteriaDialogs} />
-
         {assessment.ratingScale === 'SnapIV' && (
           <div className="mt-16">
-            <p>
+            <h1 className="text-2xl font-bold mb-4">
+              Resultados para o critério A obtidos através da escala SNAP-IV
+            </h1>
+            <p className={cn('text-md', assessment?.inattention && 'text-xl')}>
               <strong>Indicativo de desatenção: </strong>
               {assessment?.inattention ? 'Sim' : 'Não'}
             </p>
-            <p>
+            <p
+              className={cn('text-md', assessment?.hyperactivity && 'text-xl')}
+            >
               <strong>Indicativo de hiperatividade: </strong>
               {assessment?.hyperactivity ? 'Sim' : 'Não'}
             </p>
-            <div className="space-y-2">
+            <div
+              className={cn(
+                'hidden space-y-2',
+                (assessment?.inattention || assessment?.hyperactivity) &&
+                  'block',
+              )}
+            >
               <p className="my-10">
-                <strong>IMPORTANTE: </strong> Não se pode fazer o diagnóstico de
-                TDAH apenas com critério “A”. Veja abaixo os demais critérios.
+                <strong>IMPORTANTE: </strong>O Critério A foi satisfeito, porém
+                Não se pode fazer o diagnóstico de TDAH apenas com critério “A”.
+                Veja abaixo os demais critérios que precisam ser satisfeitos.
               </p>
               <p className="">
                 <strong>CRITÉRIO B:</strong>Alguns desses sintomas devem estar
@@ -412,6 +419,11 @@ const Dashboard = ({
             </div>
           </div>
         )}
+
+        <h1 className="text-2xl font-bold mt-20">
+          Resultados Critério de Diagóstico
+        </h1>
+        <QuestionnairePieChart criteriaDialogs={criteriaDialogs} />
       </div>
     </div>
   )
