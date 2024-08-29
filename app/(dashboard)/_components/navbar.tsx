@@ -18,7 +18,7 @@ const NavBar = ({ absolute }: NavbarProps) => {
         )}
       >
         <div className="w-full py-4 border-b border-white ">
-          <div className="max-w-[1440px] px-32 flex justify-between ">
+          <div className="max-w-[1440px] px-32 flex justify-between mx-auto">
             <Logo />
             <NavbarRoutes />
             <div className="border w-8 h-8 flex justify-center items-center rounded-full my-auto">
