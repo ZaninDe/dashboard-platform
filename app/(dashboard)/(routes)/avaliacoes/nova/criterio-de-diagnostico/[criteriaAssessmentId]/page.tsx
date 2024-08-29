@@ -37,7 +37,7 @@ const CriteriaAssesmentIdPage = async ({
       </div>
       <div
         className={cn(
-          'absolute inset-0 md:m-auto mt-40 mx-4 md:w-1/2 h-1/2 bg-white rounded-lg',
+          'absolute inset-0 md:m-auto mt-40 mx-4 md:w-1/2 h-1/2 md:h-[50%] bg-white rounded-lg',
           criteriaAssessment?.ratingScale === 'ATA' && 'h-[70%]',
         )}
       >

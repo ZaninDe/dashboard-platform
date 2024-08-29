@@ -77,7 +77,7 @@ export async function PUT(
       if (assessment?.ratingScale) {
         const newCriteriaAssessment = await db.criteriaAssessment.create({
           data: {
-            currentStep: 1,
+            currentStep: 0,
             assessmentId: assessment.id,
             ratingScale: assessment?.ratingScale,
             userId: assessment.userId,

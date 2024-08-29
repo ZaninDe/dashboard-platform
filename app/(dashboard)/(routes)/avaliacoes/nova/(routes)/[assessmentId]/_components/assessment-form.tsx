@@ -68,29 +68,6 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
     }
   }
 
-  const onSubmit = async () => {
-    setIsSubmitting(true)
-    try {
-      if (currentDialog?.answer === answer) {
-        return
-      }
-      await axios.post(`/api/assessments/${assessment.id}/dialogs`, {
-        questionNumber: step,
-        question: questions[step - 1].question,
-        answer,
-        step,
-      })
-      router.refresh()
-    } catch (err) {
-      toast.error('Algo deu errado.')
-      console.log(err)
-    } finally {
-      setIsSubmitting(false)
-      setAnswer(null)
-      nextStep()
-    }
-  }
-
   const onSubmitFinish = async () => {
     setIsSubmitting(true)
     try {
@@ -114,12 +91,41 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
       setIsSubmitting(false)
     }
   }
+
+  const onSubmit = async () => {
+    setIsSubmitting(true)
+    try {
+      if (currentDialog?.answer === answer) {
+        return
+      }
+      await axios.post(`/api/assessments/${assessment.id}/dialogs`, {
+        questionNumber: step,
+        question: questions[step - 1].question,
+        answer,
+        step,
+      })
+      console.log(step)
+
+      if (step === questions.length) {
+        await onSubmitFinish()
+      } else {
+        nextStep()
+      }
+      router.refresh()
+    } catch (err) {
+      toast.error('Algo deu errado.')
+      console.log(err)
+    } finally {
+      setIsSubmitting(false)
+      setAnswer(null)
+    }
+  }
   const isDisabled =
     (!answer && !questions.length) || isSubmitting || answer === null
   return (
     <div className="h-full">
       <div className="h-full">
-        {step <= questions.length ? (
+        {step <= questions.length && (
           <div className="w-full h-full p-4">
             <p className="font-bold">{`Questão ${step} de ${questions.length}`}</p>
             <div className="w-full h-full flex flex-col justify-around items-center">
@@ -166,22 +172,6 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
                 </Button>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="flex flex-col justify-center items-center gap-8 h-full p-8">
-            <h1 className="text-3xl">Muito Bem!</h1>
-            <h1 className="text-xl text-center md:text-left">
-              Agora, vamos aplicar o questionário de Critério de Avaliação, ele
-              servirá para a confirmação dos resultados obtidos no questionário
-              anterior, vamos lá?
-            </h1>
-            <Button onClick={onSubmitFinish} className="w-20">
-              {isSubmitting ? (
-                <LoaderCircleIcon className="animate-spin" />
-              ) : (
-                <p>Iniciar</p>
-              )}
-            </Button>
           </div>
         )}
       </div>

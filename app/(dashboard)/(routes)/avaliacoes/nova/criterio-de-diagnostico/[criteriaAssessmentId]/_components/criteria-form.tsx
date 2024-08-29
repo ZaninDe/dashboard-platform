@@ -22,7 +22,7 @@ interface CriteriaFormProps {
 }
 
 const CriteriaForm = ({ criteriaAssessment, dialogs }: CriteriaFormProps) => {
-  const [step, setStep] = useState(criteriaAssessment?.currentStep | 1)
+  const [step, setStep] = useState(criteriaAssessment?.currentStep | 0)
   const [answer, setAnswer] = useState<number | null>()
   const [currentDialog, setCurrentDialog] = useState<Dialog>()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -95,52 +95,68 @@ const CriteriaForm = ({ criteriaAssessment, dialogs }: CriteriaFormProps) => {
   const isDisabled =
     (!answer && !questions.length) || isSubmitting || answer === null
   return (
-    <div className="w-full h-full">
-      <p className="font-bold p-4">{`Questão ${step} de ${questions.length}`}</p>
-      <div className="w-full h-full flex flex-col justify-around items-center p-4">
+    <div>
+      {step !== 0 ? (
         <div>
-          <div>
-            <div className="min-h-40 flex flex-col items-center justify-center">
-              <p className="text-center text-xl">
-                {questions[step - 1]?.question}
-              </p>
+          <p className="font-bold p-4">{`Questão ${step} de ${questions.length}`}</p>
+          <div className="w-full h-full flex flex-col justify-around items-center p-4">
+            <div>
+              <div>
+                <div className="min-h-40 flex flex-col items-center justify-center">
+                  <p className="text-center text-xl">
+                    {questions[step - 1]?.question}
+                  </p>
+                </div>
+                <div className="flex gap-4 justify-center mt-4">
+                  {criteriaOptions.map((button) => (
+                    <Button
+                      className={cn(
+                        'bg-transparent',
+                        button.value === answer?.toString() && 'bg-slate-200',
+                      )}
+                      key={button.value}
+                      variant="outline"
+                      onClick={() => {
+                        setAnswer(parseInt(button.value))
+                      }}
+                    >
+                      {button.label}
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="flex gap-4 justify-center mt-4">
-              {criteriaOptions.map((button) => (
-                <Button
-                  className={cn(
-                    'bg-transparent',
-                    button.value === answer?.toString() && 'bg-slate-200',
-                  )}
-                  key={button.value}
-                  variant="outline"
-                  onClick={() => {
-                    setAnswer(parseInt(button.value))
-                  }}
-                >
-                  {button.label}
-                </Button>
-              ))}
+            <div className="w-full flex justify-between p-4">
+              <Button variant="secondary" onClick={prevStep}>
+                Voltar
+              </Button>
+              <Button onClick={onSubmit} disabled={isDisabled} className="w-20">
+                {isSubmitting ? (
+                  <LoaderCircleIcon className="animate-spin" />
+                ) : (
+                  <p>{step === questions.length ? 'Finalizar' : 'Próximo'}</p>
+                )}
+              </Button>
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-between p-4">
-          <Button variant="secondary" onClick={prevStep}>
-            Voltar
-          </Button>
-          <Button onClick={onSubmit} disabled={isDisabled} className="w-20">
+      ) : (
+        <div className="flex flex-col justify-center items-center gap-8 h-full p-8">
+          <h1 className="text-3xl">Muito Bem!</h1>
+          <h1 className="text-xl text-center md:text-left">
+            Agora, vamos aplicar o questionário de Critério de Avaliação, ele
+            servirá para a confirmação dos resultados obtidos no questionário
+            anterior, vamos lá?
+          </h1>
+          <Button onClick={nextStep} className="w-20">
             {isSubmitting ? (
               <LoaderCircleIcon className="animate-spin" />
             ) : (
-              <p>{step === questions.length ? 'Finalizar' : 'Próximo'}</p>
+              <p>Iniciar</p>
             )}
           </Button>
         </div>
-      </div>
-      <p className="bg-yellow-500/80 w-full p-4 rounded-md text-white">
-        <strong>*ATENÇÃO*</strong> Não se preocupe em sair desta página, a
-        avaliação é salva automaticamente a cada resposta
-      </p>
+      )}
     </div>
   )
 }

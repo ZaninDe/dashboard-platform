@@ -213,8 +213,9 @@ const Dashboard = ({
             </Select>
             <div
               className={cn(
-                'grid grid-cols-4 grid-rows-4 mt-10 border justify-center items-center gap-1 md:w-[320px]',
-                assessment?.ratingScale === 'SnapIV' && 'grid-cols-5',
+                'grid grid-cols-5 grid-rows-5 mt-10 border justify-center items-center gap-1 md:w-[320px]',
+                assessment?.ratingScale === 'SnapIV' &&
+                  'grid-cols-5 grid-rows-4',
               )}
             >
               {dialogs.map((dialog, index) => {
@@ -271,7 +272,14 @@ const Dashboard = ({
                       <HoverCardTrigger className="text-transparent">
                         <p>.</p>
                         <p>.</p>
-                        <p className="hidden md:block">.</p>
+                        <p
+                          className={cn(
+                            'hidden md:block',
+                            isAtaRatingScale && 'md:hidden',
+                          )}
+                        >
+                          .
+                        </p>
                       </HoverCardTrigger>
                       <HoverCardContent className="w-96">
                         <p>

@@ -61,28 +61,6 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
     )
   }
 
-  const onSubmit = async () => {
-    setIsSubmitting(true)
-    try {
-      if (dialogs[step]?.answer === selectedItems) {
-        return
-      }
-      await axios.post(`/api/assessments/${assessment.id}/dialogs`, {
-        questionNumber: step,
-        question: questions[step - 1].question,
-        answer: selectedItems,
-        step,
-      })
-    } catch (err) {
-      console.log(err)
-      toast.error('Algo deu errado.')
-    } finally {
-      setIsSubmitting(false)
-      setSelectedItems([])
-      nextStep()
-    }
-  }
-
   const onSubmitFinish = async () => {
     setIsSubmitting(true)
     try {
@@ -105,10 +83,36 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
     }
   }
 
+  const onSubmit = async () => {
+    setIsSubmitting(true)
+    try {
+      if (dialogs[step]?.answer === selectedItems) {
+        return
+      }
+      await axios.post(`/api/assessments/${assessment.id}/dialogs`, {
+        questionNumber: step,
+        question: questions[step - 1].question,
+        answer: selectedItems,
+        step,
+      })
+      if (step === questions.length) {
+        onSubmitFinish()
+      } else {
+        nextStep()
+      }
+    } catch (err) {
+      console.log(err)
+      toast.error('Algo deu errado.')
+    } finally {
+      setIsSubmitting(false)
+      setSelectedItems([])
+    }
+  }
+
   const isDisabled = !questions.length || isSubmitting
   return (
     <div className="h-full">
-      {step <= questions.length ? (
+      {step <= questions.length && (
         <div className="w-full h-full p-4">
           <p className="font-bold">{`Questão ${step} de 23`}</p>
           <div className="w-full h-full flex flex-col justify-start mt-10 md:mt-0 items-center">
@@ -151,22 +155,6 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
               </Button>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="flex flex-col justify-center items-center gap-8 h-full p-8">
-          <h1 className="text-3xl">Muito Bem!</h1>
-          <h1 className="text-xl text-center md:text-left">
-            Agora, vamos aplicar o questionário de Critério de Avaliação, ele
-            servirá para a confirmação dos resultados obtidos no questionário
-            anterior, vamos lá?
-          </h1>
-          <Button onClick={onSubmitFinish} className="w-20">
-            {isSubmitting ? (
-              <LoaderCircleIcon className="animate-spin" />
-            ) : (
-              <p>Iniciar</p>
-            )}
-          </Button>
         </div>
       )}
       <p className="bg-yellow-500/80 w-full p-4 rounded-b-md text-white absolute bottom-[-100px]">
