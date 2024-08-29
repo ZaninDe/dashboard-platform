@@ -170,7 +170,7 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
         ) : (
           <div className="flex flex-col justify-center items-center gap-8 h-full p-8">
             <h1 className="text-3xl">Muito Bem!</h1>
-            <h1 className="text-xl">
+            <h1 className="text-xl text-center md:text-left">
               Agora, vamos aplicar o questionário de Critério de Avaliação, ele
               servirá para a confirmação dos resultados obtidos no questionário
               anterior, vamos lá?

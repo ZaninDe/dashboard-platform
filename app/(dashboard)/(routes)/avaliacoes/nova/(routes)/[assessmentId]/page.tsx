@@ -39,7 +39,7 @@ const AssesmentIdPage = async ({
       <div
         className={cn(
           'absolute inset-0 m-auto w-[90vw] mt-44 md:w-1/2 h-2/3 bg-white rounded-lg',
-          assessment?.ratingScale === 'ATA' && 'h-[90%] md:mt-0 md:h-[70%]',
+          assessment?.ratingScale === 'ATA' && 'h-[85%] md:h-[70%]',
         )}
       >
         {assessment && (
@@ -52,7 +52,7 @@ const AssesmentIdPage = async ({
           </div>
         )}
       </div>
-      <div className="h-[80%] md:h-[60%] bg-cyan-600 flex justify-center items-end">
+      <div className="h-[90%] md:h-[60%] bg-cyan-600 flex justify-center items-end">
         <h1 className="mb-10 text-5xl font-bold text-white">
           Questionário<span className="text-yellow-400">.</span>
         </h1>

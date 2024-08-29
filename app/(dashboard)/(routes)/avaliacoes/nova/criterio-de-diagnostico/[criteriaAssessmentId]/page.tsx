@@ -25,7 +25,7 @@ const CriteriaAssesmentIdPage = async ({
   })
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-[130vh] md:h-screen">
       <div className="h-[40%] w-full bg-cyan-200 p-4">
         <Link
           href="/avaliacoes"
@@ -37,7 +37,7 @@ const CriteriaAssesmentIdPage = async ({
       </div>
       <div
         className={cn(
-          'absolute inset-0 m-auto w-1/2 h-1/2 bg-white rounded-lg',
+          'absolute inset-0 md:m-auto mt-40 mx-4 md:w-1/2 h-1/2 bg-white rounded-lg',
           criteriaAssessment?.ratingScale === 'ATA' && 'h-[70%]',
         )}
       >
@@ -51,7 +51,7 @@ const CriteriaAssesmentIdPage = async ({
         )}
       </div>
       <div className="h-[60%] bg-cyan-600 flex justify-center items-end">
-        <h1 className="mb-10 text-5xl font-bold text-white">
+        <h1 className="mb-32 p-4 md:mb-10 text-2xl md:text-5xl font-bold text-white">
           Questionário Critério de Diagnostico
           <span className="text-yellow-400">.</span>
         </h1>

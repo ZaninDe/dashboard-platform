@@ -95,17 +95,17 @@ const CriteriaForm = ({ criteriaAssessment, dialogs }: CriteriaFormProps) => {
   const isDisabled =
     (!answer && !questions.length) || isSubmitting || answer === null
   return (
-    <div className="w-full h-full p-4">
-      <p className="font-bold">{`Questão ${step} de ${questions.length}`}</p>
-      <div className="w-full h-full flex flex-col justify-around items-center">
+    <div className="w-full h-full">
+      <p className="font-bold p-4">{`Questão ${step} de ${questions.length}`}</p>
+      <div className="w-full h-full flex flex-col justify-around items-center p-4">
         <div>
           <div>
-            <div className="h-40 flex flex-col items-center justify-center">
+            <div className="min-h-40 flex flex-col items-center justify-center">
               <p className="text-center text-xl">
                 {questions[step - 1]?.question}
               </p>
             </div>
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-4 justify-center mt-4">
               {criteriaOptions.map((button) => (
                 <Button
                   className={cn(
@@ -124,7 +124,7 @@ const CriteriaForm = ({ criteriaAssessment, dialogs }: CriteriaFormProps) => {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between p-4">
           <Button variant="secondary" onClick={prevStep}>
             Voltar
           </Button>
