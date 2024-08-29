@@ -130,7 +130,7 @@ const Dashboard = ({
                           className={cn(
                             'h-8 w-12 mt-2',
                             index === 0 && 'bg-red-50 text-white',
-                            index === 1 && 'bg-red-100 text-white',
+                            index === 1 && 'bg-green-200 text-white',
                             index === 2 && 'bg-red-300 text-white',
                             index === 3 && 'bg-red-400 text-white',
                           )}
