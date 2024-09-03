@@ -103,7 +103,7 @@ const CriteriaForm = ({ criteriaAssessment, dialogs }: CriteriaFormProps) => {
             <div>
               <div>
                 <div className="min-h-40 flex flex-col items-center justify-center">
-                  <p className="text-center text-xl">
+                  <p className="text-center text-lg md:text-xl">
                     {questions[step - 1]?.question}
                   </p>
                 </div>
