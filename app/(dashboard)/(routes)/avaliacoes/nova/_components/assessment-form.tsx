@@ -82,11 +82,17 @@ const AssessmentForm = ({
   }
 
   const { isValid, isSubmitting } = form.formState
+  const ratingScaleOptions = [
+    {
+      label: 'SNAP-IV (TDAH)',
+      value: 'SnapIV',
+    },
+    {
+      label: 'ATA (Autismo)',
+      value: 'ATA',
+    },
+  ]
 
-  const ratingScaleOptions = Object.keys(RatingScale).map((key) => ({
-    label: key,
-    value: RatingScale[key as keyof typeof RatingScale],
-  }))
   return (
     <div className="space-y-4">
       <Dialog>

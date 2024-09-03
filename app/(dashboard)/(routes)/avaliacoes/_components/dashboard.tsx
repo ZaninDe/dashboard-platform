@@ -24,6 +24,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { ELEButtonOptions, SNAPButtonOptions } from '@/const/rating-scales'
 import { useEffect, useState } from 'react'
 import QuestionnairePieChart from './questionCriteriaChart'
+import { AlertCircle, MessageCircleWarning } from 'lucide-react'
 
 interface DashBoardProps {
   assessment: AssesmentUser
@@ -80,36 +81,47 @@ const Dashboard = ({
         {assessment.ratingScale === 'ATA' ? '(Aspectro Autista)' : '(TDAH)'}
       </h1>
       <h1 className="text-2xl font-bold mt-4">Barra de Pontuação</h1>
-      <p className="mb-10 text-muted-foreground">
+      <p className="mb-4 text-muted-foreground">
         Aqui, temos que quanto menor a pontuação, significa que menor são as
         características dos comportamentos da escala aplicada.
       </p>
+      <p className="md:text-2xl mb-10">
+        Pontuação atingida pelo aluno:{' '}
+        <strong className="text-2xl md:text-3xl">
+          {assessment.resultAmount}
+        </strong>{' '}
+        de {maxScore}
+      </p>
       <div className="relative">
-        <p className={`absolute right-0 mt-[-24px]`}>{maxScore}</p>
+        <p className={`absolute right-0 mt-10`}>de {maxScore} pontos</p>
         <p className={cn(`absolute mt-[-24px]`)} style={{ left: margin }}>
-          {assessment.resultAmount} Pontos
+          {assessment.resultAmount} pontos
         </p>
       </div>
 
       <div>
-        <Progress
-          value={progress}
-          className="h-10 rounded-none bg-green-600/40"
-        />
-        <p>Pontuação do Aluno</p>
+        <Progress value={progress} className="h-10 rounded-none " />
       </div>
 
       {isAtaRatingScale && (
         <div className="mt-10">
+          <p className="text-muted-foreground mb-2">
+            Barra para comparação com o ponto de alerta, onde notas superiores
+            exigem intervenções.
+          </p>
           <div className="relative">
-            <p className={`absolute right-0 mt-[-24px] `}>{maxScore}</p>
+            {/* <p className={`absolute right-0 mt-[-24px] `}>{maxScore}</p> */}
           </div>
-          <Progress
-            value={(meanProgress / maxScore) * 100}
-            className="bg-green-600/40"
-          />
-          <p className={cn(`absolute`)} style={{ left: meanMargin }}>
-            Corte {meanProgress} Pontos
+          <Progress value={(meanProgress / maxScore) * 100} className="" />
+          <p
+            className={cn(`md:absolute text-center mt-2 text-xs md:text-base`)}
+            style={{ left: meanMargin }}
+          >
+            A Nota do aluno deve ser no máximo de:
+            <span className="block text-center text-red-600 font-bold text-base md:text-lg">
+              {' '}
+              {meanProgress} Pontos
+            </span>
           </p>
         </div>
       )}
@@ -299,9 +311,13 @@ const Dashboard = ({
                 )
               })}
             </div>
-            <p className="text-muted-foreground mb-12 max-w-[320px] mt-4 text-sm">
+            <p className="hidden md:block text-muted-foreground mb-12 max-w-[320px] mt-4 text-sm">
               Você também pode passar o mouse por cima de cada quadrado, para
               visualizar a questão individualmente.
+            </p>
+            <p className="md:hidden text-muted-foreground mb-12 max-w-[320px] mt-4 text-sm">
+              Aqui, você pode entender visualmente através da intencidade das
+              cores o grau de alerta em relação ao aluno.
             </p>
           </div>
           <Card className="w-full h-full col-span-2 py-4">
@@ -376,16 +392,34 @@ const Dashboard = ({
             <h1 className="text-2xl font-bold mb-4">
               Resultados para o critério A obtidos através da escala SNAP-IV
             </h1>
-            <p className={cn('text-md', assessment?.inattention && 'text-xl')}>
-              <strong>Indicativo de desatenção: </strong>
-              {assessment?.inattention ? 'Sim' : 'Não'}
-            </p>
-            <p
-              className={cn('text-md', assessment?.hyperactivity && 'text-xl')}
-            >
-              <strong>Indicativo de hiperatividade: </strong>
-              {assessment?.hyperactivity ? 'Sim' : 'Não'}
-            </p>
+            <div className="flex gap-2 items-center">
+              {assessment?.inattention && (
+                <AlertCircle className="text-red-600" />
+              )}
+              <p
+                className={cn(
+                  'text-md font-bold',
+                  assessment?.inattention && 'text-2xl text-red-600',
+                )}
+              >
+                <strong>Indicativo de desatenção: </strong>
+                {assessment?.inattention ? 'Sim' : 'Não'}
+              </p>
+            </div>
+            <div className="flex gap-2 items-center">
+              {assessment?.hyperactivity && (
+                <AlertCircle className="text-red-600" />
+              )}
+              <p
+                className={cn(
+                  'text-md font-bold',
+                  assessment?.hyperactivity && 'text-2xl text-red-600',
+                )}
+              >
+                <strong>Indicativo de hiperatividade: </strong>
+                {assessment?.hyperactivity ? 'Sim' : 'Não'}
+              </p>
+            </div>
             <div
               className={cn(
                 'hidden space-y-2',

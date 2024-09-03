@@ -35,7 +35,7 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: 'Nome é obrigatório',
   }),
-  ra: z.string().min(2, {
+  ra: z.string().min(1, {
     message: 'Registro do Aluno é obrigatório',
   }),
   individualMonitoring: z.boolean().optional(),
@@ -138,7 +138,7 @@ const StudentForm = ({ schoolOptions, onChangeStudent }: StudentFormProps) => {
       })
       toast.success('Aluno criado com sucesso!')
     } catch (err) {
-      toast.error('Algo deu errado.')
+      toast.error('Algo deu errado.', { duration: 4000 })
     } finally {
       router.push('/avaliacoes/nova')
     }
@@ -167,7 +167,7 @@ const StudentForm = ({ schoolOptions, onChangeStudent }: StudentFormProps) => {
       toast.success('Escola criada com sucesso!')
       setValue('schoolId', response.data.id)
     } catch (err) {
-      toast.error('Algo deu errado.')
+      toast.error('Algo deu errado.', { duration: 4000 })
     }
   }
   return (

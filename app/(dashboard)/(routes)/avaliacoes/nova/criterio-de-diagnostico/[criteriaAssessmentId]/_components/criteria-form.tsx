@@ -84,7 +84,7 @@ const CriteriaForm = ({ criteriaAssessment, dialogs }: CriteriaFormProps) => {
 
       router.refresh()
     } catch (err) {
-      toast.error('Algo deu errado.')
+      toast.error('Algo deu errado.', { duration: 4000 })
       console.log(err)
     } finally {
       setIsSubmitting(false)

@@ -75,7 +75,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
       router.refresh()
     } catch (err) {
       console.log(err)
-      toast.error('Algo deu errado.')
+      toast.error('Algo deu errado.', { duration: 4000 })
     } finally {
       setIsSubmitting(false)
       setSelectedItems([])
@@ -102,7 +102,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
       }
     } catch (err) {
       console.log(err)
-      toast.error('Algo deu errado.')
+      toast.error('Algo deu errado.', { duration: 4000 })
     } finally {
       setIsSubmitting(false)
       setSelectedItems([])
@@ -115,6 +115,18 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
       {step <= questions.length && (
         <div className="w-full h-full p-4">
           <p className="font-bold">{`Questão ${step} de 23`}</p>
+          <div className="flex md:hidden w-full justify-between py-2 mt-6">
+            <Button variant="secondary" onClick={prevStep}>
+              Voltar
+            </Button>
+            <Button onClick={onSubmit} disabled={isDisabled} className="w-20">
+              {isSubmitting ? (
+                <LoaderCircleIcon className="animate-spin" />
+              ) : (
+                <p>Próximo</p>
+              )}
+            </Button>
+          </div>
           <div className="w-full h-full flex flex-col justify-start mt-10 md:mt-0 items-center">
             <div>
               <div>
@@ -142,7 +154,7 @@ const ATAAssessmentForm = ({ assessment, dialogs }: ATAAssessmentFormProps) => {
                 </div>
               </div>
             </div>
-            <div className="w-full flex justify-between absolute bottom-4 p-2">
+            <div className="hidden md:flex w-full justify-between absolute bottom-4 p-2">
               <Button variant="secondary" onClick={prevStep}>
                 Voltar
               </Button>

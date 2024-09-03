@@ -440,7 +440,7 @@ export const ATAQuestions: ATAQuestionsProps[] = [
   },
   {
     step: 11,
-    question: 'EXPLORAÇÃO DOS OBJETOS (APALPAR, CHUPAR)',
+    question: 'EXPLORAÇÃO DOS OBJETOS (APALPAR, COLOCAR NA BOCA)',
     options: [
       { index: 1, item: 'Morde e engole objetos não alimentares' },
       { index: 2, item: 'Chupa e coloca as coisas na boca' },
@@ -475,7 +475,7 @@ export const ATAQuestions: ATAQuestionsProps[] = [
   },
   {
     step: 13,
-    question: 'ATENÇÃO',
+    question: 'ATENÇÃO DO ALUNO',
     options: [
       {
         index: 1,
@@ -589,7 +589,7 @@ export const ATAQuestions: ATAQuestionsProps[] = [
       },
       {
         index: 2,
-        item: 'Para chegar a fazer alguma coisa, há que se repetir muitas vezes ou elevar o tom de voz',
+        item: 'Para chegar a fazer alguma atividade, há que se repetir muitas vezes ou elevar o tom de voz',
       },
     ],
   },
@@ -639,7 +639,8 @@ export const ATAQuestions: ATAQuestionsProps[] = [
   },
   {
     step: 23,
-    question: 'APARECIMENTO DOS SINTOMAS ANTES DOS 36 MESES (DSM-IV)',
+    question:
+      'APARECIMENTO DOS SINTOMAS ANTES DOS 36 MESES (DSM-IV - Manual Diagnóstico e Estatístico de Transtornos Mentais)',
     options: [
       { index: 1, item: 'Não' },
       { index: 2, item: 'Sim' },

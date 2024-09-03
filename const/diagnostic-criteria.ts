@@ -156,6 +156,6 @@ export const TDAHDiagnosticQuestions: QuestionsProps[] = [
   },
   {
     step: 22,
-    question: `Os sintomas não ocorrem exclusivamente durante o curso de esquizofrenia ou outro transtorno psicótico e não são mais bem explicados por outro transtorno mental?`,
+    question: `Os sintomas se apresentam sem estar relacionado ao curso de esquizofrenia ou outro transtorno psicótico?`,
   },
 ]

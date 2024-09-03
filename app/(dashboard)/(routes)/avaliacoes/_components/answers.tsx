@@ -53,7 +53,7 @@ const Answers = ({
       router.refresh()
     } catch (err) {
       console.log(err)
-      toast.error('Algo deu errado ao salvar observação')
+      toast.error('Algo deu errado ao salvar observação', { duration: 4000 })
     }
   }
 
@@ -243,15 +243,20 @@ const Answers = ({
           </AccordionTrigger>
           <AccordionContent>
             <form className="grid w-full gap-1.5 p-1" action={handleSave}>
+              <p className="text-sm text-muted-foreground">
+                As observações ajudam profissionais compreender cada aluno de
+                forma individual
+              </p>
               <Textarea
                 id="message"
                 onBlur={handleSave}
                 onChange={(e) => setObservation(e.target.value)}
                 value={observation}
               />
-              <p className="text-sm text-muted-foreground">
-                As observações ajudam profissionais compreender cada aluno de
-                forma individual
+              <p>
+                <span className="text-red-600 font-bold">ATENÇÃO:</span> Clique
+                fora da área do texto para salvar, você verá uma mensagem de
+                sucesso.
               </p>
             </form>
           </AccordionContent>

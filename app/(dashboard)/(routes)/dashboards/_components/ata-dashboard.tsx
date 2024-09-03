@@ -60,7 +60,7 @@ const ATADashboard = ({
       </CardHeader>
       <CardContent>
         {isFinished ? (
-          <div className="p-4 md:p-6 mb-20">
+          <div className="p-4 md:p-6 mb-10">
             <div className="mt-10">
               <div className="relative">
                 <p className={`absolute right-0 mt-4`}>de {maxScore}</p>
@@ -84,12 +84,18 @@ const ATADashboard = ({
               </div>
               <Progress value={progress} className="bg-green-600/40" />
             </div>
+            <div className="mt-14 text-muted-foreground">
+              <p className="text-center md:text-left">
+                O Corte representa a nota limite onde o caso do aluno não exige
+                intervenção
+              </p>
+            </div>
           </div>
         ) : (
           <div className="mt-14">Avaliação não finalizada.</div>
         )}
         {criteriaAssessment && (
-          <div className="mt-10">
+          <div className="mt-4">
             <h1 className="text-2xl font-bold mb-2">
               Características mapeadas para critério de diagnóstico:
             </h1>

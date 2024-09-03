@@ -85,7 +85,7 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
 
       router.refresh()
     } catch (err) {
-      toast.error('Algo deu errado.')
+      toast.error('Algo deu errado.', { duration: 4000 })
       console.log(err)
     } finally {
       setIsSubmitting(false)
@@ -113,7 +113,7 @@ const AssessmentForm = ({ assessment, dialogs }: AssessmentFormProps) => {
       }
       router.refresh()
     } catch (err) {
-      toast.error('Algo deu errado.')
+      toast.error('Algo deu errado.', { duration: 4000 })
       console.log(err)
     } finally {
       setIsSubmitting(false)

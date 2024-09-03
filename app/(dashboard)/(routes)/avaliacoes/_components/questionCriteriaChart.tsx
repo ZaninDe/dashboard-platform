@@ -19,7 +19,7 @@ const QuestionCriteriaChart = ({ criteriaDialogs }: QuestionCriteriaChart) => {
   const isMobile = useIsMobile()
   console.log('IS MOBILE: ', isMobile)
 
-  const COLORS = ['#86efac', '#f87171']
+  const COLORS = ['#f87171', '#86efac']
 
   const dataQuestions: QuestionData[] = []
   criteriaDialogs.forEach((criteriaDialog) => {

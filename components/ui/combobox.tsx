@@ -49,11 +49,11 @@ export const Combobox = ({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0 border">
+      <PopoverContent className="p-0 border overflow-y-auto">
         <Command className="w-full ">
           <CommandInput placeholder={placeholder} />
           <CommandEmpty>nenhum aluno encontrado.</CommandEmpty>
-          <CommandGroup className="max-h-64 overflow-y-auto">
+          <CommandGroup className="max-h-80 overflow-y-auto">
             {options.map((option) => (
               <CommandItem
                 key={option.value}

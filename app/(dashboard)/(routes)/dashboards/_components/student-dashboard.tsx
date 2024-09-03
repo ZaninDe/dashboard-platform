@@ -83,7 +83,7 @@ const StudentDashboard = ({
         setCurrentStudent(newCurrentStudent)
       }
     } catch (err) {
-      toast.error('Algo de errado ocorreu.')
+      toast.error('Algo de errado ocorreu.', { duration: 4000 })
     }
   }
 
