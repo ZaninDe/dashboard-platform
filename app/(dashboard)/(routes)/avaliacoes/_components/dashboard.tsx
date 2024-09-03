@@ -24,7 +24,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { ELEButtonOptions, SNAPButtonOptions } from '@/const/rating-scales'
 import { useEffect, useState } from 'react'
 import QuestionnairePieChart from './questionCriteriaChart'
-import { AlertCircle, MessageCircleWarning } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 
 interface DashBoardProps {
   assessment: AssesmentUser
