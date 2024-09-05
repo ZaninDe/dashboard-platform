@@ -455,7 +455,7 @@ const Dashboard = ({
         )}
 
         <h1 className="text-2xl font-bold mt-20">
-          Resultados Critério de Diagóstico
+          Resultados Critério de Diagnóstico
         </h1>
         <QuestionnairePieChart criteriaDialogs={criteriaDialogs} />
       </div>
